@@ -1,0 +1,60 @@
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
+
+export const env = createEnv({
+  server: {
+    WORDPRESS_API_URL: z.string(),
+    WORDPRESS_API_URL_SITE: z.string(),
+    AUTH_URL: z.string(),
+    GOOGLE_PROJECT_ID: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string(),
+    GOOGLE_PRIVATE_KEY: z.string(),
+    GOOGLE_SHEET_ID: z.string(),
+    RECAPTCHA_SECRET_KEY: z.string(),
+    WORDPRESS_JWT_REFRESH_TOKEN: z.string(),
+    API_URL_CUSTOM_API: z.string(),
+
+    STRIPE_SECRET_KEY: z.string(),
+  },
+  client: {
+    NEXT_PUBLIC_STRIPE_PUBLIC_KEY: z.string(),
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string(),
+    NEXT_PUBLIC_AUTH_URL: z.string(),
+    NEXT_PUBLIC_API_URL: z.string(),
+    NEXT_PUBLIC_API_URL_CUSTOM_API: z.string(),
+    NEXT_PUBLIC_WORDPRESS_JWT_REFRESH_TOKEN: z.string(),
+    NEXT_PUBLIC_EMAIL: z.string(),
+    NEXT_PUBLIC_PHONE: z.string(),
+    NEXT_PUBLIC_HOSTNAME: z.string(),
+
+    NEXT_PUBLIC_OLD_URL: z.string(),
+    NEXT_PUBLIC_NEW_URL: z.string(),
+  },
+  runtimeEnv: {
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    NEXT_PUBLIC_STRIPE_PUBLIC_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
+    WORDPRESS_API_URL: process.env.WORDPRESS_API_URL,
+    WORDPRESS_API_URL_SITE: process.env.WORDPRESS_API_URL_SITE,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_API_URL_CUSTOM_API: process.env.NEXT_PUBLIC_API_URL_CUSTOM_API,
+    API_URL_CUSTOM_API: process.env.API_URL_CUSTOM_API,
+    NEXT_PUBLIC_WORDPRESS_JWT_REFRESH_TOKEN:
+      process.env.NEXT_PUBLIC_WORDPRESS_JWT_REFRESH_TOKEN,
+    WORDPRESS_JWT_REFRESH_TOKEN: process.env.WORDPRESS_JWT_REFRESH_TOKEN,
+    AUTH_URL: process.env.AUTH_URL,
+    NEXT_PUBLIC_AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL,
+    GOOGLE_PROJECT_ID: process.env.GOOGLE_PROJECT_ID,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
+    GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID,
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
+    NEXT_PUBLIC_EMAIL: process.env.NEXT_PUBLIC_EMAIL,
+    NEXT_PUBLIC_PHONE: process.env.NEXT_PUBLIC_PHONE,
+    NEXT_PUBLIC_HOSTNAME: process.env.NEXT_PUBLIC_HOSTNAME,
+    NEXT_PUBLIC_OLD_URL: process.env.NEXT_PUBLIC_OLD_URL,
+    NEXT_PUBLIC_NEW_URL: process.env.NEXT_PUBLIC_NEW_URL,
+  },
+});
