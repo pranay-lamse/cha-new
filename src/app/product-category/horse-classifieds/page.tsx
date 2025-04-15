@@ -15,17 +15,8 @@ export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [bidStatus, setBidStatus] = useState("active");
 
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const status = params.get("bid_status") || "active";
-      setBidStatus(status);
-    }
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,11 +33,8 @@ export default function EditAccountPage() {
         setLoading(false);
       }
     };
-
-    if (bidStatus) {
-      fetchData();
-    }
-  }, [bidStatus]);
+    fetchData();
+  }, [url]);
 
   useEffect(() => {
     if (!loading && htmlContent) {
