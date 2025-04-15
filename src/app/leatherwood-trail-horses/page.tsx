@@ -5,6 +5,7 @@ import Loader from "@/components/Loader";
 import { fetchHtmlData } from "@/lib/fetchHtmlData";
 import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
+import axios from "axios";
 
 declare global {
   interface Window {
@@ -21,7 +22,7 @@ export default function EditAccountPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/leatherwood-trail-horses`;
+  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/wp/v2/pages?slug=closed-auctions`;
 
   // Fetch HTML Data
   useEffect(() => {
@@ -29,9 +30,19 @@ export default function EditAccountPage() {
       try {
         setLoading(true);
         setError(null);
-        const data = await fetchHtmlData(url);
-        setHtmlContent(data);
+        const response = await axios.get(url);
+
+        // response.data is an array, get the first item
+        const page = response.data?.[0];
+
+        if (page && page.content && page.content.rendered) {
+          setHtmlContent(page.content.rendered);
+        } else {
+          setHtmlContent(null);
+          setError("No content found.");
+        }
       } catch (err) {
+        console.error("Error fetching WordPress page:", err);
         setError("Failed to fetch data. Please try again later.");
       } finally {
         setLoading(false);
