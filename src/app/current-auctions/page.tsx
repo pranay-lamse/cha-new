@@ -7,7 +7,30 @@ import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import $ from "jquery";
 import axios from "axios";
+import parse, { domToReact } from "html-react-parser";
+import Link from "next/link"; // ✅ For internal routing
 
+// 🧠 Helper function to parse HTML and replace <a> with <Link>
+const renderHtmlWithLinks = (html: string) => {
+  return parse(html, {
+    replace: (domNode: any) => {
+      if (domNode.name === "a" && domNode.attribs?.href) {
+        const href = domNode.attribs.href;
+        const isExternal =
+          href.startsWith("http") && !href.includes(env.NEXT_PUBLIC_NEW_URL);
+
+        if (isExternal) return; // keep as <a>
+
+        return (
+          <Link href={href}>
+            {domToReact(domNode.children)}
+          </Link>
+        );
+      }
+    },
+  });
+};
+// 👇 Your actual component
 export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -15,18 +38,14 @@ export default function EditAccountPage() {
 
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/wp/v2/pages?slug=current-auctions&_fields=content`;
 
-  // ✅ Fetch HTML content
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
         const response = await axios.get(url);
-
-        // response.data is an array, get the first item
         const page = response.data?.[0];
-
-        if (page && page.content && page.content.rendered) {
+        if (page && page.content?.rendered) {
           setHtmlContent(page.content.rendered);
         } else {
           setHtmlContent(null);
@@ -42,6 +61,8 @@ export default function EditAccountPage() {
 
     fetchData();
   }, [url]);
+
+
   useEffect(() => {
     if (!loading && htmlContent) {
       setTimeout(() => {
@@ -117,18 +138,21 @@ export default function EditAccountPage() {
         };
       }, 100);
     }
-  }, [htmlContent]);
+  }, [htmlContent, loading]);
+
+
+
   return (
     <div className="auctionTow-page all-auctions-page">
       {loading ? (
         <Loader />
       ) : (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: filterHTMLContent(htmlContent || "", ["elementor"]),
-          }}
-          className="text-gray-700"
-        ></div>
+        <div className="text-gray-700">
+          {/* ✅ Render parsed HTML with <Link> support */}
+          {renderHtmlWithLinks(
+            filterHTMLContent(htmlContent || "", ["elementor"])
+          )}
+        </div>
       )}
     </div>
   );
