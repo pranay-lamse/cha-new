@@ -2,7 +2,7 @@ export const revalidate = 60;
 export const maxDuration = 60;
 import { getMenus } from "@/actions";
 import { Header, Footer, BarFooter, BarHeader } from "@/components";
-import { ReCaptchaProvider } from "next-recaptcha-v3";
+/* import { ReCaptchaProvider } from "next-recaptcha-v3"; */
 import "./globals.css";
 import { AuthProvider } from "./providers/UserProvider";
 
@@ -19,13 +19,13 @@ export default function RootLayout({
         <body>
           <BarHeader />
           <Header menuItems={menuItems.nodes} />
-          <ReCaptchaProvider
+          {/*  <ReCaptchaProvider
             reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-          >
-            <main id="content" className="">
-              {children}
-            </main>
-          </ReCaptchaProvider>
+          > */}
+          <main id="content" className="">
+            {children}
+          </main>
+          {/* </ReCaptchaProvider> */}
           <Footer />
           <BarFooter />
         </body>
