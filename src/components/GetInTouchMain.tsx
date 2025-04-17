@@ -4,7 +4,7 @@ import { marcellus, raleway } from "@/config/fonts";
 import { ReCaptcha } from "next-recaptcha-v3";
 import { env } from "@/env";
 
-export const GetInTouch = ({ isContact = false }) => {
+export const GetInTouchMain = ({ isContact = false }) => {
   const [token, setToken] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
@@ -17,21 +17,23 @@ export const GetInTouch = ({ isContact = false }) => {
 
     // Append fixed required WordPress payload fields
     formData.append("action", "elementor_pro_forms_send_form");
-    formData.append("post_id", "129");
-    formData.append("form_id", "5a1ed790");
+    formData.append("post_id", "45");
+    formData.append("form_id", "a078974");
     formData.append("referer_title", "Contact - CHA Staging");
-    formData.append("queried_id", "129");
+    formData.append("queried_id", "45");
 
     // Format data like: form_fields[name], form_fields[message], etc.
     const name = formData.get("name");
+    const email = formData.get("email");
     const phone = formData.get("phone");
-    const type = formData.get("type");
+
     const message = formData.get("message");
 
     formData.append("form_fields[name]", name as string);
+
+    formData.append("form_fields[field_493edd0]", email as string);
+
     formData.append("form_fields[field_1c8282a]", phone as string);
-    formData.append("form_fields[field_16f2d58]", type as string);
-    formData.append("form_fields[message]", message as string);
     formData.append("g-recaptcha-response", token || "");
 
     try {
@@ -86,6 +88,16 @@ export const GetInTouch = ({ isContact = false }) => {
                 required
               />
             </div>
+
+            <div className="relative md:mb-3 mb-3 phone-input">
+              <input
+                type="email"
+                name="email"
+                className={`${raleway.className} block w-full focus:outline-none`}
+                placeholder="Your Email"
+                required
+              />
+            </div>
             <div className="relative md:mb-3 mb-3 phone-input">
               <input
                 type="text"
@@ -96,29 +108,6 @@ export const GetInTouch = ({ isContact = false }) => {
               />
             </div>
           </div>
-
-          {isContact && (
-            <>
-              <div className="relative md:mb-3 mb-2">
-                <select
-                  name="type"
-                  className={`${raleway.className} bg-gray-100 border text-gray-900 text-sm rounded-lg block w-full p-2.5`}
-                >
-                  <option value="Horse Auction">Horse Auction</option>
-                  <option value="Bidding Question">Bidding Question</option>
-                </select>
-              </div>
-              <div className="relative md:mb-3 mb-2">
-                <textarea
-                  name="message"
-                  rows={4}
-                  className="block w-full"
-                  placeholder="Your Message"
-                  required
-                />
-              </div>
-            </>
-          )}
 
           <div className="relative md:mb-3 mb-3">
             <input type="hidden" name="token-recaptcha" value={token} />

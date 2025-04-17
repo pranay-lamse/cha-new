@@ -11,6 +11,7 @@ import { searchProps } from "@/interfaces";
 import CurrentAuction from "./current-auctions/page";
 import Link from "next/link";
 import { cormorantSC, marcellus, raleway } from "@/config/fonts";
+import { GetInTouchMain } from "@/components/GetInTouchMain";
 export async function generateMetadata(): Promise<Metadata> {
   const { metadata: meta } = await getMetadata();
 
@@ -59,7 +60,7 @@ export default async function Home(props: searchProps) {
           title="Current Auctions"
         /> */}
         <CurrentAuction />
-        
+
         <div className="flex justify-center mb-2 md:mb-6 mt-2 md:mt-10">
         <Link
           href="/closed-auctions"
@@ -72,7 +73,7 @@ export default async function Home(props: searchProps) {
 
         {/* <ClosedAuctions /> */}
         <Newsletter />
-        <GetInTouch />
+        <GetInTouchMain />
       </div>
     </>
   );
