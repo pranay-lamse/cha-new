@@ -17,7 +17,19 @@ const EditAccountPage = () => {
 
   const [productPage, setProductPage] = useState("");
 
-  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/wp/v2/pages?slug=all-auctions&_fields=content`;
+  // ✅ Get bid_status from query string without Suspense
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+
+      const productPage = params.get("product-page") || "";
+      setProductPage(productPage);
+    }
+  }, []);
+
+  const url = productPage
+    ? `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/wp/v2/pages?slug=all-auctions&_fields=content&product-page=${productPage}`
+    : `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/wp/v2/pages?slug=all-auctions&_fields=content`;
 
   // ✅ Fetch HTML content
   useEffect(() => {
