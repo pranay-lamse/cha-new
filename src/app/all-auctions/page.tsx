@@ -5,8 +5,6 @@ import Loader from "@/components/Loader";
 import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import $ from "jquery";
-import { ensureStableJQueryLogic } from "@/components/jquery/ensureStableJQueryLogic";
-import { fetchHtmlData } from "@/lib/fetchHtmlData";
 import axios from "axios";
 
 const EditAccountPage = () => {
@@ -15,19 +13,18 @@ const EditAccountPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [productPage, setProductPage] = useState<string>("");
 
-  // ✅ Step 1: Get productPage param
+  // ✅ Get initial productPage from URL
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      const productPageParam = params.get("product-page") || "";
+      const productPageParam = params.get("product-page") || "1";
       setProductPage(productPageParam);
     }
   }, []);
 
-  // ✅ Step 2: Fetch data once productPage is available
+  // ✅ Fetch page data based on productPage
   useEffect(() => {
-    if (typeof window === "undefined") return; // SSR safety
-    if (productPage === "") return; // ❌ block fetching until productPage is set
+    if (typeof window === "undefined" || productPage === "") return;
 
     const fetchData = async () => {
       try {
@@ -35,7 +32,6 @@ const EditAccountPage = () => {
         setError(null);
 
         const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/wp/v2/pages?slug=all-auctions&_fields=content&product-page=${productPage}`;
-
         const response = await axios.get(url);
         const page = response.data?.[0];
 
@@ -56,7 +52,14 @@ const EditAccountPage = () => {
     fetchData();
   }, [productPage]);
 
-  // ✅ Step 3: DOM Manipulation after content is loaded
+  function fixPaginationLinks(html: string) {
+    return html.replace(
+      /\/stage\/wp-json\/wp\/v2\/pages\?slug=all-auctions&_fields=content&product-page=(\d+)/g,
+      "/all-auctions?product-page=$1"
+    );
+  }
+
+  // ✅ DOM Manipulation after content is loaded
   useEffect(() => {
     if (!loading && htmlContent) {
       $(".product").each(function () {
@@ -112,8 +115,26 @@ const EditAccountPage = () => {
       };
 
       reorderProducts();
-
       $(window).on("resize", reorderProducts);
+
+      // ✅ BONUS: Attach click listeners to pagination
+      $(".page-numbers a").on("click", function (e) {
+        e.preventDefault();
+        const href = $(this).attr("href");
+        if (href) {
+          const url = new URL(href, window.location.origin);
+          const page = url.searchParams.get("product-page") || "1";
+
+          setProductPage(page);
+
+          // Update browser URL without reload
+          window.history.pushState(
+            {},
+            "",
+            `/all-auctions?product-page=${page}`
+          );
+        }
+      });
 
       return () => {
         $(window).off("resize", reorderProducts);
