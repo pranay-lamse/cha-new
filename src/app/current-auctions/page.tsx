@@ -21,11 +21,7 @@ const renderHtmlWithLinks = (html: string) => {
 
         if (isExternal) return; // keep as <a>
 
-        return (
-          <Link href={href}>
-            {domToReact(domNode.children)}
-          </Link>
-        );
+        return <Link href={href}>{domToReact(domNode.children)}</Link>;
       }
     },
   });
@@ -61,7 +57,6 @@ export default function EditAccountPage() {
 
     fetchData();
   }, [url]);
-
 
   useEffect(() => {
     if (!loading && htmlContent) {
@@ -140,19 +135,17 @@ export default function EditAccountPage() {
     }
   }, [htmlContent, loading]);
 
-
-
   return (
     <div className="auctionTow-page all-auctions-page">
       {loading ? (
         <Loader />
       ) : (
-        <div className="text-gray-700">
-          {/* ✅ Render parsed HTML with <Link> support */}
-          {renderHtmlWithLinks(
-            filterHTMLContent(htmlContent || "", ["elementor"])
-          )}
-        </div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: filterHTMLContent(htmlContent || "", ["elementor"]),
+          }}
+          className="text-gray-700"
+        ></div>
       )}
     </div>
   );
