@@ -54,8 +54,8 @@ export default function ContactPage() {
     );
   return (
     <div className="grid">
-      <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] my-10 sm:my-20 buyer-condition px-2">
-        <div className={`${raleway.className} text-[15px] mb-6 leading-[1.8em] text-[#222]`}  dangerouslySetInnerHTML={{ __html: data.page.content }} />
+      <div className="buyer-condition">
+        <div dangerouslySetInnerHTML={{ __html: data.page.content }} />
       </div>
     </div>
   );
