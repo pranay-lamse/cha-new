@@ -44,7 +44,7 @@ const AuctionDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const pathname = usePathname();
-
+  const token = getToken();
   // Extract 'bonafide' from the path
   const slug = pathname.split("/").pop();
 
@@ -74,17 +74,20 @@ const AuctionDetails = () => {
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     try {
-      const response = await axiosClientwithApi.post(
-        "/wp-json/custom-api/v1/watchlist",
-        {
-          post_id: auctionId,
-        }
-      );
-      /* if (response) {
+      if (token) {
+        const response = await axiosClientwithApi.post(
+          "/wp-json/custom-api/v1/watchlist",
+          {
+            post_id: auctionId,
+          }
+        );
+        /* if (response) {
         window.location.reload();
       } */
-
-      return response.data;
+        return response.data;
+      } else {
+        alert("Please login to add to watchlist");
+      }
     } catch (error) {
       console.error("Error updating watchlist:", error);
       return null;
@@ -145,7 +148,7 @@ const AuctionDetails = () => {
       const bidValue = form.find("#uwa_bid_value").val();
       const productId = form.find("input[name='product_id']").val();
       const userId = form.find("input[name='user_id']").val();
-      const token = getToken();
+
       try {
         if (token) {
           const response = await axiosClientwithApi.post(
