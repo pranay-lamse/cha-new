@@ -18,7 +18,7 @@ import { ProductGalleryPage } from "@/components/ProductGallery";
 import { MoreDetails } from "@/components/MoreDetails";
 import Loader from "@/components/Loader";
 import DocumentCard from "@/components/Document";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import $ from "jquery";
 
 import axios from "axios";
@@ -29,6 +29,7 @@ import axiosClientwithApi from "@/api/axiosClientwithApi";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { fetchHtmlData } from "@/lib/fetchHtmlData";
+import { getToken } from "@/utils/storage";
 interface Props {
   status: any;
   title: any;
@@ -43,10 +44,24 @@ const AuctionDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const pathname = usePathname();
-
+  const token = getToken();
   // Extract 'bonafide' from the path
   const slug = pathname.split("/").pop();
+  const fetchData = async () => {
+    setLoading(true);
 
+    try {
+      const data = await fetchHtmlData(url);
+      setHtmlContent(data);
+    } catch (error) {
+      setHtmlContent(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   useEffect(() => {
     $(document).on("click", ".add-uwa", function (e) {
       e.preventDefault();
@@ -73,17 +88,22 @@ const AuctionDetails = () => {
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     try {
-      const response = await axiosClientwithApi.post(
-        "/wp-json/custom-api/v1/watchlist",
-        {
-          post_id: auctionId,
-        }
-      );
-      /* if (response) {
+      if (token) {
+        const response = await axiosClientwithApi.post(
+          "/wp-json/custom-api/v1/watchlist",
+          {
+            post_id: auctionId,
+          }
+        );
+        /* if (response) {
         window.location.reload();
       } */
 
-      return response.data;
+        return response.data;
+      } else {
+        alert("Please login to add to watchlist");
+      }
+      fetchData();
     } catch (error) {
       console.error("Error updating watchlist:", error);
       return null;
@@ -115,22 +135,6 @@ const AuctionDetails = () => {
 
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}`;
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-
-      try {
-        const data = await fetchHtmlData(url);
-        setHtmlContent(data);
-      } catch (error) {
-        setHtmlContent(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
@@ -146,18 +150,24 @@ const AuctionDetails = () => {
       const userId = form.find("input[name='user_id']").val();
 
       try {
-        const response = await axiosClientwithApi.post(
-          "/wp-json/custom-auction/v1/place-bid",
-          {
-            uwa_bid_value: bidValue,
-            product_id: productId,
-            user_id: userId,
-          }
-        );
+        if (token) {
+          const response = await axiosClientwithApi.post(
+            "/wp-json/custom-auction/v1/place-bid",
+            {
+              uwa_bid_value: bidValue,
+              product_id: productId,
+              user_id: userId,
+            }
+          );
 
-        // Handle success response
-        if (response.data.success) {
-          window.location.reload();
+          // Handle success response
+          /* if (response.data.success) {
+            window.location.reload();
+          } */
+          fetchData();
+        } else {
+          alert("Please login to place a bid");
+          /* redirect("/login"); */
         }
       } catch (err) {
         console.error("Error submitting bid:", err);

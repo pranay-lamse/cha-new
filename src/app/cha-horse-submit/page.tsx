@@ -7,6 +7,7 @@ import Image from "next/image";
 import { marcellus, raleway, cormorantSC, lora } from "@/config/fonts";
 
 export default function HoursSubmitPage() {
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -61,6 +62,7 @@ export default function HoursSubmitPage() {
     console.log("Form submitted:", formData);
   };
 
+
   return (
     <>
       <Head>
@@ -68,8 +70,7 @@ export default function HoursSubmitPage() {
         <meta name="description" content="Submit your horse for auction" />
       </Head>
 
-      {/* ✅ Global CSS for hiding header and topbar */}
-      <style jsx global>{`
+        <style jsx global>{`
         header.w-full.z-99 {
           display: none !important;
         }
@@ -93,7 +94,7 @@ export default function HoursSubmitPage() {
           {/* Overlay */}
           <div className="absolute inset-0 bg-black opacity-[0.8]"></div>
           <div className="border-b-2 border-[#dcc373] w-full relative mb-4">
-            <div className="w-full h-full flex justify-center items-center py-8">
+            <div className=" w-full h-full flex justify-center items-center py-8">
               <Image
                 src="/assets/img/logo.png"
                 alt="logo"
@@ -104,103 +105,201 @@ export default function HoursSubmitPage() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4 w-full py-10">
-              <div className="grid px-5 py-8">
-                <Image
-                  src="/assets/img/about.jpg"
-                  alt="about"
-                  width={1000}
-                  height={1000}
-                  className="object-cover"
-                />
-              </div>
-              <div className="pl-8 pr-4 py-2 justify-center items-center text-center">
+                <div className="grid px-5 py-8">
+                  <Image
+                    src="/assets/img/about.jpg"
+                    alt="about"
+                    width={1000}
+                    height={1000}
+                    className="object-cover"
+                  />
+                </div>
+                <div className="pl-8 pr-4 py-2 justify-center items-center text-center">
                 <h2
-                  className={`${cormorantSC.className} text-[24px] md:text-[45px] font-semibold mb-4 text-[#dcc373]`}
-                >
-                  Auction Your Horse
-                </h2>
+                      className={`${cormorantSC.className} text-[24px] md:text-[45px] font-semibold mb-4 text-[#dcc373]`}
+                    >
+                      Auction Your Horse
+                    </h2>
 
-                <h4
-                  className={`${cormorantSC.className} text-[23px] font-semibold capitalize leading-[28px] text-[#fff]`}
-                >
-                  All auctions will end on Tuesdays & Thursdays. We will begin
-                  your listing within 24 hours of approval.
-                </h4>
-                <h4
-                  className={`${cormorantSC.className} text-[17px] font-semibold capitalize leading-[28px] text-[#fff]  py-5`}
-                >
-                  WE OFFER VIDEO EDITING SERVICES FREE OF CHARGE
-                </h4>
+                    <h4
+                    className={`${cormorantSC.className} text-[23px] font-semibold capitalize leading-[28px] text-[#fff]`}
+                  >
+                    All auctions will end on Tuesdays & Thursdays. We will begin your listing
+                    within 24 hours of approval.
+                  </h4>
+                  <h4
+                    className={`${cormorantSC.className} text-[17px] font-semibold capitalize leading-[28px] text-[#fff]  py-5`}
+                  >
+                    WE OFFER VIDEO EDITING SERVICES FREE OF CHARGE 
+                  </h4>
 
-                <p
-                  className={`${cormorantSC.className} text-[26px] font-semibold leading-[33px] text-[#dcc373]`}
-                >
-                  We are thrilled that you've chosen ClassicHorseAuction.com to
-                  list your horse. We can't wait to work for you. Please note
-                  that all fields must be completed below. Once submitted, we
-                  will reach out to you via email or phone. Text or Call Hope @
-                  615-545-6488 or Emily @ 615-542-4564 if you need any
-                  assistance.
-                </p>
+                  <p
+                    className={`${cormorantSC.className} text-[26px] font-semibold leading-[33px] text-[#dcc373]`}
+                  >
+                    We are thrilled that you've chosen ClassicHorseAuction.com to list your
+                    horse. We can't wait to work for you. Please note that all fields must be
+                    completed below. Once submitted, we will reach out to you via email or phone.
+                    Text or Call Hope @ 615-545-6488 or Emily @ 615-542-4564 if you need any
+                    assistance.
+                  </p>
 
-                <p
-                  className={`${cormorantSC.className} text-[16px] font-semibold leading-[33px] text-[#dcc373]  py-5`}
-                >
-                  <a href="/seller-terms-conditions/">
-                    Please review our Seller’s Terms before submitting your
-                    listing
-                  </a>
-                </p>
-              </div>
+                  <p className={`${cormorantSC.className} text-[16px] font-semibold leading-[33px] text-[#dcc373]  py-5`}>
+                  <a href="/seller-terms-conditions/">Please review our Seller’s Terms before submitting your listing</a>
+                  </p>
+                
+                </div>
             </div>
           </div>
 
-          <div className="relative p-14 bg-[#dcc373] shadow-lg rounded-lg mx-[20px] my-[80px]">
-            <h2
-              className={`${cormorantSC.className} text-[24px] md:text-[42px] font-semibold text-[#000] text-center pb-[25px]`}
-            >
-              Classic Horse Auction Listing Form
-            </h2>
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-              {/* EXAMPLE INPUT FIELDS */}
-              <div className="flex flex-col">
-                <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>
-                  Horse Name
-                </label>
-                <input
-                  type="text"
-                  name="horseName"
-                  placeholder="Horse Name"
-                  value={formData.horseName}
-                  onChange={handleChange}
-                  className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
-                />
-              </div>
+        <div className="relative p-14 bg-[#dcc373] shadow-lg rounded-lg mx-[20px] my-[80px]">
+  <h2 className={`${cormorantSC.className} text-[24px] md:text-[42px] font-semibold text-[#000] text-center pb-[25px]`}>
+    Classic Horse Auction Listing Form
+  </h2>
 
-              {/* More fields like this... */}
-              <div className="flex flex-col col-span-2">
-                <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>
-                  Address
-                </label>
-                <textarea
-                  name="address"
-                  placeholder="Address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
-                />
-              </div>
+  <form onSubmit={handleSubmit} className="space-y-6">
+    {/* First row: 3 inputs in one line */}
+    <div className="flex gap-4">
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Name</label>
+        <input type="text" name="horseName" placeholder="Enter Name" value={formData.horseName} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
 
-              <button
-                type="submit"
-                className="bg-[#0f335f] text-white p-[12px_24px] rounded-[3px] text-center transition-all duration-300 border-none text-[15px] shadow-md min-h-[40px] w-[100px] sm:w-[110px]"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Email</label>
+        <input type="text" name="email" placeholder="Enter Email" value={formData.email} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
+
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Phone Number</label>
+        <input type="text" name="phone" placeholder="What's Phone Number" value={formData.phone} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
+    </div>
+
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Street Address</label>
+        <input type="text" name="microchipNo" placeholder="What's Your Street Address" value={formData.microchipNo} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Street Address</label>
+        <input type="text" name="microchipNo" placeholder="Optional" value={formData.microchipNo} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
+
+         
+    {/* Rest of the form: 2 columns */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex flex-col">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>City</label>
+          <input
+            type="text"
+            name="city"
+            placeholder="City"
+            value={formData.city}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
         </div>
+
+        <div className="flex flex-col">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>State</label>
+          <input
+            type="text"
+            name="state"
+            placeholder="State"
+            value={formData.state}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
+  
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Zip/Postal Code</label>
+        <input type="text" name="zip-code" placeholder="Zip/Postal Code" onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
+
+      <div className="flex flex-col">
+      <label htmlFor="country" className={`${lora.className} text-[#000] text-[16px] pb-3`}>Country</label>
+          <select
+            name="country"
+            id="country"
+            value={formData.country}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`}
+          >
+            <option value="">Select Country</option>
+            <option value="United States">United States</option>
+            {/* Add more country options here if needed */}
+          </select>
+      </div>
+
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Horse Name</label>
+        <input type="text" name="horseName" placeholder="Your Answer" value={formData.horseName} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
+
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Breed</label>
+        <input type="text" name="breed" placeholder="Your Answer" value={formData.breed} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
+    </div>
+    <div className="flex gap-4">
+      <div className="flex flex-col w-full md:w-1/3">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Color</label>
+          <input
+            type="text"
+            name="color"
+            placeholder="Enter Color"
+            value={formData.color}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
+
+        {/* Height */}
+        <div className="flex flex-col w-full md:w-1/3">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Height</label>
+          <input
+            type="text"
+            name="height"
+            placeholder="Enter Height"
+            value={formData.height}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
+
+        {/* Parentheses */}
+        <div className="flex flex-col w-full md:w-1/3">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Parentheses</label>
+          <input
+            type="text"
+            name="parentheses"
+            placeholder="Enter Parentheses"
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
+    </div>
+      <div className="col-span-1 md:col-span-2 flex justify-center">
+        <button type="submit"
+          className="bg-[#0f335f] text-white p-[12px_24px] rounded-[3px] text-center transition-all duration-300 border-none text-[15px] shadow-md min-h-[40px] w-[100px] sm:w-[110px]">
+          Submit
+        </button>
+      </div>
+  </form>
+</div>
+
+        </div>
+
+
       </div>
     </>
   );
