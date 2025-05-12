@@ -15,10 +15,20 @@ export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [bidStatus, setBidStatus] = useState("active");
 
-  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const status = params.get("bid_status") || "active";
+      setBidStatus(status);
+    }
+  }, []);
+
+  useEffect(() => {
+      const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
+
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -33,8 +43,11 @@ export default function EditAccountPage() {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [url]);
+
+    if (bidStatus) {
+      fetchData();
+    }
+  }, [bidStatus]);
 
   useEffect(() => {
     if (!loading && htmlContent) {
@@ -97,6 +110,52 @@ export default function EditAccountPage() {
             });
           }
         }
+  $(".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid").text("Sold via Bid");
+
+        $(".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for").text("Sold via Buy Now");
+
+        $(".home_products_sec .product").each(function(){
+
+        const $link = $(this).find(".woocommerce-LoopProduct-link").attr("href");
+
+        $(this).find(".short_des_loop").append("<a href='"+$link+"#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>");
+
+        $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+
+    });
+
+        if (window.location.href.indexOf("bidding") > -1) {
+
+            console.log("yes");
+
+      $('html, body').animate({
+
+       scrollTop: $("#bidding_sec").offset() && $("#bidding_sec").offset()?.top ? $("#bidding_sec").offset()!.top - 300 : 0
+
+      });
+        }
+
+   $("body ul.products .product").each(function () {
+  const $product = $(this);
+  const $shortDesc = $product.find('.woocommerce-loop-product__title,.price,.short_des_loop,.uwa_auction_product_countdown,.button').first(); // safer
+
+  // Only move if short_desc exists
+  if ($shortDesc.length) {
+    const $detailsDiv = $("<div class='product_details_left'></div>");
+    $shortDesc.before($detailsDiv); // insert before short_desc
+    $shortDesc.appendTo($detailsDiv); // move it into the new div
+  }
+});
+
+$("body ul.products .product").each(function () {
+    const $product = $(this);
+    const $shortDesc = $product.find('.short_des_loop').first();
+    const $addToCartBtn = $product.find('a.ajax_add_to_cart').first();
+
+    if ($shortDesc.length && $addToCartBtn.length) {
+        $shortDesc.append($addToCartBtn); // move the button inside short_des_loop
+    }
+});
 
         reorderProducts();
         $(window).on("resize", reorderProducts);
