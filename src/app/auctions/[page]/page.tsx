@@ -30,6 +30,7 @@ import { filterHTMLContent } from "@/utils/htmlHelper";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { fetchHtmlData } from "@/lib/fetchHtmlData";
 import { getToken } from "@/utils/storage";
+import { placeAuctionBid } from "@/services/placeBid";
 interface Props {
   status: any;
   title: any;
@@ -157,31 +158,20 @@ const AuctionDetails = () => {
       const productId = form.find("input[name='product_id']").val();
       const userId = form.find("input[name='user_id']").val();
 
-      try {
-        if (token) {
-          const response = await axiosClientwithApi.post(
-            "/wp-json/custom-auction/v1/place-bid",
-            {
-              uwa_bid_value: bidValue,
-              product_id: productId,
-              user_id: userId,
-            }
-          );
+      const handleBidSubmit = async () => {
+        const result = await placeAuctionBid({
+          productId: productId,
+          auctionId: productId,
+          bidAmount: bidValue,
+        });
 
-          // Handle success response
-          /* if (response.data.success) {
-            window.location.reload();
-          } */
-          fetchData();
+        if (result?.success) {
+          alert("Bid placed successfully!");
         } else {
-          alert("Please login to place a bid");
-          /* redirect("/login"); */
+          alert("Failed to place bid");
         }
-      } catch (err) {
-        console.error("Error submitting bid:", err);
-      } finally {
-        setLoading(false);
-      }
+      };
+      handleBidSubmit();
     };
 
     // Attach event listener to form
@@ -192,18 +182,6 @@ const AuctionDetails = () => {
     };
   }, []);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString); // Directly create Date object with full timestamp
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-
-      hour12: true, // Ensures AM/PM format
-    });
-  };
   const imagePlaceholder = "/assets/img/placeholder.png";
   if (loading)
     return (
@@ -211,11 +189,6 @@ const AuctionDetails = () => {
         <Loader />
       </>
     );
-
-  const formatYouTubeEmbed = (url: string) => {
-    const videoId = url.split("v=")[1]?.split("&")[0];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-  };
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] p-4 my-10 sm:my-10">
