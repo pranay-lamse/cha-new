@@ -13,7 +13,7 @@ export default function EditAccountPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/wp/v2/pages?slug=current-auctions&_fields=content`;
+  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/custom/v1/live-auctions-content`;
 
   // ✅ Fetch HTML content
   useEffect(() => {
@@ -125,7 +125,7 @@ export default function EditAccountPage() {
       ) : (
         <div
           dangerouslySetInnerHTML={{
-            __html: filterHTMLContent(htmlContent || "", ["elementor"]),
+            __html: filterHTMLContent(htmlContent || "", ["woocommerce"]),
           }}
           className="text-gray-700"
         ></div>
