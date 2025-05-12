@@ -164,7 +164,7 @@ const AuctionDetails = () => {
         bidAmount: bidValue,
       });
       console.log("Bid Response:", result);
-      window.location.reload();
+      fetchData();
     };
 
     // Attach event listener to form
