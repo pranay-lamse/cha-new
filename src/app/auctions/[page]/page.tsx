@@ -87,25 +87,33 @@ const AuctionDetails = () => {
   }, []);
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
-    try {
-      if (token) {
-        const response = await axiosClientwithApi.post(
-          "/wp-json/custom-api/v1/watchlist",
-          {
-            post_id: auctionId,
-          }
-        );
-        /* if (response) {
-        window.location.reload();
-      } */
+    if (!token) {
+      alert("Please log in to add to watchlist.");
+      return null;
+    }
 
-        return response.data;
-      } else {
-        alert("Please login to add to watchlist");
+    try {
+      const response = await axios.get(
+        `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-admin/admin-ajax.php`,
+        {
+          params: {
+            "uwa-ajax": "watchlist",
+            post_id: auctionId,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response) {
+        fetchData();
+        /* window.location.reload(); */
       }
-      fetchData();
-    } catch (error) {
-      console.error("Error updating watchlist:", error);
+    } catch (error: any) {
+      console.error(
+        "Error adding to watchlist:",
+        error.response?.data || error.message
+      );
       return null;
     }
   };
