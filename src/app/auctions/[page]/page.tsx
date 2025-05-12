@@ -18,7 +18,7 @@ import { ProductGalleryPage } from "@/components/ProductGallery";
 import { MoreDetails } from "@/components/MoreDetails";
 import Loader from "@/components/Loader";
 import DocumentCard from "@/components/Document";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import $ from "jquery";
 
 import axios from "axios";
@@ -29,6 +29,7 @@ import axiosClientwithApi from "@/api/axiosClientwithApi";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { fetchHtmlData } from "@/lib/fetchHtmlData";
+import { getToken } from "@/utils/storage";
 interface Props {
   status: any;
   title: any;
@@ -144,20 +145,25 @@ const AuctionDetails = () => {
       const bidValue = form.find("#uwa_bid_value").val();
       const productId = form.find("input[name='product_id']").val();
       const userId = form.find("input[name='user_id']").val();
-
+      const token = getToken();
       try {
-        const response = await axiosClientwithApi.post(
-          "/wp-json/custom-auction/v1/place-bid",
-          {
-            uwa_bid_value: bidValue,
-            product_id: productId,
-            user_id: userId,
-          }
-        );
+        if (token) {
+          const response = await axiosClientwithApi.post(
+            "/wp-json/custom-auction/v1/place-bid",
+            {
+              uwa_bid_value: bidValue,
+              product_id: productId,
+              user_id: userId,
+            }
+          );
 
-        // Handle success response
-        if (response.data.success) {
-          window.location.reload();
+          // Handle success response
+          if (response.data.success) {
+            window.location.reload();
+          }
+        } else {
+          alert("Please login to place a bid");
+          /* redirect("/login"); */
         }
       } catch (err) {
         console.error("Error submitting bid:", err);
