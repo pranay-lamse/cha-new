@@ -165,11 +165,7 @@ const AuctionDetails = () => {
           bidAmount: bidValue,
         });
 
-        if (result?.success) {
-          alert("Bid placed successfully!");
-        } else {
-          alert("Failed to place bid");
-        }
+        fetchData();
       };
       handleBidSubmit();
     };
