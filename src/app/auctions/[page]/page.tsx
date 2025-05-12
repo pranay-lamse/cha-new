@@ -149,7 +149,7 @@ const AuctionDetails = () => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
       e.preventDefault(); // Prevent default form submission
       e.stopPropagation(); // Stop event from propagating further
-      setLoading(true);
+      /* setLoading(true); */
 
       const form = $(e.target); // Get the form element
 
@@ -165,7 +165,7 @@ const AuctionDetails = () => {
           bidAmount: bidValue,
         });
 
-        fetchData();
+        window.location.reload();
       };
       handleBidSubmit();
     };
