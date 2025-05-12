@@ -539,9 +539,11 @@ export default function HoursSubmitPage() {
 
 
     <div className="col-span-1 md:col-span-2 flex justify-center">
-      <button type="submit"
-        className="bg-[#0f335f] text-white p-[12px_24px] rounded-[3px] text-center transition-all duration-300 border-none text-[15px] shadow-md min-h-[40px] w-[100px] sm:w-[110px]">
-        Submit
+     <button
+      type="submit"
+      className="bg-[#0f335f] text-white p-[12px_24px] rounded-[3px] text-center transition-all duration-300 border-none text-[15px] shadow-md min-h-[40px] w-[100px] sm:w-[110px] hover:bg-[#6699CC]"
+      >
+      Submit
       </button>
     </div>
   </form>
