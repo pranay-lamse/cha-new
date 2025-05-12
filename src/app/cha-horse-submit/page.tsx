@@ -88,7 +88,7 @@ export default function HoursSubmitPage() {
             background: #0f335f;
         }
       `}</style>
-      
+
       <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] my-10 sm:my-20 about px-2 sm:px-0">
         <div className="relative justify-center border-4 border-[#dcc373] bg-[url('/assets/img/cover-image.jpg')] bg-cover bg-center p-10">
           {/* Overlay */}
@@ -152,75 +152,151 @@ export default function HoursSubmitPage() {
           </div>
 
 
-          <div className="relative p-14 bg-[#dcc373] shadow-lg rounded-lg mx-[20px] my-[80px]">
-            <h2 className={`${cormorantSC.className} text-[24px] md:text-[42px] font-semibold text-[#000] text-center pb-[25px]`}>Classic Horse Auction Listing Form</h2>
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col">
-            <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Horse Name</label>
-              <input type="text" name="horseName" placeholder="Horse Name" value={formData.horseName} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+        <div className="relative p-14 bg-[#dcc373] shadow-lg rounded-lg mx-[20px] my-[80px]">
+  <h2 className={`${cormorantSC.className} text-[24px] md:text-[42px] font-semibold text-[#000] text-center pb-[25px]`}>
+    Classic Horse Auction Listing Form
+  </h2>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>AHS No.</label>
-              <input type="text" name="ahsNo" placeholder="AHS No." value={formData.ahsNo} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+  <form onSubmit={handleSubmit} className="space-y-6">
+    {/* First row: 3 inputs in one line */}
+    <div className="flex gap-4">
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Name</label>
+        <input type="text" name="horseName" placeholder="Enter Name" value={formData.horseName} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Microchip No.</label>
-              <input type="text" name="microchipNo" placeholder="Microchip No." value={formData.microchipNo} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Email</label>
+        <input type="text" name="email" placeholder="Enter Email" value={formData.email} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>UELN No.</label>
-              <input type="text" name="uelnNo" placeholder="UELN No." value={formData.uelnNo} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Phone Number</label>
+        <input type="text" name="phone" placeholder="What's Phone Number" value={formData.phone} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
+    </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Date of Birth</label>
-              <input type="date" name="dob" value={formData.dob} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Street Address</label>
+        <input type="text" name="microchipNo" placeholder="What's Your Street Address" value={formData.microchipNo} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Street Address</label>
+        <input type="text" name="microchipNo" placeholder="Optional" value={formData.microchipNo} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Color</label>
-              <input type="text" name="color" placeholder="Color" value={formData.color} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+         
+    {/* Rest of the form: 2 columns */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex flex-col">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>City</label>
+          <input
+            type="text"
+            name="city"
+            placeholder="City"
+            value={formData.city}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Breed</label>
-              <input type="text" name="breed" placeholder="Breed" value={formData.breed} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+        <div className="flex flex-col">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>State</label>
+          <input
+            type="text"
+            name="state"
+            placeholder="State"
+            value={formData.state}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
+  
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Zip/Postal Code</label>
+        <input type="text" name="zip-code" placeholder="Zip/Postal Code" onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Gender</label>
-              <input type="text" name="gender" placeholder="Gender" value={formData.gender} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+      <div className="flex flex-col">
+      <label htmlFor="country" className={`${lora.className} text-[#000] text-[16px] pb-3`}>Country</label>
+          <select
+            name="country"
+            id="country"
+            value={formData.country}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`}
+          >
+            <option value="">Select Country</option>
+            <option value="United States">United States</option>
+            {/* Add more country options here if needed */}
+          </select>
+      </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Owner Name</label>
-              <input type="text" name="ownerName" placeholder="Owner Name" value={formData.ownerName} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Horse Name</label>
+        <input type="text" name="horseName" placeholder="Your Answer" value={formData.horseName} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Owner Email</label>
-              <input type="email" name="ownerEmail" placeholder="Owner Email" value={formData.ownerEmail} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+      <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Breed</label>
+        <input type="text" name="breed" placeholder="Your Answer" value={formData.breed} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+      </div>
+    </div>
+    <div className="flex gap-4">
+      <div className="flex flex-col w-full md:w-1/3">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Color</label>
+          <input
+            type="text"
+            name="color"
+            placeholder="Enter Color"
+            value={formData.color}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
 
-            <div className="flex flex-col">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Owner Phone</label>
-              <input type="tel" name="ownerPhone" placeholder="Owner Phone" value={formData.ownerPhone} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+        {/* Height */}
+        <div className="flex flex-col w-full md:w-1/3">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Height</label>
+          <input
+            type="text"
+            name="height"
+            placeholder="Enter Height"
+            value={formData.height}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
 
-            <div className="flex flex-col col-span-2">
-              <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Address</label>
-              <textarea name="address" placeholder="Address" value={formData.address} onChange={handleChange} className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
-            </div>
+        {/* Parentheses */}
+        <div className="flex flex-col w-full md:w-1/3">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Parentheses</label>
+          <input
+            type="text"
+            name="parentheses"
+            placeholder="Enter Parentheses"
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
+    </div>
+      <div className="col-span-1 md:col-span-2 flex justify-center">
+        <button type="submit"
+          className="bg-[#0f335f] text-white p-[12px_24px] rounded-[3px] text-center transition-all duration-300 border-none text-[15px] shadow-md min-h-[40px] w-[100px] sm:w-[110px]">
+          Submit
+        </button>
+      </div>
+  </form>
+</div>
 
-            <button type="submit" className="bg-[#0f335f] text-white p-[12px_24px] rounded-[3px] text-center transition-all duration-300 border-none text-[15px] shadow-md min-h-[40px] w-[100px] sm:w-[110px]">
-              Submit
-            </button>
-          </form>
-
-          </div>
         </div>
 
 
