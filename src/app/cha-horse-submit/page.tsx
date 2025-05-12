@@ -288,12 +288,264 @@ export default function HoursSubmitPage() {
           />
         </div>
     </div>
-      <div className="col-span-1 md:col-span-2 flex justify-center">
-        <button type="submit"
-          className="bg-[#0f335f] text-white p-[12px_24px] rounded-[3px] text-center transition-all duration-300 border-none text-[15px] shadow-md min-h-[40px] w-[100px] sm:w-[110px]">
-          Submit
-        </button>
+    <div className="flex flex-col mt-4">
+      <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>
+        Description
+      </label>
+      <textarea
+        name="description"
+        placeholder="Enter Description"
+        value={formData.description}
+        onChange={handleChange}
+        rows={4}
+        className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] resize-none ${lora.className}`}
+      ></textarea>
+    </div>
+
+
+   <div className="flex gap-4">
+  {/* Registered */}
+  <div className="flex flex-col w-full md:w-1/2">
+    <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Registered</label>
+    <div className="flex gap-4">
+      <label className="flex items-center gap-2">
+        <input
+          type="radio"
+          name="registered"
+          value="Yes"
+          onChange={handleChange}
+        />
+        <span className={`${lora.className}`}>Yes</span>
+      </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="radio"
+          name="registered"
+          value="No"
+          onChange={handleChange}
+        />
+        <span className={`${lora.className}`}>No</span>
+      </label>
+    </div>
+  </div>
+
+  {/* Registration Number */}
+  <div className="flex flex-col w-full md:w-1/2">
+    <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Registration #</label>
+    <input
+      type="text"
+      name="registrationNo"
+      placeholder="Registration"
+      onChange={handleChange}
+      className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+    />
+  </div>
+   </div>
+
+   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex flex-col">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Height</label>
+          <input
+            type="text"
+            name="height"
+            placeholder="Your Answer"
+            value={formData.height}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Markings</label>
+          <input
+            type="text"
+            name="markings"
+            placeholder="Your Answer"
+            value={formData.markings}
+            onChange={handleChange}
+            className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`}
+          />
+        </div>
+        <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Sex</label>
+        <div className="flex gap-4 flex-wrap">
+          {['Mare', 'Gelding', 'Stallion'].map((sexOption) => (
+            <label key={sexOption} className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="sex"
+                value={sexOption}
+                checked={formData.sex === sexOption}
+                onChange={handleChange}
+              />
+              <span className={`${lora.className}`}>{sexOption}</span>
+            </label>
+          ))}
+        </div>
       </div>
+
+        <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-1`}>
+          Documents to upload (Registration Papers, Coggins, Vet Inspection)
+        </label>
+        <p className="text-[11px] font-semibold italic pb-2">
+          Allowed: jpg, jpeg, png, gif, bmp, tiff, heic, heif, webp
+        </p>
+        <input
+          type="file"
+          name="documents"
+          accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff,.heic,.heif,.webp"
+          multiple
+          onChange={handleChange}
+          className="border border-[#69727d] bg-white rounded-[3px] p-2 text-[14px]"
+        />
+      </div>
+  
+      
+    </div>
+
+ <div className="flex gap-4">
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>YouTube Links</label>
+        <input type="text" name="YouTubeLinks" placeholder="Your Answer" value={formData.youtubeLinks} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
+
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Location of Horse	</label>
+        <input type="text" name="location" placeholder="Your Answer" value={formData.email} onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
+
+      <div className="flex flex-col w-full md:w-1/3">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Buy It Now Price (optional)	</label>
+        <input type="text" name="price" placeholder="Your Answer" onChange={handleChange}
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] transition-all duration-300 text-[14px] ${lora.className}`} />
+      </div>
+    </div>
+
+    <div className="flex flex-col">
+        <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>Auction Reserve Price (This is the MINIMUM price you will accept before commission)
+       (NOTE that horses generate more interest once reserve price is met)</label>
+        <input type="text" name="Auction" placeholder="Your Answer"
+          className={`border border-[#69727d] bg-white rounded-[3px] p-[.5rem_1rem] text-[14px] ${lora.className}`} />
+    </div>
+
+      <div className="flex gap-4">
+    <div className="flex flex-col w-full md:w-1/2">
+      <label className={`${lora.className} text-[#000] text-[16px] pb-1`}>
+        Upload Copy Of Driver License
+      </label>
+      <p className="text-[11px] font-semibold italic pb-2">
+        Allowed: jpg, jpeg, png, gif, bmp, tiff, heic, heif, webp
+      </p>
+      <input
+        type="file"
+        name="driverLicense"
+        id="driverLicense"
+        accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff,.heic,.heif,.webp"
+        multiple
+        className="border border-[#69727d] bg-white rounded-[3px] p-2 text-[14px]"
+      />
+    </div>
+
+    {/* Upload Horse Photos */}
+    <div className="flex flex-col w-full md:w-1/2">
+      <label className={`${lora.className} text-[#000] text-[16px] pb-1`}>
+        Photos Of The Horse
+      </label>
+      <p className="text-[11px] font-semibold italic pb-2">
+        Allowed: jpg, jpeg, png, gif, bmp, tiff, heic, heif, webp
+      </p>
+      <input
+        type="file"
+        name="horsePhotos"
+        id="horsePhotos"
+        accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff,.heic,.heif,.webp"
+        multiple
+        className="border border-[#69727d] bg-white rounded-[3px] p-2 text-[14px]"
+      />
+    </div>
+  </div>
+
+  <div className="flex gap-4">
+  <div className="flex flex-col w-full md:w-1/2">
+    <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>
+      Listing Length
+    </label>
+    <div className="flex gap-4">
+      <label className="flex items-center gap-2">
+        <input
+          type="radio"
+          name="listingLength"
+          value="2 Weeks"
+          onChange={handleChange}
+        />
+        <span className={`${lora.className}`}>2 Weeks</span>
+      </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="radio"
+          name="listingLength"
+          value="3 Weeks"
+          onChange={handleChange}
+        />
+        <span className={`${lora.className}`}>3 Weeks</span>
+      </label>
+    </div>
+  </div>
+
+  <div className="flex flex-col w-full md:w-1/2">
+    <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>
+      Review <a href="https://classichorseauction.com/seller-terms-conditions/" className="text-[#0F335F] hover:underline">Seller Terms</a>
+    </label>
+    <div className="flex items-center">
+      <input
+        type="checkbox"
+        name="sellerTerms"
+        id="sellerTerms"
+        className="mr-2"
+        onChange={handleChange}
+        required
+      />
+      <label htmlFor="sellerTerms" className={`${lora.className} text-[#000] text-[14px]`}>
+        I Have Read & Agreed to Seller Terms
+      </label>
+    </div>
+  </div>
+</div>
+
+
+<div className="flex flex-col w-full">
+  <div className="flex flex-col w-full">
+    <label className={`${lora.className} text-[#000] text-[16px] pb-3`}>
+      Photo <a href="https://classichorseauction.com/seller-terms-conditions/#photo" className="text-[#0F335F] hover:underline">Consent Terms</a>
+    </label>
+    <div className="flex items-center gap-2">
+      <input
+        type="checkbox"
+        name="photoConsent"
+        id="photoConsent"
+        className="mr-2"
+        required
+      />
+      <label htmlFor="photoConsent" className={`${lora.className} text-[#000] text-[14px]`}>
+        <em>If you did not personally take the photos you submit, you must provide written permission from the copyright holder to use them.</em>
+      </label>
+    </div>
+  </div>
+</div>
+
+
+
+    <div className="col-span-1 md:col-span-2 flex justify-center">
+     <button
+      type="submit"
+      className="bg-[#0f335f] text-white p-[12px_24px] rounded-[3px] text-center transition-all duration-300 border-none text-[15px] shadow-md min-h-[40px] w-[100px] sm:w-[110px] hover:bg-[#6699CC]"
+      >
+      Submit
+      </button>
+    </div>
   </form>
 </div>
 
