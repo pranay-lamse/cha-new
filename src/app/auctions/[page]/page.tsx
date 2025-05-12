@@ -158,16 +158,13 @@ const AuctionDetails = () => {
       const productId = form.find("input[name='product_id']").val();
       const userId = form.find("input[name='user_id']").val();
 
-      const handleBidSubmit = async () => {
-        const result = await placeAuctionBid({
-          productId: productId,
-          auctionId: productId,
-          bidAmount: bidValue,
-        });
-
-        window.location.reload();
-      };
-      handleBidSubmit();
+      const result = await placeAuctionBid({
+        productId: productId,
+        auctionId: productId,
+        bidAmount: bidValue,
+      });
+      console.log("Bid Response:", result);
+      window.location.reload();
     };
 
     // Attach event listener to form
