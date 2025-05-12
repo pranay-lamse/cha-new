@@ -7,7 +7,6 @@ import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import $ from "jquery";
 
-
 export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -22,7 +21,6 @@ export default function EditAccountPage() {
     }
   }, []);
 
-  
   useEffect(() => {
     const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/current-auctions`;
 
@@ -51,40 +49,44 @@ export default function EditAccountPage() {
         // -------------------------
         // Reorder Product Elements
         // -------------------------
-         $(function () {
-    $('.clock_jquery').each(function () {
-      const el = $(this);
-      const endTime = new Date(el.data('time').replace(/-/g, '/')).getTime();
+        $(function () {
+          $(".clock_jquery").each(function () {
+            const el = $(this);
+            const endTime = new Date(
+              el.data("time").replace(/-/g, "/")
+            ).getTime();
 
-      function update() {
-        const now = Date.now();
-        const diff = endTime - now;
+            function update() {
+              const now = Date.now();
+              const diff = endTime - now;
 
-        if (diff <= 0) {
-          el.html('<span class="countdown-expired">Auction ended</span>');
-          clearInterval(timer);
-          return;
-        }
+              if (diff <= 0) {
+                el.html('<span class="countdown-expired">Auction ended</span>');
+                clearInterval(timer);
+                return;
+              }
 
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
+              const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+              const h = Math.floor(
+                (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+              );
+              const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+              const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-        el.html(
-          `<span class="countdown_row countdown_show4">
-            <span class="countdown_section"><span class="countdown_amount">${d}</span><br>Day(s)</span>
-            <span class="countdown_section"><span class="countdown_amount">${h}</span><br>Hour(s)</span>
-            <span class="countdown_section"><span class="countdown_amount">${m}</span><br>Min(s)</span>
-            <span class="countdown_section"><span class="countdown_amount">${s}</span><br>Sec(s)</span>
+              el.html(
+                `<span class="countdown_row countdown_show4">
+            <span class="countdown_section"><span class="countdown_amount">${d} </span><br>Day(s)</span>
+            <span class="countdown_section"><span class="countdown_amount">${h} </span><br>Hour(s)</span>
+            <span class="countdown_section"><span class="countdown_amount">${m} </span><br>Min(s)</span>
+            <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
           </span>`
-        );
-      }
+              );
+            }
 
-      update();
-      const timer = setInterval(update, 1000);
-    });
-  });
+            update();
+            const timer = setInterval(update, 1000);
+          });
+        });
 
         $(".product").each(function () {
           const price = $(this).find(".price");
@@ -108,7 +110,9 @@ export default function EditAccountPage() {
           const details = $(this).find("ul");
           const button = $(this)
             .closest(".product")
-            .find("a.button.product_type_auction, a.button.alt.uwa_pay_now, .uwa_auction_product_countdown");
+            .find(
+              "a.button.product_type_auction, a.button.alt.uwa_pay_now, .uwa_auction_product_countdown"
+            );
 
           if (details.length && button.length) {
             details.after(button);
@@ -146,31 +150,39 @@ export default function EditAccountPage() {
         reorderProducts();
         $(window).on("resize", reorderProducts);
 
-      
+        $(
+          ".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid"
+        ).text("Sold via Bid");
 
-        $(".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid").text("Sold via Bid");
+        $(
+          ".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for"
+        ).text("Sold via Buy Now");
 
-        $(".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for").text("Sold via Buy Now");
+        $(".home_products_sec .product").each(function () {
+          const $link = $(this)
+            .find(".woocommerce-LoopProduct-link")
+            .attr("href");
 
-        $(".home_products_sec .product").each(function(){
+          $(this)
+            .find(".short_des_loop")
+            .append(
+              "<a href='" +
+                $link +
+                "#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>"
+            );
 
-        const $link = $(this).find(".woocommerce-LoopProduct-link").attr("href");
-
-        $(this).find(".short_des_loop").append("<a href='"+$link+"#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>");
-
-        $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
-
-    });
+          $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+        });
 
         if (window.location.href.indexOf("bidding") > -1) {
+          console.log("yes");
 
-            console.log("yes");
-
-      $('html, body').animate({
-
-       scrollTop: $("#bidding_sec").offset() && $("#bidding_sec").offset()?.top ? $("#bidding_sec").offset()!.top - 300 : 0
-
-      });
+          $("html, body").animate({
+            scrollTop:
+              $("#bidding_sec").offset() && $("#bidding_sec").offset()?.top
+                ? $("#bidding_sec").offset()!.top - 300
+                : 0,
+          });
         }
 
         $(document).on("click", ".how-to-bid-button", function (e) {
@@ -187,7 +199,6 @@ export default function EditAccountPage() {
       };
     }
   }, [htmlContent, loading]);
-
   return (
     <div className="auctionTow-page all-auctions-page">
       {loading ? (
