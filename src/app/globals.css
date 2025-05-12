@@ -1414,6 +1414,10 @@ body .woocommerce ul.products li.product .button {
   margin-top: 35px !important;
 }
 
+#uwa_auction_countdown>strong {
+  display: none;
+}
+
 .home-main-title h2.elementor-heading-title.elementor-size-default {
   padding-bottom: 0px !important;
 }

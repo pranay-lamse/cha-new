@@ -52,9 +52,18 @@ export default function EditAccountPage() {
         $(function () {
           $(".clock_jquery").each(function () {
             const el = $(this);
-            const endTime = new Date(
-              el.data("time").replace(/-/g, "/")
-            ).getTime();
+            const timeStr = el.data("time"); // e.g. "2025-05-15 15:33:20"
+
+            // Parse time manually from data-time
+            const [datePart, timePart] = timeStr.split(" ");
+            const [year, month, day] = datePart.split("-").map(Number);
+            const [hour, minute, second] = timePart.split(":").map(Number);
+
+            // Adjust by +6 hours (UTC-6 / CST)
+            const localTime = new Date(
+              Date.UTC(year, month - 1, day, hour + 6, minute, second)
+            );
+            const endTime = localTime.getTime();
 
             function update() {
               const now = Date.now();
@@ -75,11 +84,11 @@ export default function EditAccountPage() {
 
               el.html(
                 `<span class="countdown_row countdown_show4">
-            <span class="countdown_section"><span class="countdown_amount">${d} </span><br>Day(s)</span>
-            <span class="countdown_section"><span class="countdown_amount">${h} </span><br>Hour(s)</span>
-            <span class="countdown_section"><span class="countdown_amount">${m} </span><br>Min(s)</span>
-            <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
-          </span>`
+        <span class="countdown_section"><span class="countdown_amount">${d}</span><br>Day(s)</span>
+        <span class="countdown_section"><span class="countdown_amount">${h}</span><br>Hour(s)</span>
+        <span class="countdown_section"><span class="countdown_amount">${m}</span><br>Min(s)</span>
+        <span class="countdown_section"><span class="countdown_amount">${s}</span><br>Sec(s)</span>
+      </span>`
               );
             }
 
