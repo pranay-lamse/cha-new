@@ -47,7 +47,21 @@ const AuctionDetails = () => {
   const token = getToken();
   // Extract 'bonafide' from the path
   const slug = pathname.split("/").pop();
+  const fetchData = async () => {
+    setLoading(true);
 
+    try {
+      const data = await fetchHtmlData(url);
+      setHtmlContent(data);
+    } catch (error) {
+      setHtmlContent(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   useEffect(() => {
     $(document).on("click", ".add-uwa", function (e) {
       e.preventDefault();
@@ -84,10 +98,12 @@ const AuctionDetails = () => {
         /* if (response) {
         window.location.reload();
       } */
+
         return response.data;
       } else {
         alert("Please login to add to watchlist");
       }
+      fetchData();
     } catch (error) {
       console.error("Error updating watchlist:", error);
       return null;
@@ -119,22 +135,6 @@ const AuctionDetails = () => {
 
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}`;
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-
-      try {
-        const data = await fetchHtmlData(url);
-        setHtmlContent(data);
-      } catch (error) {
-        setHtmlContent(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
@@ -161,9 +161,10 @@ const AuctionDetails = () => {
           );
 
           // Handle success response
-          if (response.data.success) {
+          /* if (response.data.success) {
             window.location.reload();
-          }
+          } */
+          fetchData();
         } else {
           alert("Please login to place a bid");
           /* redirect("/login"); */
