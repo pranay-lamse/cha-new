@@ -44,10 +44,24 @@ const AuctionDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const pathname = usePathname();
-
+  const token = getToken();
   // Extract 'bonafide' from the path
   const slug = pathname.split("/").pop();
+  const fetchData = async () => {
+    setLoading(true);
 
+    try {
+      const data = await fetchHtmlData(url);
+      setHtmlContent(data);
+    } catch (error) {
+      setHtmlContent(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   useEffect(() => {
     $(document).on("click", ".add-uwa", function (e) {
       e.preventDefault();
@@ -74,17 +88,22 @@ const AuctionDetails = () => {
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     try {
-      const response = await axiosClientwithApi.post(
-        "/wp-json/custom-api/v1/watchlist",
-        {
-          post_id: auctionId,
-        }
-      );
-      /* if (response) {
+      if (token) {
+        const response = await axiosClientwithApi.post(
+          "/wp-json/custom-api/v1/watchlist",
+          {
+            post_id: auctionId,
+          }
+        );
+        /* if (response) {
         window.location.reload();
       } */
 
-      return response.data;
+        return response.data;
+      } else {
+        alert("Please login to add to watchlist");
+      }
+      fetchData();
     } catch (error) {
       console.error("Error updating watchlist:", error);
       return null;
@@ -116,22 +135,6 @@ const AuctionDetails = () => {
 
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}`;
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-
-      try {
-        const data = await fetchHtmlData(url);
-        setHtmlContent(data);
-      } catch (error) {
-        setHtmlContent(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
@@ -145,7 +148,7 @@ const AuctionDetails = () => {
       const bidValue = form.find("#uwa_bid_value").val();
       const productId = form.find("input[name='product_id']").val();
       const userId = form.find("input[name='user_id']").val();
-      const token = getToken();
+
       try {
         if (token) {
           const response = await axiosClientwithApi.post(
@@ -158,9 +161,10 @@ const AuctionDetails = () => {
           );
 
           // Handle success response
-          if (response.data.success) {
+          /* if (response.data.success) {
             window.location.reload();
-          }
+          } */
+          fetchData();
         } else {
           alert("Please login to place a bid");
           /* redirect("/login"); */
