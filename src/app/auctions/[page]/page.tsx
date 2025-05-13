@@ -40,6 +40,9 @@ interface Props {
 }
 
 const AuctionDetails = () => {
+   // Removed duplicate declaration of htmlContent
+   const [bidStatus, setBidStatus] = useState("active");
+    const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -47,18 +50,42 @@ const AuctionDetails = () => {
   const token = getToken();
   // Extract 'bonafide' from the path
   const slug = pathname.split("/").pop();
+  const [htmlContent, setHtmlContent] = useState<string | null>(null);
+  
   const fetchData = async () => {
-    setLoading(true);
+      setLoading(true);
+  
+      try {
+        const data = await fetchHtmlData(url);
+        setHtmlContent(data);
+      } catch (error) {
+        setHtmlContent(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    try {
-      const data = await fetchHtmlData(url);
-      setHtmlContent(data);
-    } catch (error) {
-      setHtmlContent(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+    useEffect(() => {
+      const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/current-auctions`;
+  
+      const fetchData = async () => {
+        setLoading(true);
+        setError(null);
+  
+        try {
+          const data = await fetchHtmlData(url);
+          setHtmlContent(data);
+        } catch (error) {
+          setError("Failed to fetch data. Please try again later.");
+          setHtmlContent(null);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, [bidStatus]);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -85,6 +112,74 @@ const AuctionDetails = () => {
       }
     });
   }, []);
+
+ useEffect(() => {
+  if (!loading && htmlContent) {
+    const timeoutId = setTimeout(() => {
+      $(function () {
+        $(".clock_jquery").each(function () {
+          const el = $(this);
+          const timeStr = el.data("time"); // e.g., "2025-05-15 15:33:20"
+
+          // Parse time manually from data-time
+          const [datePart, timePart] = timeStr.split(" ");
+          const [year, month, day] = datePart.split("-").map(Number);
+          const [hour, minute, second] = timePart.split(":").map(Number);
+
+          // Adjust by +6 hours (UTC-6 / CST)
+          const localTime = new Date(
+            Date.UTC(year, month - 1, day, hour + 6, minute, second)
+          );
+          const endTime = localTime.getTime();
+
+          function update() {
+            const now = Date.now();
+            const diff = endTime - now;
+
+            if (diff <= 0) {
+              el.html('<span class="countdown-expired">Auction ended</span>');
+              clearInterval(timer);
+              return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor(
+              (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            el.html(
+              `<span class="countdown_row countdown_show4">
+                <span class="countdown_section"><span class="countdown_amount">${d}</span><br>Day(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${h}</span><br>Hour(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${m}</span><br>Min(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${s}</span><br>Sec(s)</span>
+              </span>`
+            );
+          }
+
+          update();
+          const timer = setInterval(update, 1000);
+
+          // Cleanup timer when the element is removed
+          el.data("timer", timer);
+        });
+      });
+    }, 0);
+
+    // Cleanup function
+    return () => {
+      clearTimeout(timeoutId);
+      $(".clock_jquery").each(function () {
+        const timer = $(this).data("timer");
+        if (timer) {
+          clearInterval(timer);
+        }
+      });
+    };
+  }
+}, [htmlContent, loading]);
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     if (!token) {
@@ -141,8 +236,8 @@ const AuctionDetails = () => {
     fetchSingleProduct();
   }, []);
 
+ 
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}`;
-  const [htmlContent, setHtmlContent] = useState<string | null>(null);
 
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
@@ -274,7 +369,7 @@ const AuctionDetails = () => {
 
               {auction.price_html ? (
                 <div
-                  className={`${marcellus.className} block mb-4 md:mb-10 text-xl md:text-2xl`}
+                  className={`${marcellus.className} block mb-4 md:mb-6 text-xl md:text-2xl`}
                   dangerouslySetInnerHTML={{
                     __html: auction.price_html,
                   }}
@@ -283,7 +378,31 @@ const AuctionDetails = () => {
                 ""
               )}
 
-              {startDateEntry && endDateEntry ? (
+              {loading ? (
+              <Loader />
+            ) : (
+              <div className="mb-2"
+                dangerouslySetInnerHTML={{
+                  __html: filterHTMLContent(htmlContent || "", [
+                    "uwa_proxy_text",
+                  ]),
+                }}
+              ></div>
+            )}
+
+              <div className="">
+                  {loading ? (
+                    <Loader />
+                  ) : (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: filterHTMLContent(htmlContent || "", ["uwa_auction_product_countdown"]),
+                      }}
+                      className="text-gray-700"
+                    ></div>
+                  )}
+                </div>
+              {/* {startDateEntry && endDateEntry ? (
                 <Timer
                   title=""
                   startDate={startDateEntry}
@@ -291,7 +410,7 @@ const AuctionDetails = () => {
                 />
               ) : (
                 ""
-              )}
+              )} */}
             </div>
             {loading ? (
               <Loader />
