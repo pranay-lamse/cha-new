@@ -15,6 +15,33 @@ export default function EditAccountPage() {
 
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/wp/v2/pages?slug=closed-auctions&_fields=content`;
 
+  useEffect(() => {
+    // Event delegation since HTML is loaded via Ajax
+    $(document).on(
+      "click",
+      ".woocommerce-pagination a.page-numbers",
+      function (e) {
+        e.preventDefault();
+
+        const href = $(this).attr("href");
+        const match = href?.match(/page\/(\d+)/);
+        const slugMatch = href ? href.match(/slug=([^&]+)/) : null;
+
+        if (match && slugMatch) {
+          const page = match[1];
+          const slug = slugMatch[1];
+
+          // Navigate using Next.js router (no page reload)
+          window.location.href = `/${slug}/page/${page}`;
+        }
+      }
+    );
+
+    // Cleanup on unmount
+    return () => {
+      $(document).off("click", ".woocommerce-pagination a.page-numbers");
+    };
+  }, []);
   // Fetch HTML Data
   useEffect(() => {
     const fetchData = async () => {
