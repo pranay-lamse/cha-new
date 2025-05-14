@@ -2764,6 +2764,15 @@ input#uwa_bid_value {
     margin: 0px !important;
   }
 
+  .auctionTow-page ul.products li.product {
+    padding-bottom: 0px !important;
+  }
+
+  body .woocommerce ul.products li.product .button {
+    margin-left: 0px !IMPORTANT;
+    margin-top: 20px !important;
+  }
+
   .cha-horse-page {
     padding: 0px !important;
     margin: 0px !important;
