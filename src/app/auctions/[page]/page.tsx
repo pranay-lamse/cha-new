@@ -75,6 +75,12 @@ const AuctionDetails = () => {
   }, []);
 
   useEffect(() => {
+    const timeout = setTimeout(() => {}, 5000); // Apply the update after a short delay // Apply the update after a short delay // Apply the update after a short delay
+
+    return () => clearTimeout(timeout); // Cleanup
+  }, []);
+
+  useEffect(() => {
     $(document).on("click", ".remove-uwa", function (e) {
       e.preventDefault();
 
@@ -266,7 +272,7 @@ const AuctionDetails = () => {
 
               {auction.price_html ? (
                 <div
-                  className={`${marcellus.className} block mb-4 md:mb-10 text-xl md:text-2xl`}
+                  className={`${marcellus.className} block mb-4 text-xl md:text-2xl`}
                   dangerouslySetInnerHTML={{
                     __html: auction.price_html,
                   }}
