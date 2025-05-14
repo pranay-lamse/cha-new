@@ -158,33 +158,19 @@ const AuctionDetails = () => {
 
               el.html(
                 `<span class="countdown_row countdown_show4">
-                <span class="countdown_section"><span class="countdown_amount">${d}</span><br>Day(s)</span>
-                <span class="countdown_section"><span class="countdown_amount">${h}</span><br>Hour(s)</span>
-                <span class="countdown_section"><span class="countdown_amount">${m}</span><br>Min(s)</span>
-                <span class="countdown_section"><span class="countdown_amount">${s}</span><br>Sec(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${d} </span><br>Day(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${h} </span><br>Hour(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${m} </span><br>Min(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
               </span>`
               );
             }
 
             update();
-            const timer = setInterval(update, 1000);
-
-            // Cleanup timer when the element is removed
-            el.data("timer", timer);
+            const timer = setInterval(update, 3000);
           });
         });
       }, 0);
-
-      // Cleanup function
-      return () => {
-        clearTimeout(timeoutId);
-        $(".clock_jquery").each(function () {
-          const timer = $(this).data("timer");
-          if (timer) {
-            clearInterval(timer);
-          }
-        });
-      };
     }
   }, [htmlContent, loading]);
 
