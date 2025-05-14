@@ -1406,10 +1406,6 @@ button#place_order:hover,
   display: none;
 }
 
-.woocommerce ul.products li.product_loop_wrap:nth-child(even) li.product {
-  flex-direction: row-reverse !important;
-}
-
 .auctionTow-page ul.products li.product {
   padding: 50px 0px 100px 0px !important;
 }
@@ -1418,34 +1414,12 @@ body .woocommerce ul.products li.product .button {
   margin-top: 35px !important;
 }
 
-.product_details_left {
-  width: 50%;
-  padding-right: 30px;
-}
-
-.woocommerce ul.products li.product_loop_wrap li.product .product_details_left {
-  padding-right: 30px;
-  padding-left: 30px;
-}
-
-.home_products_sec .woocommerce ul.products li.product .product_details_left {
-  order: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
 #uwa_auction_countdown>strong {
   display: none;
 }
 
 .home-main-title h2.elementor-heading-title.elementor-size-default {
   padding-bottom: 0px !important;
-}
-
-body ul.products li.product,
-body .elementor-products-grid ul.products.elementor-grid li.product {
-  flex-wrap: wrap;
 }
 
 .uwa_auction_product_countdown.uwa-main-auction-product-loop.uwa_auction_product_countdown.clock_jquery {
@@ -1812,6 +1786,11 @@ form.woocommerce-ordering {
   padding-left: 30px;
 }
 
+.auctionTow-page .short_des_loop {
+  width: 50%;
+  padding-right: 30px;
+  padding-left: 30px;
+}
 
 .auctionTow-page .short_des_loop h2.woocommerce-loop-product__title:after {
   content: "";
@@ -2790,14 +2769,6 @@ input#uwa_bid_value {
     margin: 0px !important;
   }
 
-  .woocommerce ul.products li.product_loop_wrap {
-    padding: 30px 15px !important;
-  }
-
-  .auctionTow-page ul.products li.product {
-    padding: 0px !important;
-  }
-
   .add-horse-page {
     padding: 20px 20px 40px 20px !important;
     margin: 0px !important;
@@ -2942,18 +2913,8 @@ input#uwa_bid_value {
   }
 
   .auctionTow-page ul.products li.product {
-    margin: 0px !important;
+    margin: 10px !important;
     width: unset !important;
-  }
-
-  body .woocommerce ul.products li.product .button {
-    margin-left: 0px !important;
-    margin-top: 25px !important;
-  }
-
-  .woocommerce ul.products li.product_loop_wrap li.product .product_details_left {
-    padding: 0px;
-    width: 100%;
   }
 
   .all-auctions-page h2.elementor-heading-title.elementor-size-default {
