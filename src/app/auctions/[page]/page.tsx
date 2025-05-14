@@ -214,9 +214,9 @@ const AuctionDetails = () => {
 
               el.html(
                 `<span class="countdown_row countdown_show4">
-        <span class="countdown_section"><span class="countdown_amount">${d} </span><br>Day(s)</span>
-        <span class="countdown_section"><span class="countdown_amount">${h} </span><br>Hour(s)</span>
-        <span class="countdown_section"><span class="countdown_amount">${m} </span><br>Min(s)</span>
+        <span class="countdown_section"><span class="countdown_amount">${d}, </span><br>Day(s)</span>
+        <span class="countdown_section"><span class="countdown_amount">${h}, </span><br>Hour(s)</span>
+        <span class="countdown_section"><span class="countdown_amount">${m}, </span><br>Min(s)</span>
         <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
       </span>`
               );
