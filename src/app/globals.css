@@ -2758,6 +2758,30 @@ input#uwa_bid_value {
 }
 
 @media (max-width: 767px) {
+    .cha-form-page {
+        display: block !important;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+    .cha-horse-page {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+    .add-horse-page {
+        padding: 20px 20px 40px 20px !important;
+        margin: 0px !important;
+    }
+    .add-horse-one {
+        padding: 10px;
+        margin: 0px;
+    }
+    .cha-horse-logo img {
+    width: 200px;
+}
+    .horse-resp {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
 
   .buyer-condition .elementor-element-2a62765a .elementor-container.elementor-column-gap-default {
     max-width: 767px;

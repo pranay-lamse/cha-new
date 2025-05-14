@@ -30,6 +30,7 @@ import { filterHTMLContent } from "@/utils/htmlHelper";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { fetchHtmlData } from "@/lib/fetchHtmlData";
 import { getToken } from "@/utils/storage";
+import { placeAuctionBid } from "@/services/placeBid";
 interface Props {
   status: any;
   title: any;
@@ -40,6 +41,9 @@ interface Props {
 }
 
 const AuctionDetails = () => {
+  // Removed duplicate declaration of htmlContent
+  const [bidStatus, setBidStatus] = useState("active");
+  const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -47,6 +51,8 @@ const AuctionDetails = () => {
   const token = getToken();
   // Extract 'bonafide' from the path
   const slug = pathname.split("/").pop();
+  const [htmlContent, setHtmlContent] = useState<string | null>(null);
+
   const fetchData = async () => {
     setLoading(true);
 
@@ -59,6 +65,28 @@ const AuctionDetails = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/current-auctions`;
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const data = await fetchHtmlData(url);
+        setHtmlContent(data);
+      } catch (error) {
+        setError("Failed to fetch data. Please try again later.");
+        setHtmlContent(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [bidStatus]);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -92,26 +120,102 @@ const AuctionDetails = () => {
     });
   }, []);
 
-  const handleWatchListSubmit = async (auctionId: string | number) => {
-    try {
-      if (token) {
-        const response = await axiosClientwithApi.post(
-          "/wp-json/custom-api/v1/watchlist",
-          {
-            post_id: auctionId,
-          }
-        );
-        /* if (response) {
-        window.location.reload();
-      } */
+  useEffect(() => {
+    if (!loading && htmlContent) {
+      const timeoutId = setTimeout(() => {
+        $(function () {
+          $(".clock_jquery").each(function () {
+            const el = $(this);
+            const timeStr = el.data("time"); // e.g., "2025-05-15 15:33:20"
 
-        return response.data;
-      } else {
-        alert("Please login to add to watchlist");
+            // Parse time manually from data-time
+            const [datePart, timePart] = timeStr.split(" ");
+            const [year, month, day] = datePart.split("-").map(Number);
+            const [hour, minute, second] = timePart.split(":").map(Number);
+
+            // Adjust by +6 hours (UTC-6 / CST)
+            const localTime = new Date(
+              Date.UTC(year, month - 1, day, hour + 6, minute, second)
+            );
+            const endTime = localTime.getTime();
+
+            function update() {
+              const now = Date.now();
+              const diff = endTime - now;
+
+              if (diff <= 0) {
+                el.html('<span class="countdown-expired">Auction ended</span>');
+                clearInterval(timer);
+                return;
+              }
+
+              const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+              const h = Math.floor(
+                (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+              );
+              const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+              const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+              el.html(
+                `<span class="countdown_row countdown_show4">
+                <span class="countdown_section"><span class="countdown_amount">${d}</span><br>Day(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${h}</span><br>Hour(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${m}</span><br>Min(s)</span>
+                <span class="countdown_section"><span class="countdown_amount">${s}</span><br>Sec(s)</span>
+              </span>`
+              );
+            }
+
+            update();
+            const timer = setInterval(update, 1000);
+
+            // Cleanup timer when the element is removed
+            el.data("timer", timer);
+          });
+        });
+      }, 0);
+
+      // Cleanup function
+      return () => {
+        clearTimeout(timeoutId);
+        $(".clock_jquery").each(function () {
+          const timer = $(this).data("timer");
+          if (timer) {
+            clearInterval(timer);
+          }
+        });
+      };
+    }
+  }, [htmlContent, loading]);
+
+  const handleWatchListSubmit = async (auctionId: string | number) => {
+    if (!token) {
+      alert("Please log in to add to watchlist.");
+      return null;
+    }
+
+    try {
+      const response = await axios.get(
+        `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-admin/admin-ajax.php`,
+        {
+          params: {
+            "uwa-ajax": "watchlist",
+            post_id: auctionId,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response) {
+        fetchData();
+        /* window.location.reload(); */
       }
-      fetchData();
-    } catch (error) {
-      console.error("Error updating watchlist:", error);
+    } catch (error: any) {
+      console.error(
+        "Error adding to watchlist:",
+        error.response?.data || error.message
+      );
       return null;
     }
   };
@@ -140,13 +244,12 @@ const AuctionDetails = () => {
   }, []);
 
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}`;
-  const [htmlContent, setHtmlContent] = useState<string | null>(null);
 
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
       e.preventDefault(); // Prevent default form submission
       e.stopPropagation(); // Stop event from propagating further
-      setLoading(true);
+      /* setLoading(true); */
 
       const form = $(e.target); // Get the form element
 
@@ -155,31 +258,13 @@ const AuctionDetails = () => {
       const productId = form.find("input[name='product_id']").val();
       const userId = form.find("input[name='user_id']").val();
 
-      try {
-        if (token) {
-          const response = await axiosClientwithApi.post(
-            "/wp-json/custom-auction/v1/place-bid",
-            {
-              uwa_bid_value: bidValue,
-              product_id: productId,
-              user_id: userId,
-            }
-          );
-
-          // Handle success response
-          /* if (response.data.success) {
-            window.location.reload();
-          } */
-          fetchData();
-        } else {
-          alert("Please login to place a bid");
-          /* redirect("/login"); */
-        }
-      } catch (err) {
-        console.error("Error submitting bid:", err);
-      } finally {
-        setLoading(false);
-      }
+      const result = await placeAuctionBid({
+        productId: productId,
+        auctionId: productId,
+        bidAmount: bidValue,
+      });
+      console.log("Bid Response:", result);
+      fetchData();
     };
 
     // Attach event listener to form
@@ -190,18 +275,6 @@ const AuctionDetails = () => {
     };
   }, []);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString); // Directly create Date object with full timestamp
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-
-      hour12: true, // Ensures AM/PM format
-    });
-  };
   const imagePlaceholder = "/assets/img/placeholder.png";
   if (loading)
     return (
@@ -209,11 +282,6 @@ const AuctionDetails = () => {
         <Loader />
       </>
     );
-
-  const formatYouTubeEmbed = (url: string) => {
-    const videoId = url.split("v=")[1]?.split("&")[0];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-  };
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] p-4 my-10 sm:my-10">
@@ -272,7 +340,7 @@ const AuctionDetails = () => {
 
               {auction.price_html ? (
                 <div
-                  className={`${marcellus.className} block mb-4 text-xl md:text-2xl`}
+                  className={`${marcellus.className} block mb-4 md:mb-6 text-xl md:text-2xl`}
                   dangerouslySetInnerHTML={{
                     __html: auction.price_html,
                   }}
@@ -281,7 +349,34 @@ const AuctionDetails = () => {
                 ""
               )}
 
-              {startDateEntry && endDateEntry ? (
+              {loading ? (
+                <Loader />
+              ) : (
+                <div
+                  className="mb-2"
+                  dangerouslySetInnerHTML={{
+                    __html: filterHTMLContent(htmlContent || "", [
+                      "uwa_proxy_text",
+                    ]),
+                  }}
+                ></div>
+              )}
+
+              <div className="">
+                {loading ? (
+                  <Loader />
+                ) : (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: filterHTMLContent(htmlContent || "", [
+                        "uwa_auction_product_countdown",
+                      ]),
+                    }}
+                    className="text-gray-700"
+                  ></div>
+                )}
+              </div>
+              {/* {startDateEntry && endDateEntry ? (
                 <Timer
                   title=""
                   startDate={startDateEntry}
@@ -289,7 +384,7 @@ const AuctionDetails = () => {
                 />
               ) : (
                 ""
-              )}
+              )} */}
             </div>
             {loading ? (
               <Loader />
