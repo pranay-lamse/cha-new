@@ -2770,14 +2770,13 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
   border-radius: 10px;
 }
 .add-loading a.button.product_type_simple.add_to_cart_button.ajax_add_to_cart.loading:after {
-    font-family: WooCommerce;
-  content: "\e01c";
-  vertical-align: top;
+  font-family: WooCommerce;
+  content: "\e01c"; /* Spinner */
   font-weight: 400;
-  position: absolute;
-  top: .618em;
-  right: 1em;
-  animation: spin 2s linear infinite;}
+  margin-left: 8px;
+  display: inline-block;
+  animation: spin 2s linear infinite;
+}
 
   .add-loading a.button.product_type_simple.add_to_cart_button.ajax_add_to_cart.added:after {
   font-family: WooCommerce;
@@ -2785,7 +2784,23 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
   margin-left: .53em;
   vertical-align: bottom;
  }
-
+.product span.onsale {
+    min-height: 3.236em;
+    min-width: 3.236em;
+    padding: .202em;
+    font-weight: 700;
+    position: absolute;
+    text-align: center;
+    line-height: 3.236;
+    border-radius: 100%;
+    background-color: #958e09;
+    color: #fff;
+    font-size: .857em;
+    margin: -1.5em 0em 0px -42px;
+}
+.woocommerce ul.products li.product .woocommerce-placeholder {
+    border: 1px solid #f2f2f2;
+}
 @media (max-width: 767px) {
   .cha-form-page {
     display: block !important;
