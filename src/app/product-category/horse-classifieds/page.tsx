@@ -10,13 +10,13 @@ import Head from "next/head";
 import { Leatherwood } from "@/components/Leatherwood";
 import Image from "next/image";
 import { marcellus, raleway } from "@/config/fonts";
-
+import axios from "axios";
+import { getToken } from "@/utils/storage";
 export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [bidStatus, setBidStatus] = useState("active");
-
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -25,9 +25,9 @@ export default function EditAccountPage() {
       setBidStatus(status);
     }
   }, []);
-
+  const token = getToken();
   useEffect(() => {
-      const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
+    const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
 
     const fetchData = async () => {
       setLoading(true);
@@ -110,52 +110,66 @@ export default function EditAccountPage() {
             });
           }
         }
-  $(".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid").text("Sold via Bid");
+        $(
+          ".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid"
+        ).text("Sold via Bid");
 
-        $(".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for").text("Sold via Buy Now");
+        $(
+          ".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for"
+        ).text("Sold via Buy Now");
 
-        $(".home_products_sec .product").each(function(){
+        $(".home_products_sec .product").each(function () {
+          const $link = $(this)
+            .find(".woocommerce-LoopProduct-link")
+            .attr("href");
 
-        const $link = $(this).find(".woocommerce-LoopProduct-link").attr("href");
+          $(this)
+            .find(".short_des_loop")
+            .append(
+              "<a href='" +
+                $link +
+                "#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>"
+            );
 
-        $(this).find(".short_des_loop").append("<a href='"+$link+"#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>");
-
-        $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
-
-    });
+          $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+        });
 
         if (window.location.href.indexOf("bidding") > -1) {
+          console.log("yes");
 
-            console.log("yes");
-
-      $('html, body').animate({
-
-       scrollTop: $("#bidding_sec").offset() && $("#bidding_sec").offset()?.top ? $("#bidding_sec").offset()!.top - 300 : 0
-
-      });
+          $("html, body").animate({
+            scrollTop:
+              $("#bidding_sec").offset() && $("#bidding_sec").offset()?.top
+                ? $("#bidding_sec").offset()!.top - 300
+                : 0,
+          });
         }
 
-   $("body ul.products .product").each(function () {
-  const $product = $(this);
-  const $shortDesc = $product.find('.woocommerce-loop-product__title,.price,.short_des_loop,.uwa_auction_product_countdown,.button').first(); // safer
+        $("body ul.products .product").each(function () {
+          const $product = $(this);
+          const $shortDesc = $product
+            .find(
+              ".woocommerce-loop-product__title,.price,.short_des_loop,.uwa_auction_product_countdown,.button"
+            )
+            .first(); // safer
 
-  // Only move if short_desc exists
-  if ($shortDesc.length) {
-    const $detailsDiv = $("<div class='product_details_left'></div>");
-    $shortDesc.before($detailsDiv); // insert before short_desc
-    $shortDesc.appendTo($detailsDiv); // move it into the new div
-  }
-});
+          // Only move if short_desc exists
+          if ($shortDesc.length) {
+            const $detailsDiv = $("<div class='product_details_left'></div>");
+            $shortDesc.before($detailsDiv); // insert before short_desc
+            $shortDesc.appendTo($detailsDiv); // move it into the new div
+          }
+        });
 
-$("body ul.products .product").each(function () {
-    const $product = $(this);
-    const $shortDesc = $product.find('.short_des_loop').first();
-    const $addToCartBtn = $product.find('a.ajax_add_to_cart').first();
+        $("body ul.products .product").each(function () {
+          const $product = $(this);
+          const $shortDesc = $product.find(".short_des_loop").first();
+          const $addToCartBtn = $product.find("a.ajax_add_to_cart").first();
 
-    if ($shortDesc.length && $addToCartBtn.length) {
-        $shortDesc.append($addToCartBtn); // move the button inside short_des_loop
-    }
-});
+          if ($shortDesc.length && $addToCartBtn.length) {
+            $shortDesc.append($addToCartBtn); // move the button inside short_des_loop
+          }
+        });
 
         reorderProducts();
         $(window).on("resize", reorderProducts);
@@ -166,6 +180,48 @@ $("body ul.products .product").each(function () {
       }, 100);
     }
   }, [htmlContent, loading]);
+
+  useEffect(() => {
+    const handleAddToCartClick = async (e: Event) => {
+      e.preventDefault();
+
+      const target = e.currentTarget as HTMLAnchorElement;
+      const relativeHref = target.getAttribute("href"); // e.g., "?add-to-cart=16993"
+
+      const baseURL =
+        "https://classichorseauction.com/stage/product-category/horse-classifieds";
+
+      if (relativeHref && token) {
+        const fullURL = `${baseURL}${relativeHref}`;
+
+        try {
+          const response = await axios.get(fullURL, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          });
+
+          alert("Item added to cart successfully!");
+          // Optional: trigger toast or UI update here
+        } catch (error) {
+          console.error("Add to cart failed:", error);
+        }
+      }
+    };
+
+    const buttons = document.querySelectorAll("a.ajax_add_to_cart");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", handleAddToCartClick);
+    });
+
+    return () => {
+      buttons.forEach((btn) => {
+        btn.removeEventListener("click", handleAddToCartClick);
+      });
+    };
+  }, [token, htmlContent]);
 
   return (
     <div className="auctionTow-page">
