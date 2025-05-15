@@ -2798,8 +2798,8 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
     font-size: .857em;
     margin: -1.5em 0em 0px -42px;
 }
-.woocommerce ul.products li.product .woocommerce-placeholder {
-    border: 1px solid #f2f2f2;
+.woocommerce-placeholder.wp-post-image {
+    border: 1px solid #f2f2f2 !important;
 }
 @media (max-width: 767px) {
   .cha-form-page {
