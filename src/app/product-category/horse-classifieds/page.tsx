@@ -160,8 +160,7 @@ export default function EditAccountPage() {
   // Custom Add to Cart Handler with Event Trigger
   useEffect(() => {
     const handleAddToCartClick = (e: Event) => {
-      e.preventDefault(); // stop link default
-      e.stopImmediatePropagation(); // block WooCommerce scripts
+      e.preventDefault();
 
       const runAsync = async () => {
         const target = e.currentTarget as HTMLAnchorElement;
@@ -178,24 +177,9 @@ export default function EditAccountPage() {
               withCredentials: true,
             });
 
-            const existingViewCart =
-              target.parentElement?.querySelector(".view-cart-button");
-
-            if (!existingViewCart) {
-              const viewCartButton = document.createElement("a");
-              viewCartButton.href = "/cart";
-              viewCartButton.textContent = "View Cart";
-              viewCartButton.className = "view-cart-button";
-              viewCartButton.style.marginLeft = "10px";
-              viewCartButton.style.padding = "6px 12px";
-              viewCartButton.style.backgroundColor = "#007cba";
-              viewCartButton.style.color = "#fff";
-              viewCartButton.style.borderRadius = "4px";
-              viewCartButton.style.textDecoration = "none";
-              viewCartButton.style.fontSize = "14px";
-
-              target.insertAdjacentElement("afterend", viewCartButton);
-            }
+            // ✅ Manually trigger WooCommerce event
+            const $button = $(target);
+            $("body").trigger("added_to_cart", [{}, "", $button]);
           } catch (error) {
             console.error("Add to cart failed:", error);
           }
@@ -206,17 +190,12 @@ export default function EditAccountPage() {
     };
 
     const buttons = document.querySelectorAll("a.ajax_add_to_cart");
-
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", handleAddToCartClick, true); // <== capture phase
-    });
+    buttons.forEach((btn) => btn.addEventListener("click", handleAddToCartClick));
 
     return () => {
-      buttons.forEach((btn) => {
-        btn.removeEventListener("click", handleAddToCartClick, true);
-      });
+      buttons.forEach((btn) => btn.removeEventListener("click", handleAddToCartClick));
     };
-  }, [htmlContent]);
+  }, [token, htmlContent]);
 
   return (
     <div className="auctionTow-page">
