@@ -128,36 +128,36 @@ export default function EditAccountPage() {
           }
         });
 
-        function reorderProducts() {
-          const windowWidth = $(window)?.width() || 0;
+        // function reorderProducts() {
+        //   const windowWidth = $(window)?.width() || 0;
 
-          if (windowWidth > 768) {
-            $(".products .product").each(function (index) {
-              const $image = $(this).find(".woocommerce-LoopProduct-link");
-              const $description = $(this).find(".short_des_loop");
+        //   if (windowWidth > 768) {
+        //     $(".products .product").each(function (index) {
+        //       const $image = $(this).find(".woocommerce-LoopProduct-link");
+        //       const $description = $(this).find(".short_des_loop");
 
-              if ($image.length && $description.length) {
-                if (index % 2 === 0) {
-                  $image.insertBefore($description);
-                } else {
-                  $description.insertBefore($image);
-                }
-              }
-            });
-          } else {
-            $(".products .product").each(function () {
-              const $image = $(this).find(".woocommerce-LoopProduct-link");
-              const $description = $(this).find(".short_des_loop");
+        //       if ($image.length && $description.length) {
+        //         if (index % 2 === 0) {
+        //           $image.insertBefore($description);
+        //         } else {
+        //           $description.insertBefore($image);
+        //         }
+        //       }
+        //     });
+        //   } else {
+        //     $(".products .product").each(function () {
+        //       const $image = $(this).find(".woocommerce-LoopProduct-link");
+        //       const $description = $(this).find(".short_des_loop");
 
-              if ($image.length && $description.length) {
-                $image.insertBefore($description); // reset order on mobile
-              }
-            });
-          }
-        }
+        //       if ($image.length && $description.length) {
+        //         $image.insertBefore($description); // reset order on mobile
+        //       }
+        //     });
+        //   }
+        // }
 
-        reorderProducts();
-        $(window).on("resize", reorderProducts);
+        // reorderProducts();
+        // $(window).on("resize", reorderProducts);
 
         $(
           ".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid"
@@ -200,6 +200,56 @@ export default function EditAccountPage() {
           alert("Open How to Bid instructions or modal here.");
           // or use: window.location.href = "/how-to-bid";
         });
+        $("ul.products li.product").each(function () {
+          const $product = $(this);
+          const $bdi = $product.find(
+            "span.woocommerce-Price-amount.amount bdi"
+          );
+
+          const currency = $bdi.find("span").text();
+          $bdi.find("span").remove();
+
+          const priceRefText = $bdi.html();
+
+          const hasReserveOrExpired =
+            $product.find(".woo-ua-winned-for").hasClass("reserve_not_met") ||
+            $product.find(".woo-ua-winned-for").hasClass("expired");
+
+          const finalPrice = hasReserveOrExpired
+            ? $product.find(".product-custom-price").attr("data-price") ?? "0"
+            : priceRefText ?? "0";
+
+          $product.attr("data-price", finalPrice);
+          $bdi.prepend(currency);
+        });
+
+        sortProductsPriceDescending();
+
+        function sortProductsPriceDescending() {
+          const $wrapper1 = $(
+            ".home_products_sec:not(.closed_auctions) ul.products"
+          );
+          const products = $wrapper1.find("li.product").toArray();
+
+          products.sort((a, b) => {
+            const priceA = parseFloat($(a).attr("data-price") ?? "0");
+            const priceB = parseFloat($(b).attr("data-price") ?? "0");
+            return priceB - priceA;
+          });
+
+          $wrapper1.append(products); // replace with sorted elements
+
+          const $wrapper2 = $(".closed_auc ul.products");
+          const products1 = $wrapper2.find("li.product").toArray();
+
+          products1.sort((a, b) => {
+            const priceA = parseFloat($(a).attr("data-price") ?? "0");
+            const priceB = parseFloat($(b).attr("data-price") ?? "0");
+            return priceB - priceA;
+          });
+
+          $wrapper2.append(products1);
+        }
       }, 200);
 
       return () => {
@@ -208,6 +258,7 @@ export default function EditAccountPage() {
       };
     }
   }, [htmlContent, loading]);
+
   return (
     <div className="auctionTow-page all-auctions-page">
       {loading ? (

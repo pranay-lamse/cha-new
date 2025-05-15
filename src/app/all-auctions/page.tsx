@@ -62,82 +62,135 @@ const EditAccountPage = () => {
   // ✅ DOM Manipulation after content is loaded
   useEffect(() => {
     if (!loading && htmlContent) {
-      $(".product").each(function () {
-        const price = $(this).find(".price");
-        const title = $(this).find(".woocommerce-loop-product__title");
-        const details = $(this).find(".short_des_loop");
+      const timeoutId = setTimeout(() => {
+        $(".product").each(function () {
+          const price = $(this).find(".price");
+          const title = $(this).find(".woocommerce-loop-product__title");
+          const details = $(this).find(".short_des_loop");
 
-        if (details.length) {
-          if (price.length && !details.find(".price").length) {
-            price.detach().prependTo(details);
-          }
-          if (
-            title.length &&
-            !details.find(".woocommerce-loop-product__title").length
-          ) {
-            title.detach().prependTo(details);
-          }
-        }
-      });
-
-      $(".short_des_loop").each(function () {
-        const details = $(this).find("ul");
-        const button = $(this)
-          .closest(".product")
-          .find("a.button.product_type_auction");
-
-        if (details.length && button.length) {
-          details.after(button);
-        }
-      });
-
-      const reorderProducts = () => {
-        if (typeof window === "undefined") return;
-
-        const windowWidth = $(window).width() || 0;
-
-        $(".products .product").each(function (index) {
-          const $image = $(this).find(".woocommerce-LoopProduct-link");
-          const $description = $(this).find(".short_des_loop");
-
-          if ($image.length && $description.length) {
-            if (windowWidth > 768) {
-              if (index % 2 === 0) {
-                $image.insertBefore($description);
-              } else {
-                $description.insertBefore($image);
-              }
-            } else {
-              $image.insertBefore($description); // Reset for mobile
+          if (details.length) {
+            if (price.length && !details.find(".price").length) {
+              price.detach().prependTo(details);
+            }
+            if (
+              title.length &&
+              !details.find(".woocommerce-loop-product__title").length
+            ) {
+              title.detach().prependTo(details);
             }
           }
         });
-      };
 
-      reorderProducts();
-      $(window).on("resize", reorderProducts);
+        $(".short_des_loop").each(function () {
+          const details = $(this).find("ul");
+          const button = $(this)
+            .closest(".product")
+            .find("a.button.product_type_auction");
 
-      // ✅ BONUS: Attach click listeners to pagination
-      $(".page-numbers a").on("click", function (e) {
-        e.preventDefault();
-        const href = $(this).attr("href");
-        if (href) {
-          const url = new URL(href, window.location.origin);
-          const page = url.searchParams.get("product-page") || "1";
+          if (details.length && button.length) {
+            details.after(button);
+          }
+        });
 
-          setProductPage(page);
+        // const reorderProducts = () => {
+        //   if (typeof window === "undefined") return;
 
-          // Update browser URL without reload
-          window.history.pushState(
-            {},
-            "",
-            `/all-auctions?product-page=${page}`
+        //   const windowWidth = $(window).width() || 0;
+
+        //   $(".products .product").each(function (index) {
+        //     const $image = $(this).find(".woocommerce-LoopProduct-link");
+        //     const $description = $(this).find(".short_des_loop");
+
+        //     if ($image.length && $description.length) {
+        //       if (windowWidth > 768) {
+        //         if (index % 2 === 0) {
+        //           $image.insertBefore($description);
+        //         } else {
+        //           $description.insertBefore($image);
+        //         }
+        //       } else {
+        //         $image.insertBefore($description); // Reset for mobile
+        //       }
+        //     }
+        //   });
+        // };
+
+        // reorderProducts();
+        // $(window).on("resize", reorderProducts);
+
+        // ✅ BONUS: Attach click listeners to pagination
+        $(".page-numbers a").on("click", function (e) {
+          e.preventDefault();
+          const href = $(this).attr("href");
+          if (href) {
+            const url = new URL(href, window.location.origin);
+            const page = url.searchParams.get("product-page") || "1";
+
+            setProductPage(page);
+
+            // Update browser URL without reload
+            window.history.pushState(
+              {},
+              "",
+              `/all-auctions?product-page=${page}`
+            );
+          }
+        });
+
+        $("ul.products li.product").each(function () {
+          const $product = $(this);
+          const $bdi = $product.find(
+            "span.woocommerce-Price-amount.amount bdi"
           );
-        }
-      });
 
+          const currency = $bdi.find("span").text();
+          $bdi.find("span").remove();
+
+          const priceRefText = $bdi.html();
+
+          const hasReserveOrExpired =
+            $product.find(".woo-ua-winned-for").hasClass("reserve_not_met") ||
+            $product.find(".woo-ua-winned-for").hasClass("expired");
+
+          const finalPrice = hasReserveOrExpired
+            ? $product.find(".product-custom-price").attr("data-price") ?? "0"
+            : priceRefText ?? "0";
+
+          $product.attr("data-price", finalPrice);
+          $bdi.prepend(currency);
+        });
+
+        sortProductsPriceDescending();
+
+        function sortProductsPriceDescending() {
+          const $wrapper1 = $(
+            ".home_products_sec:not(.closed_auctions) ul.products"
+          );
+          const products = $wrapper1.find("li.product").toArray();
+
+          products.sort((a, b) => {
+            const priceA = parseFloat($(a).attr("data-price") ?? "0");
+            const priceB = parseFloat($(b).attr("data-price") ?? "0");
+            return priceB - priceA;
+          });
+
+          $wrapper1.append(products); // replace with sorted elements
+
+          const $wrapper2 = $(".closed_auc ul.products");
+          const products1 = $wrapper2.find("li.product").toArray();
+
+          products1.sort((a, b) => {
+            const priceA = parseFloat($(a).attr("data-price") ?? "0");
+            const priceB = parseFloat($(b).attr("data-price") ?? "0");
+            return priceB - priceA;
+          });
+
+          $wrapper2.append(products1);
+        }
+      }, 200);
       return () => {
-        $(window).off("resize", reorderProducts);
+        clearTimeout(timeoutId);
+        $(window).off("resize");
       };
     }
   }, [htmlContent, loading]);

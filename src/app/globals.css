@@ -2757,11 +2757,28 @@ input#uwa_bid_value {
   flex-wrap: wrap;
 }
 
+.woocommerce ul.products li.product:nth-child(even) {
+  flex-direction: row-reverse !important;
+}
+
+body .woocommerce ul.products li.product .short_des_loop ul a.button.product_type_auction,
+body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
+  display: none !IMPORTANT;
+}
+
+.auctionTow-page a.woocommerce-LoopProduct-link.woocommerce-loop-product__link img {
+  border-radius: 10px;
+}
+
 @media (max-width: 767px) {
   .cha-form-page {
     display: block !important;
     padding: 0px !important;
     margin: 0px !important;
+  }
+
+  .woocommerce ul.products li.product:nth-child(even) {
+    flex-direction: row !important;
   }
 
   .auctionTow-page ul.products li.product {
