@@ -2769,6 +2769,22 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
 .auctionTow-page a.woocommerce-LoopProduct-link.woocommerce-loop-product__link img {
   border-radius: 10px;
 }
+.add-loading a.button.product_type_simple.add_to_cart_button.ajax_add_to_cart.loading:after {
+    font-family: WooCommerce;
+  content: "\e01c";
+  vertical-align: top;
+  font-weight: 400;
+  position: absolute;
+  top: .618em;
+  right: 1em;
+  animation: spin 2s linear infinite;}
+
+  .add-loading a.button.product_type_simple.add_to_cart_button.ajax_add_to_cart.added:after {
+  font-family: WooCommerce;
+  content: "\e017";
+  margin-left: .53em;
+  vertical-align: bottom;
+ }
 
 @media (max-width: 767px) {
   .cha-form-page {

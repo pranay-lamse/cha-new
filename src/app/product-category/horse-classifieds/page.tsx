@@ -158,47 +158,60 @@ export default function EditAccountPage() {
   }, [htmlContent, loading]);
 
   // Custom Add to Cart Handler with Event Trigger
-  useEffect(() => {
-    const handleAddToCartClick = (e: Event) => {
-      e.preventDefault();
+useEffect(() => {
+  const handleAddToCartClick = (e: Event) => {
+    e.preventDefault();
 
-      const runAsync = async () => {
-        const target = e.currentTarget as HTMLAnchorElement;
-        const relativeHref = target.getAttribute("href");
-        const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
+    const target = e.currentTarget as HTMLAnchorElement;
+    target.classList.add("loading"); // add loading class immediately
+    target.classList.remove("added"); // remove added class before new request
 
-        if (relativeHref && token) {
-          const fullURL = `${baseURL}${relativeHref}`;
-          try {
-            await axios.get(fullURL, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              withCredentials: true,
-            });
+    const runAsync = async () => {
+      const relativeHref = target.getAttribute("href");
+      const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
 
-            // ✅ Manually trigger WooCommerce event
-            const $button = $(target);
-            $("body").trigger("added_to_cart", [{}, "", $button]);
-          } catch (error) {
-            console.error("Add to cart failed:", error);
-          }
+      if (relativeHref && token) {
+        const fullURL = `${baseURL}${relativeHref}`;
+        try {
+          await axios.get(fullURL, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          });
+
+          // Manually trigger WooCommerce event
+          const $button = $(target);
+          $("body").trigger("added_to_cart", [{}, "", $button]);
+
+          // Add the 'added' class after successful add to cart
+          target.classList.add("added");
+        } catch (error) {
+          console.error("Add to cart failed:", error);
+        } finally {
+          target.classList.remove("loading"); // remove loading class after request finishes
         }
-      };
-
-      runAsync();
+      } else {
+        target.classList.remove("loading");
+      }
     };
 
-    const buttons = document.querySelectorAll("a.ajax_add_to_cart");
-    buttons.forEach((btn) => btn.addEventListener("click", handleAddToCartClick));
+    runAsync();
+  };
 
-    return () => {
-      buttons.forEach((btn) => btn.removeEventListener("click", handleAddToCartClick));
-    };
-  }, [token, htmlContent]);
+  const buttons = document.querySelectorAll("a.ajax_add_to_cart");
+  buttons.forEach((btn) => btn.addEventListener("click", handleAddToCartClick));
 
-  return (
-    <div className="auctionTow-page">
+  return () => {
+    buttons.forEach((btn) => btn.removeEventListener("click", handleAddToCartClick));
+  };
+}, [token, htmlContent]);
+
+
+
+return (
+  <>
+    <div className="auctionTow-page add-loading">
       {loading ? (
         <Loader />
       ) : (
@@ -210,5 +223,7 @@ export default function EditAccountPage() {
         ></div>
       )}
     </div>
-  );
+  </>
+);
+
 }
