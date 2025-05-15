@@ -182,32 +182,35 @@ export default function EditAccountPage() {
   }, [htmlContent, loading]);
 
   useEffect(() => {
-    const handleAddToCartClick = async (e: Event) => {
-      e.preventDefault();
+    const handleAddToCartClick = (e: Event) => {
+      e.preventDefault(); // STOP the default link behavior immediately
 
-      const target = e.currentTarget as HTMLAnchorElement;
-      const relativeHref = target.getAttribute("href"); // e.g., "?add-to-cart=16993"
+      const runAsync = async () => {
+        const target = e.currentTarget as HTMLAnchorElement;
+        const relativeHref = target.getAttribute("href");
 
-      const baseURL =
-        "https://classichorseauction.com/stage/product-category/horse-classifieds";
+        const baseURL =
+          "https://classichorseauction.com/stage/product-category/horse-classifieds";
 
-      if (relativeHref && token) {
-        const fullURL = `${baseURL}${relativeHref}`;
+        if (relativeHref && token) {
+          const fullURL = `${baseURL}${relativeHref}`;
 
-        try {
-          const response = await axios.get(fullURL, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          });
+          try {
+            const response = await axios.get(fullURL, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            });
 
-          alert("Item added to cart successfully!");
-          // Optional: trigger toast or UI update here
-        } catch (error) {
-          console.error("Add to cart failed:", error);
+            alert("Item added to cart successfully!");
+          } catch (error) {
+            console.error("Add to cart failed:", error);
+          }
         }
-      }
+      };
+
+      runAsync(); // run the async code after preventing default
     };
 
     const buttons = document.querySelectorAll("a.ajax_add_to_cart");
