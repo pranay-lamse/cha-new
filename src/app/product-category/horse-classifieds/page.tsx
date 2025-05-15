@@ -189,8 +189,7 @@ export default function EditAccountPage() {
         const target = e.currentTarget as HTMLAnchorElement;
         const relativeHref = target.getAttribute("href");
 
-        const baseURL =
-          "https://classichorseauction.com/stage/product-category/horse-classifieds";
+        const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
 
         if (relativeHref && token) {
           const fullURL = `${baseURL}${relativeHref}`;
