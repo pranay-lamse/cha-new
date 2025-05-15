@@ -183,7 +183,8 @@ export default function EditAccountPage() {
 
   useEffect(() => {
     const handleAddToCartClick = (e: Event) => {
-      e.preventDefault(); // STOP the default link behavior immediately
+      e.preventDefault(); // stop link default
+      e.stopImmediatePropagation(); // block WooCommerce scripts
 
       const runAsync = async () => {
         const target = e.currentTarget as HTMLAnchorElement;
@@ -202,28 +203,45 @@ export default function EditAccountPage() {
               withCredentials: true,
             });
 
-            alert("Item added to cart successfully!");
+            const existingViewCart =
+              target.parentElement?.querySelector(".view-cart-button");
+
+            if (!existingViewCart) {
+              const viewCartButton = document.createElement("a");
+              viewCartButton.href = "/cart";
+              viewCartButton.textContent = "View Cart";
+              viewCartButton.className = "view-cart-button";
+              viewCartButton.style.marginLeft = "10px";
+              viewCartButton.style.padding = "6px 12px";
+              viewCartButton.style.backgroundColor = "#007cba";
+              viewCartButton.style.color = "#fff";
+              viewCartButton.style.borderRadius = "4px";
+              viewCartButton.style.textDecoration = "none";
+              viewCartButton.style.fontSize = "14px";
+
+              target.insertAdjacentElement("afterend", viewCartButton);
+            }
           } catch (error) {
             console.error("Add to cart failed:", error);
           }
         }
       };
 
-      runAsync(); // run the async code after preventing default
+      runAsync();
     };
 
     const buttons = document.querySelectorAll("a.ajax_add_to_cart");
 
     buttons.forEach((btn) => {
-      btn.addEventListener("click", handleAddToCartClick);
+      btn.addEventListener("click", handleAddToCartClick, true); // <== capture phase
     });
 
     return () => {
       buttons.forEach((btn) => {
-        btn.removeEventListener("click", handleAddToCartClick);
+        btn.removeEventListener("click", handleAddToCartClick, true);
       });
     };
-  }, [token, htmlContent]);
+  }, [htmlContent]);
 
   return (
     <div className="auctionTow-page">
