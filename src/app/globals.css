@@ -2771,7 +2771,7 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
 }
 .add-loading a.button.product_type_simple.add_to_cart_button.ajax_add_to_cart.loading:after {
   font-family: WooCommerce;
-  content: "\e01c"; /* Spinner */
+  content: "\e01c" !important;
   font-weight: 400;
   margin-left: 8px;
   display: inline-block;
@@ -2780,7 +2780,7 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
 
   .add-loading a.button.product_type_simple.add_to_cart_button.ajax_add_to_cart.added:after {
   font-family: WooCommerce;
-  content: "\e017";
+  content: "\e017" !important;
   margin-left: .53em;
   vertical-align: bottom;
  }
@@ -2801,6 +2801,17 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
 .woocommerce-placeholder.wp-post-image {
     border: 1px solid #f2f2f2 !important;
 }
+@font-face {
+    font-family: 'WooCommerce';
+    src: url('/fonts/WooCommerce.eot');
+    src: url('/fonts/WooCommerce.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/WooCommerce.woff') format('woff'),
+         url('/fonts/WooCommerce.ttf') format('truetype'),
+         url('/fonts/WooCommerce.svg#WooCommerce') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 @media (max-width: 767px) {
   .cha-form-page {
     display: block !important;
