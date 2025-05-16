@@ -1675,7 +1675,10 @@ table.shop_table.shop_table_responsive.tbl_bidauc_list a.button.uwa_checkout_all
   font-weight: 700;
   border: 0;
 }
-
+.woocommerce .product-remove a.remove:hover {
+    color: #fff !important;
+    background: #a00;
+}
 .payment-page .woocommerce-MyAccount-content-wrapper {
   padding: 30px;
   background: #fff;
@@ -1877,6 +1880,7 @@ form.woocommerce-ordering {
   display: inline-block !important;
   margin-top: 20px;
   font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .auctionTow-page ul.products li.product .button:hover,
@@ -2800,6 +2804,9 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
 }
 .woocommerce-placeholder.wp-post-image {
     border: 1px solid #f2f2f2 !important;
+}
+.add-loading a.added_to_cart.wc-forward.custom_view_cart_link:hover {
+    color: #dcc373;
 }
 @font-face {
     font-family: 'WooCommerce';

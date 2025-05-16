@@ -67,7 +67,7 @@ export const BarHeader = () => {
               {!loading && <FontAwesomeIcon icon={faChevronCircleRight} />}
             </Link>
             <Link
-              href="https://classichorseauction.com/my-account/"
+              href="/my-account/"
               className={`${raleway.className} join-btn text-sm bg-twilight-navy text-white px-4 py-1`}
             >
               Join Now
