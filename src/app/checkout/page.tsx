@@ -88,7 +88,7 @@ export default function CheckoutPage() {
               .on("click", function (e: any) {
                 e.preventDefault();
                 console.log("Order placed! Redirecting to checkout...");
-                router.push("https://classichorseauction.com/stage/checkout"); // Redirect using Next.js router
+                router.push(`${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/checkout`); // Redirect using Next.js router
               });
           });
         } else {
