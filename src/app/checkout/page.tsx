@@ -12,13 +12,14 @@ import Loader from "@/components/Loader";
 import { fetchHtmlData } from "@/lib/fetchHtmlData";
 import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
-
+import axios from "axios";
+import { getToken } from "@/utils/storage";
 export default function CheckoutPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [bidStatus, setBidStatus] = useState<string>("active"); // State to store bidStatus
-
+  const token = getToken();
   const router = useRouter();
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/checkout`;
 
@@ -36,8 +37,15 @@ export default function CheckoutPage() {
       setError(null);
 
       try {
-        const data = await fetchHtmlData(url);
-        setHtmlContent(data);
+        const data = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+        if (data && data.data) {
+          setHtmlContent(data.data);
+        }
       } catch (error) {
         setError("Failed to fetch data. Please try again later.");
         setHtmlContent(null);
