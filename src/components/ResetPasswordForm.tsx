@@ -38,7 +38,7 @@ const ResetPasswordForm = () => {
   };
 
   return (
-    <div className="woocommerce">
+    <div className="woocommerce container mx-auto w-full sm:w-11/12 lg:w-[1140px] my-10 sm:my-10 px-4 md:px-0 password-lost">
       <div className="woocommerce-notices-wrapper"></div>
       <form
         method="post"

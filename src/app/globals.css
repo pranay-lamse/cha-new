@@ -2819,6 +2819,32 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
     font-style: normal;
 }
 
+.password-lost form.woocommerce-ResetPassword.lost_reset_password {
+    width: 50%;
+    background: #fff;
+    border: 1px solid #d5d8dc;
+    padding: 16px 30px;
+    border-radius: 3px;
+}
+.password-lost form.woocommerce-ResetPassword.lost_reset_password p {
+    font-family: lora;
+    color: #69727d;
+    font-weight: 500;
+    line-height: 1.8em;
+    font-size: 14px;
+}
+.password-lost button.woocommerce-Button.button {
+    background: #0f335f;
+    color: #fff;
+    border: 1px solid #dac172;
+    padding: 15px 25px;
+    height: auto !important;
+    line-height: 1.1em;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: Raleway, sans-serif;
+}
+
 @media (max-width: 767px) {
   .cha-form-page {
     display: block !important;
