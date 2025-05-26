@@ -15,5 +15,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/my-account/(.+)"], // Matches only subpaths like `/my-account/*`
+  matcher: ["/my-account/:path((?!lost-password).*)"], // Matches only subpaths like `/my-account/*`
 };
