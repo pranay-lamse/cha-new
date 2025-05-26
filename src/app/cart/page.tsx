@@ -103,69 +103,7 @@ export default function EditAccountPage() {
     };
   }, [htmlContent]);
 
-  useEffect(() => {
-    const form = document.querySelector(
-      ".woocommerce-cart-form"
-    ) as HTMLFormElement;
-
-    const handleCartCouponSubmit = (e: Event) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const input = form.querySelector("#coupon_code") as HTMLInputElement;
-      const couponCode = input?.value;
-
-      if (!couponCode) {
-        alert("Please enter a coupon code");
-        return;
-      }
-
-      const submitButton = form.querySelector(
-        "button[name='apply_coupon']"
-      ) as HTMLButtonElement;
-
-      submitButton.disabled = true;
-      submitButton.textContent = "Applying...";
-
-      const runAsync = async () => {
-        try {
-          const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/custom/v1/apply_coupon`;
-
-          const payload = new URLSearchParams();
-          payload.append("coupon_code", couponCode);
-          payload.append("security", "edd75dde8a"); // adjust nonce if needed
-
-          await axios.post(baseURL, payload.toString(), {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          });
-
-          alert("Coupon applied successfully");
-          // Optional: refresh page or cart section
-          window.location.reload(); // or dynamically update cart totals
-        } catch (err) {
-          console.error("Error applying coupon:", err);
-          alert("Failed to apply coupon");
-        } finally {
-          submitButton.disabled = false;
-          submitButton.textContent = "Apply coupon";
-        }
-      };
-
-      runAsync();
-    };
-
-    if (form) {
-      form.addEventListener("submit", handleCartCouponSubmit);
-    }
-
-    return () => {
-      form?.removeEventListener("submit", handleCartCouponSubmit);
-    };
-  }, [token]);
+  /* remove copune */
 
   useEffect(() => {
     const handleRemoveCouponClick = (e: MouseEvent) => {
@@ -221,7 +159,7 @@ export default function EditAccountPage() {
     return () => {
       document.removeEventListener("click", handleRemoveCouponClick);
     };
-  }, [token]);
+  }, []);
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1000px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page cart-page">
