@@ -100,7 +100,7 @@ export default function CheckoutPage() {
           responseText.includes("Check your email")
         ) {
           /* alert("Password reset email sent. Please check your inbox."); */
-          window.location.href = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/lost-password`; // Redirect to my-account page
+          window.location.href = `/my-account/lost-password/?reset-link-sent=true`; // Redirect to my-account page
         } else {
           alert("Failed to send reset email. Please try again.");
           console.log("Response:", responseText);
