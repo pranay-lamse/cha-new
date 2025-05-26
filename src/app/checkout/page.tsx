@@ -29,31 +29,29 @@ export default function CheckoutPage() {
     const bidStatusValue = params.get("bid_status") || "active"; // Fallback to 'active'
     setBidStatus(bidStatusValue); // Set bidStatus in the state
   }, []); // This effect runs only once after the component mounts
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
 
+    try {
+      const data = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+      if (data && data.data) {
+        setHtmlContent(data.data);
+      }
+    } catch (error) {
+      setError("Failed to fetch data. Please try again later.");
+      setHtmlContent(null);
+    } finally {
+      setLoading(false);
+    }
+  };
   // Fetch HTML content based on bidStatus
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const data = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        });
-        if (data && data.data) {
-          setHtmlContent(data.data);
-        }
-      } catch (error) {
-        setError("Failed to fetch data. Please try again later.");
-        setHtmlContent(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [bidStatus]); // Fetch data when bidStatus changes
 
@@ -148,7 +146,7 @@ export default function CheckoutPage() {
             withCredentials: true,
           });
 
-          alert("Coupon applied successfully");
+          fetchData();
         } catch (err) {
           console.error("Error applying coupon:", err);
           alert("Failed to apply coupon");
@@ -173,6 +171,61 @@ export default function CheckoutPage() {
       form?.removeEventListener("submit", handleCouponSubmit);
     };
   }, [htmlContent, token]);
+
+  useEffect(() => {
+    const handleRemoveCouponClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      if (
+        target.classList.contains("woocommerce-remove-coupon") &&
+        target instanceof HTMLAnchorElement
+      ) {
+        e.preventDefault();
+
+        const couponCode = target.getAttribute("data-coupon");
+        const billingEmailInput =
+          document.querySelector<HTMLInputElement>("#billing_email");
+
+        if (!couponCode) {
+          alert("Coupon code not found");
+          return;
+        }
+
+        const runAsyncRemove = async () => {
+          try {
+            const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/custom/v1/remove_coupon`;
+
+            const payload = new URLSearchParams();
+            payload.append("coupon_code", couponCode);
+            payload.append("billing_email", billingEmailInput?.value || "");
+
+            await axios.post(baseURL, payload.toString(), {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            });
+
+            fetchData();
+
+            // Optional: refresh or update UI after removal
+          } catch (err) {
+            console.error("Error removing coupon:", err);
+            alert("Failed to remove coupon");
+          }
+        };
+
+        runAsyncRemove();
+      }
+    };
+
+    document.addEventListener("click", handleRemoveCouponClick);
+
+    return () => {
+      document.removeEventListener("click", handleRemoveCouponClick);
+    };
+  }, [token]);
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1000px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page">
