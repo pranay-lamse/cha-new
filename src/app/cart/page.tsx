@@ -161,6 +161,66 @@ export default function EditAccountPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const couponBtn = document.querySelector("button[name='apply_coupon']");
+    const couponInput = document.querySelector("#coupon_code");
+
+    if (couponBtn && couponInput) {
+      // Prevent form submission
+      couponBtn.setAttribute("type", "button");
+
+      // Clean up any previous listener
+      const handler = async () => {
+        const couponCode = (couponInput as HTMLInputElement).value.trim();
+        const billingEmailInput =
+          document.querySelector<HTMLInputElement>("#billing_email");
+
+        if (!couponCode) {
+          alert("Please enter a coupon code");
+          return;
+        }
+
+        // Disable button during processing
+        couponBtn.setAttribute("disabled", "true");
+        couponBtn.textContent = "Applying...";
+
+        try {
+          const baseURL = `${process.env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/custom/v1/apply_coupon`;
+
+          const payload = new URLSearchParams();
+          payload.append("security", "edd75dde8a"); // replace with dynamic if needed
+          payload.append("coupon_code", couponCode);
+          payload.append("billing_email", billingEmailInput?.value || "");
+
+          await axios.post(baseURL, payload.toString(), {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          });
+
+          // Call custom callback to refresh cart
+          fetchData();
+        } catch (err) {
+          console.error("Error applying coupon:", err);
+          alert("Failed to apply coupon");
+        } finally {
+          couponBtn.removeAttribute("disabled");
+          couponBtn.textContent = "Apply coupon";
+        }
+      };
+
+      // Attach listener
+      couponBtn.addEventListener("click", handler);
+
+      // Cleanup to avoid duplicate listeners
+      return () => {
+        couponBtn.removeEventListener("click", handler);
+      };
+    }
+  }, [htmlContent, token, fetchData]);
+
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1000px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page cart-page">
       {loading ? (
