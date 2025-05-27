@@ -173,6 +173,28 @@ export default function CheckoutPage() {
   }, [htmlContent, token]);
 
   useEffect(() => {
+    const button = document.getElementById("place_order");
+    const checkbox = document.getElementById("terms");
+
+    if (button && checkbox) {
+      button.addEventListener("click", function (e) {
+        if (!(checkbox as HTMLInputElement).checked) {
+          e.preventDefault();
+          alert(
+            "Please agree to the terms and conditions before placing the order."
+          );
+        }
+      });
+    }
+
+    // Optional cleanup
+    return () => {
+      if (button) {
+        button.removeEventListener("click", () => {});
+      }
+    };
+  }, [htmlContent]);
+  useEffect(() => {
     const handleRemoveCouponClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
 
