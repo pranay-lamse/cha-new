@@ -423,15 +423,6 @@ const AuctionDetails = () => {
                   ></div>
                 )}
               </div>
-              {/* {startDateEntry && endDateEntry ? (
-                <Timer
-                  title=""
-                  startDate={startDateEntry}
-                  endDate={endDateEntry}
-                />
-              ) : (
-                ""
-              )} */}
             </div>
             {loading ? (
               <Loader />
@@ -441,6 +432,16 @@ const AuctionDetails = () => {
                   __html: filterHTMLContent(htmlContent || "", [
                     "uwa_auction_product_ajax_change",
                   ]),
+                }}
+              ></div>
+            )}
+            {loading ? (
+              <Loader />
+            ) : (
+              <div
+                className="mb-2"
+                dangerouslySetInnerHTML={{
+                  __html: filterHTMLContent(htmlContent || "", ["buy-now"]),
                 }}
               ></div>
             )}
