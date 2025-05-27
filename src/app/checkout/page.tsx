@@ -193,23 +193,33 @@ export default function CheckoutPage() {
 
         try {
           const response = await axios.post(
-            "https://classichorseauction.com/stage/checkout/",
+            "https://classichorseauction.com/stage/?wc-ajax=checkout",
             formData,
             {
               headers: {
                 "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
               },
               withCredentials: true, // Ensure session/cookies are sent
             }
           );
 
-          console.log("Checkout success:", response.data);
+          /* console.log("Checkout success:", response.data); */
           alert("Order placed successfully!");
+          if (response.data.result === "success" && response.data.redirect) {
+            const redirectUrl = new URL(response.data.redirect);
 
+            // Remove "/stage" from the beginning of the pathname
+            const cleanedPath =
+              redirectUrl.pathname.replace(/^\/stage/, "") + redirectUrl.search;
+
+            // Redirect to local frontend without /stage
+            window.location.href = `${cleanedPath}`;
+          }
           // Optional: Redirect to a success page
           // window.location.href = "/order-success";
         } catch (error) {
-          console.error("Checkout error:", error);
+          /* console.error("Checkout error:", error); */
           alert("Failed to place order. Please try again.");
         }
       }
