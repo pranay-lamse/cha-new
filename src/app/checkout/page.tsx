@@ -175,22 +175,54 @@ export default function CheckoutPage() {
   useEffect(() => {
     const button = document.getElementById("place_order");
     const checkbox = document.getElementById("terms");
+    const form = document.forms.namedItem("checkout");
 
-    if (button && checkbox) {
-      button.addEventListener("click", function (e) {
-        if (!(checkbox as HTMLInputElement).checked) {
-          e.preventDefault();
-          alert(
-            "Please agree to the terms and conditions before placing the order."
+    const handleClick = async (e: Event) => {
+      if (!(checkbox as HTMLInputElement)?.checked) {
+        e.preventDefault();
+        alert(
+          "Please agree to the terms and conditions before placing the order."
+        );
+        return;
+      }
+
+      if (form) {
+        e.preventDefault(); // Stop the default HTML form submission
+
+        const formData = new FormData(form);
+
+        try {
+          const response = await axios.post(
+            "https://classichorseauction.com/stage/checkout/",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              withCredentials: true, // Ensure session/cookies are sent
+            }
           );
+
+          console.log("Checkout success:", response.data);
+          alert("Order placed successfully!");
+
+          // Optional: Redirect to a success page
+          // window.location.href = "/order-success";
+        } catch (error) {
+          console.error("Checkout error:", error);
+          alert("Failed to place order. Please try again.");
         }
-      });
+      }
+    };
+
+    if (button) {
+      button.addEventListener("click", handleClick);
     }
 
-    // Optional cleanup
+    // Cleanup
     return () => {
       if (button) {
-        button.removeEventListener("click", () => {});
+        button.removeEventListener("click", handleClick);
       }
     };
   }, [htmlContent]);
