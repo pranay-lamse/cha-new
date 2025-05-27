@@ -2949,6 +2949,17 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
 }
 
 @media (max-width: 767px) {
+  .order-received table.shop_table tbody tr td {
+    display: table-cell !important;
+    text-align: left !important;
+}
+.order-received ul.order_details {
+    margin-bottom: 20px;
+}
+.order-received ul.order_details li {
+    float: unset;
+    padding-bottom: 6px;
+}
   .cha-form-page {
     display: block !important;
     padding: 0px !important;
