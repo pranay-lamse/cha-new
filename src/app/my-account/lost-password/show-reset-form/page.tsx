@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function ResetPasswordPage() {
-  const searchParams = useSearchParams();
   const router = useRouter();
 
-  const key = searchParams.get("key") || "";
-  const id = searchParams.get("id") || "";
-  const login = searchParams.get("login") || "";
+  const [key, setKey] = useState("");
+  const [id, setId] = useState("");
+  const [login, setLogin] = useState("");
 
   const [valid, setValid] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +15,16 @@ export default function ResetPasswordPage() {
   const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
-    if (!key || !id || !login) {
+    const searchParams = new URLSearchParams(window.location.search);
+    const keyParam = searchParams.get("key") || "";
+    const idParam = searchParams.get("id") || "";
+    const loginParam = searchParams.get("login") || "";
+
+    setKey(keyParam);
+    setId(idParam);
+    setLogin(loginParam);
+
+    if (!keyParam || !idParam || !loginParam) {
       setValid(false);
       setError("Missing reset parameters.");
       return;
@@ -29,8 +37,10 @@ export default function ResetPasswordPage() {
           `${
             process.env.NEXT_PUBLIC_API_URL_CUSTOM_API
           }/wp-json/custom/v1/validate-reset-key?key=${encodeURIComponent(
-            key
-          )}&id=${encodeURIComponent(id)}&login=${encodeURIComponent(login)}`
+            keyParam
+          )}&id=${encodeURIComponent(idParam)}&login=${encodeURIComponent(
+            loginParam
+          )}`
         );
         const data = await res.json();
         if (data.valid) {
@@ -49,7 +59,7 @@ export default function ResetPasswordPage() {
     };
 
     validateResetKey();
-  }, [key, id, login]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +89,7 @@ export default function ResetPasswordPage() {
 
       if (data.success) {
         alert("Password updated successfully!");
-        router.push("/my-account"); // Redirect after success
+        router.push("/my-account");
       } else {
         alert("Failed to update password: " + (data.message || ""));
       }
@@ -100,7 +110,7 @@ export default function ResetPasswordPage() {
       </div>
     );
 
-  if (valid === null) return null; // or a loader
+  if (valid === null) return null;
 
   return (
     <div className="container mx-auto max-w-md p-6 border rounded shadow mt-10">

@@ -1,5 +1,12 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
+import { env } from "@/env";
+import { filterHTMLContent } from "@/utils/htmlHelper";
+import axios from "axios";
+import { getToken } from "@/utils/storage";
 
 declare global {
   interface Window {
@@ -7,71 +14,71 @@ declare global {
   }
 }
 
-import { useRouter } from "next/navigation"; // Import useRouter for redirection
-import Loader from "@/components/Loader";
-import { fetchHtmlData } from "@/lib/fetchHtmlData";
-import { env } from "@/env";
-import { filterHTMLContent } from "@/utils/htmlHelper";
-import axios from "axios";
-import { getToken } from "@/utils/storage";
 export default function CheckoutPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [url, setUrl] = useState<string | null>(null);
   const token = getToken();
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/lost-password`;
-  const url = window.location.search.includes("reset-link-sent=true")
-    ? `${baseUrl}?reset-link-sent=true`
-    : baseUrl;
+  const router = useRouter();
 
-  // Fetch bidStatus from URL search parameters on mount
-
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const data = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      });
-      if (data && data.data) {
-        setHtmlContent(data.data);
-      }
-    } catch (error) {
-      setError("Failed to fetch data. Please try again later.");
-      setHtmlContent(null);
-    } finally {
-      setLoading(false);
+  // Set the URL after checking window object
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const finalUrl = window.location.search.includes("reset-link-sent=true")
+        ? `${baseUrl}?reset-link-sent=true`
+        : baseUrl;
+      setUrl(finalUrl);
     }
-  };
-  // Fetch HTML content based on bidStatus
-  useEffect(() => {
-    fetchData();
-  }, []); // Fetch data when bidStatus changes
+  }, []);
 
+  // Fetch data once the URL is available
   useEffect(() => {
+    if (!url) return;
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+        if (data && data.data) {
+          setHtmlContent(data.data);
+        }
+      } catch (error) {
+        setError("Failed to fetch data. Please try again later.");
+        setHtmlContent(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  // Form submission handling
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const form = document.querySelector(
       "form.woocommerce-ResetPassword"
     ) as HTMLFormElement | null;
+
     const resetBtn = form?.querySelector(
       "button[type='submit'], button.woocommerce-Button"
     ) as HTMLButtonElement | null;
 
-    console.log("Form found:", !!form);
-    console.log("Reset button found:", !!resetBtn);
-
     if (!form || !resetBtn) return;
 
-    // Change button type to "button" to prevent native form submit
     resetBtn.type = "button";
-    console.log("Button type after change:", resetBtn.type);
 
     const handler = async () => {
       const formData = new FormData(form);
-
       resetBtn.disabled = true;
       resetBtn.textContent = "Sending...";
 
@@ -82,12 +89,13 @@ export default function CheckoutPage() {
             payload.append(key, value);
           }
         });
+
         const form_action = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/lost-password`;
 
         const response = await axios.post(form_action, payload.toString(), {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${token}`, // remove if not needed
+            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
           responseType: "text",
@@ -99,8 +107,7 @@ export default function CheckoutPage() {
           responseText.includes("password reset email has been sent") ||
           responseText.includes("Check your email")
         ) {
-          /* alert("Password reset email sent. Please check your inbox."); */
-          window.location.href = `/my-account/lost-password/?reset-link-sent=true`; // Redirect to my-account page
+          window.location.href = `/my-account/lost-password/?reset-link-sent=true`;
         } else {
           alert("Failed to send reset email. Please try again.");
           console.log("Response:", responseText);
