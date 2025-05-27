@@ -266,6 +266,57 @@ const AuctionDetails = () => {
       return null;
     }
   };
+
+  useEffect(() => {
+    const form = document.querySelector("form.buy-now.cart");
+    const submitBtn = form?.querySelector("button.single_add_to_cart_button");
+
+    if (!form || !submitBtn) return;
+
+    // Change the type to 'button' to avoid native form submission
+    submitBtn.setAttribute("type", "button");
+
+    const handleClick = async (e: Event) => {
+      e.preventDefault();
+
+      const formData = new FormData(form as HTMLFormElement);
+      const productId =
+        formData.get("product_id") || formData.get("add-to-cart");
+
+      if (!productId) {
+        alert("Product ID missing");
+        return;
+      }
+
+      const payload = new URLSearchParams();
+      payload.append("product_id", String(productId));
+      payload.append("quantity", "1");
+
+      try {
+        const baseURL = `${process.env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/custom/v1/add_to_cart`;
+
+        const response = await axios.post(baseURL, payload.toString(), {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+
+        console.log("Added to cart:", response.data);
+        fetchData();
+      } catch (error) {
+        console.error("Add to cart error:", error);
+        alert("Failed to add product to cart.");
+      }
+    };
+
+    submitBtn.addEventListener("click", handleClick);
+
+    return () => {
+      submitBtn.removeEventListener("click", handleClick);
+    };
+  }, [token, fetchData]);
   useEffect(() => {
     const fetchSingleProduct = async () => {
       setLoading(true);
