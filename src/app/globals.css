@@ -2832,6 +2832,15 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
     font-weight: 500;
     line-height: 1.8em;
     font-size: 14px;
+    width: 100%;
+}
+.password-lost p.woocommerce-form-row.woocommerce-form-row--first.form-row.form-row-first {
+    padding: 14px 0px 10px 0px !important;
+}
+.password-lost p.woocommerce-form-row label {
+    font-family: Raleway, sans-serif !important;
+    line-height: 1.8em !important;
+    color: #69727d;
 }
 .password-lost button.woocommerce-Button.button {
     background: #0f335f;
