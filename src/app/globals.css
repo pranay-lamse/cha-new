@@ -2853,6 +2853,100 @@ body .woocommerce ul.products li.product .short_des_loop ul .mha__auctionCopy {
     font-weight: 700;
     font-family: Raleway, sans-serif;
 }
+.order-received ul.order_details li {
+    float: left;
+    margin-right: 2em;
+    text-transform: uppercase;
+    font-size: .715em;
+    line-height: 1;
+    border-right: 1px dashed #cfc8d8;
+    padding-right: 2em;
+    margin-left: 0;
+    padding-left: 0;
+    list-style-type: none;
+    font-family: Raleway, sans-serif;
+    letter-spacing: 0.5px;
+}
+.order-received p.woocommerce-thankyou-order-received {
+    padding-bottom: 15px;
+}
+.order-received ul.order_details li strong {
+    display: block;
+    font-size: 16px;
+    text-transform: none;
+    line-height: 1.5;
+    font-weight: bolder;
+    color: #000;
+}
+.order-received ul.order_details {
+    margin-bottom: 70px;
+}
+.order-received .woocommerce-order p {
+    letter-spacing: 0.5px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #000;
+}
+.order-received td.woocommerce-table__product-name.product-name a {
+    font-size: 15px !important;
+    color: #000 !important;
+    text-decoration: underline;
+    font-family: Raleway, sans-serif;
+}
+.order-received section.woocommerce-customer-details address {
+    font-style: normal;
+    margin-bottom: 0;
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+    text-align: left;
+    width: 100%;
+    border-radius: 5px;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    font-family: "Noto Serif", Sans-serif;
+    letter-spacing: 0.5px;
+    color: #000 !important;
+}
+.order-received section.woocommerce-customer-details address p {
+    line-height: 1.8em !important;
+    font-size: 14px;
+    color: #222;
+    font-family: Raleway, sans-serif;
+    padding-left: 1.5em;
+}
+.order-received p.woocommerce-customer-details--phone{
+    margin-bottom: 18px;
+}
+.order-received p.woocommerce-customer-details--phone:before {
+    font-family: WooCommerce;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    margin-right: .618em;
+    content: "\e037";
+    text-decoration: none;
+    margin-left: -1.5em;
+    line-height: 1.75;
+    position: absolute;
+}
+.order-received p.woocommerce-customer-details--email:before {
+    font-family: WooCommerce;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    margin-right: .618em;
+    content: "\e02d";
+    text-decoration: none;
+    margin-left: -1.5em;
+    line-height: 1.75;
+    position: absolute;
+}
 
 @media (max-width: 767px) {
   .cha-form-page {

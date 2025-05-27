@@ -118,7 +118,7 @@ export const GetInTouchMain = ({ isContact = false }) => {
             <button
               type="submit"
               disabled={loading}
-              className="focus:outline-none w-24 text-white bg-golden-bold border border-golden-bold font-bold text-[14px] leading-[1.8em] text-center px-8 py-2.5 font-raleway transition-all duration-300 hover:bg-white hover:text-golden-bold hover:border-golden-bold"
+              className="focus:outline-none text-white bg-golden-bold border border-golden-bold font-bold text-[14px] leading-[1.8em] text-center px-8 py-2.5 font-raleway transition-all duration-300 hover:bg-white hover:text-golden-bold hover:border-golden-bold"
             >
               {loading ? "Sending..." : "Send"}
             </button>

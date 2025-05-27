@@ -50,7 +50,7 @@ export default function CheckoutPage() {
   }, []); // Fetch data when bidStatus changes
 
   return (
-    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1000px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page">
+    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1000px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page order-received">
       {loading ? (
         <Loader />
       ) : (
