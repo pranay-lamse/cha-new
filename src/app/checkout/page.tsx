@@ -173,6 +173,26 @@ export default function CheckoutPage() {
   }, [htmlContent, token]);
 
   useEffect(() => {
+    if (!htmlContent) return;
+
+    const style = document.createElement("style");
+    style.innerHTML = `
+    li.woocommerce-SavedPaymentMethods-new {
+      display: none !important;
+    }
+
+    fieldset#wc-stripe-cc-form {
+      display: none;
+    }
+  `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style); // Clean up
+    };
+  }, [htmlContent]);
+
+  useEffect(() => {
     const button = document.getElementById("place_order");
     const checkbox = document.getElementById("terms");
     const form = document.forms.namedItem("checkout");
