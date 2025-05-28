@@ -21,25 +21,25 @@ const CheckoutForm = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<{ credit_card?: string } | null>(null);
   const [customerId, setCustomerId] = useState<string | null>("");
+
+  const fetchPaymentMethods = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axiosClientGeneralTokenCustomApi.get(
+        `/wp-json/custom-api/v1/user-data/${user?.userId}` // ✅ Dynamically use user ID
+      );
+
+      setData(data || {});
+      setCustomerId(data.stripe_customer_id);
+    } catch (error) {
+      console.error("Error fetching payment methods:", error);
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     if (!isAuthenticated || authLoading) return; // ✅ Wait for auth data to load
-
-    const fetchPaymentMethods = async () => {
-      setLoading(true);
-      try {
-        const { data } = await axiosClientGeneralTokenCustomApi.get(
-          `/wp-json/custom-api/v1/user-data/${user?.userId}` // ✅ Dynamically use user ID
-        );
-
-        setData(data || {});
-        setCustomerId(data.stripe_customer_id);
-      } catch (error) {
-        console.error("Error fetching payment methods:", error);
-        setData(null);
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchPaymentMethods();
   }, [user, isAuthenticated, authLoading]); // ✅ Dependency array includes auth state
@@ -73,7 +73,7 @@ const CheckoutForm = () => {
           userId: user?.userId,
         });
 
-        alert("Payment method added successfully!");
+        window.location.href = "/my-account/payment-methods";
       } else {
         console.error("Source conversion failed.");
       }
