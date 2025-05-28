@@ -12,10 +12,9 @@ export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [bidStatus, setBidStatus] = useState<string | null>(null); // ✅ Set initial as null
 
-  const [bidStatus, setBidStatus] = useState("active");
-
-  // ✅ Get bid_status from query string without Suspense
+  // ✅ Extract bidStatus from URL only once
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -24,13 +23,16 @@ export default function EditAccountPage() {
     }
   }, []);
 
-  // ✅ Move URL definition outside the conditional block
-  const url = bidStatus
-    ? `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/uwa-auctions?bid_status=${bidStatus}`
-    : `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/uwa-auctions?display=watchlist`;
+  // ✅ Only construct the URL when bidStatus is available
+  const url =
+    bidStatus !== null
+      ? `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/uwa-auctions?bid_status=${bidStatus}`
+      : null;
 
+  // ✅ Fetch data only when bidStatus is available
   useEffect(() => {
     const fetchData = async () => {
+      if (!url) return;
       setLoading(true);
       setError(null);
       try {
@@ -45,7 +47,7 @@ export default function EditAccountPage() {
     };
 
     fetchData();
-  }, [bidStatus, url]); // ✅ make sure url is in the dependency array
+  }, [url]);
 
   const handleRemoveClick = async (auctionId: string) => {
     try {
