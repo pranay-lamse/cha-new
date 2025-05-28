@@ -344,6 +344,11 @@ const AuctionDetails = () => {
       e.stopPropagation(); // Stop event from propagating further
       /* setLoading(true); */
 
+      if (!token) {
+        setLoginMessage(true);
+        return null;
+      }
+
       const form = $(e.target); // Get the form element
 
       // Extract form values
@@ -424,7 +429,7 @@ const AuctionDetails = () => {
                   <li>
                     Please Login/Register in to place your bid or buy the
                     product.{" "}
-                    <a href="/my-account" target="_blank" className="button">
+                    <a href="/my-account" className="button">
                       Login/Register →
                     </a>{" "}
                   </li>
