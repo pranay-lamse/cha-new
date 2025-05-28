@@ -429,7 +429,7 @@ const AuctionDetails = () => {
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] p-4 my-10 sm:my-10">
-      {data.map((auction: any, index: number) => {
+      {data?.map((auction: any, index: number) => {
         const isEven = index % 2 === 0;
         const imageFirst =
           auction.images.length > 0 ? auction.images[0].src : imagePlaceholder;
