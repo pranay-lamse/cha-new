@@ -12,6 +12,7 @@ import CurrentAuction from "./current-auctions/page";
 import Link from "next/link";
 import { cormorantSC, marcellus, raleway } from "@/config/fonts";
 import { GetInTouchMain } from "@/components/GetInTouchMain";
+import ListingPopup from "@/components/ListingPopup";
 export async function generateMetadata(): Promise<Metadata> {
   const { metadata: meta } = await getMetadata();
 
@@ -75,6 +76,14 @@ export default async function Home(props: searchProps) {
         <Newsletter />
         <GetInTouchMain />
       </div>
+
+
+      
+     
+          <div>
+            <ListingPopup />
+          </div>
+      
     </>
   );
 }
