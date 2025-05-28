@@ -110,16 +110,18 @@ const CheckoutForm = () => {
 
 export default function PaymentMethodPage() {
   return (
-    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] my-10 sm:my-20 px-4 md:px-0">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 myaccount-info">
-        <div className="col-span-1">
-          <MenuPage />
-        </div>
-        <div className="col-span-1 md:col-span-3 md:pl-[60px]">
-          <div className="table-wrapper">
-            <Elements stripe={stripePromise}>
-              <CheckoutForm />
-            </Elements>
+    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px]">
+      <div className="e-my-account-tab e-my-account-tab__dashboard">
+        <div className="myaccount-info">
+          <div className="woocommerce-MyAccount-navigation">
+            <MenuPage />
+          </div>
+          <div className="woocommerce-MyAccount-content-outer">
+            <div className="table-wrapper">
+              <Elements stripe={stripePromise}>
+                <CheckoutForm />
+              </Elements>
+            </div>
           </div>
         </div>
       </div>

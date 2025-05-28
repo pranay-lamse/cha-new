@@ -76,23 +76,25 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] px-2">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 myaccount-info">
-        <div className="col-span-1">
+    <div className="container mx-auto w-full lg:w-[1170px] px-2">
+      <div className="myaccount-info">
+        <div className="woocommerce-MyAccount-navigation col-span-1">
           <MenuPage />
         </div>
-        {loading ? (
-          <Loader />
-        ) : (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: filterHTMLContent(htmlContent || "", [
-                "woocommerce-MyAccount-content",
-              ]),
-            }}
-            className="text-gray-700"
-          ></div>
-        )}
+        <div className="woocommerce-MyAccount-content-outer">
+          {loading ? (
+            <Loader />
+          ) : (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: filterHTMLContent(htmlContent || "", [
+                  "woocommerce-MyAccount-content",
+                ]),
+              }}
+              className="woocommerce-MyAccount-content-inner"
+            ></div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -91,17 +91,17 @@ export default function EditAccountPage() {
   };
 
   return (
-    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] my-10 sm:my-20 px-3 md:px-0">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 myaccount-info">
-        <div className="col-span-1">
-          <MenuPage />
-        </div>
-        <div className="col-span-1 md:col-span-3 md:pl-[60px]">
-          {loading ? (
-            <Loader />
-          ) : (
-            <div className="u-columns col2-set" id="customer_login">
-              <div className="woocommerce p-[16px] px-[20px] sm:px-[30px] border border-[#d5d8dc] rounded-[3px]">
+    <div className="container mx-auto w-full lg:w-[1170px] px-3 md:px-0">
+      <div className="e-my-account-tab e-my-account-tab__dashboard">
+        <div className=" myaccount-info">
+          <div className="woocommerce-MyAccount-navigation col-span-1">
+            <MenuPage />
+          </div>
+          <div className="woocommerce-MyAccount-content-outer col-span-1 md:col-span-3 md:pl-[60px]">
+            {loading ? (
+              <Loader />
+            ) : (
+              <div className="u-columns col2-set" id="customer_login">
                 <form
                   onSubmit={handlePasswordUpdate}
                   className="woocommerce-form woocommerce-form-register account-info"
@@ -231,8 +231,8 @@ export default function EditAccountPage() {
                   </p>
                 </form>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
