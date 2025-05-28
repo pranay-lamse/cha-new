@@ -3650,16 +3650,3 @@ li.wc_payment_method.payment_method_stripe {
 .woocommerce-error {
   border-top-color: #b81c23;
 }
-.woocommerce-error,
-.woocommerce-info,
-.woocommerce-message {
-  padding: 1em 2em 1em 3.5em;
-  margin: 0 0 2em;
-  position: relative;
-  background-color: #f6f5f8;
-  color: #515151;
-  border-top: 3px solid #720eec;
-  list-style: none outside;
-  width: auto;
-  word-wrap: break-word;
-}

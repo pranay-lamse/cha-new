@@ -1,68 +1,98 @@
-import Link from "next/link";
-import MenuPage from "../my-account-menu/page";
-import { lora } from "@/config/fonts";
+"use client";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-interface UserProps {
-  user: {
-    firstName?: string;
-  };
-}
+import MenuPage from "@/components/my-account-menu/page";
+import Loader from "@/components/Loader";
+import { fetchHtmlData } from "@/lib/fetchHtmlData";
+import { env } from "@/env";
+import { filterHTMLContent } from "@/utils/htmlHelper";
+import { getToken } from "@/utils/storage";
+import axios from "axios";
+export default function EditAccountPage() {
+  const [htmlContent, setHtmlContent] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [bidStatus, setBidStatus] = useState<string>("active"); // State to store bidStatus
+  const token = getToken();
 
-export default function Dashboard({ user }: UserProps) {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const bidStatusValue = params.get("bid_status") || "active"; // Fallback to 'active'
+    setBidStatus(bidStatusValue); // Set bidStatus in the state
+  }, []); // This effect runs only once after the component mounts
+
+  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account`; // ✅ Dynamic URL
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchHtmlData(url); // ✅ Pass URL dynamically
+      setHtmlContent(data);
+    } catch (error) {
+      setError("Failed to fetch data. Please try again later.");
+      setHtmlContent(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    try {
+      // Remove authentication tokens and user info from cookies
+      Cookies.remove("authToken");
+      Cookies.remove("refreshToken");
+      Cookies.remove("user");
+      Cookies.remove("rememberMe"); // Optional, if rememberMe was set
+      window.location.href = "/my-account";
+    } catch (err) {
+      console.error("Error logging out", err);
+    }
+  };
+
+  useEffect(() => {
+    const handleLogoutClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "A" &&
+        target.textContent?.trim().toLowerCase() === "log out"
+      ) {
+        e.preventDefault();
+
+        // Call your logout function here
+        handleLogout();
+      }
+    };
+
+    document.addEventListener("click", handleLogoutClick);
+
+    return () => {
+      document.removeEventListener("click", handleLogoutClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] px-2">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 myaccount-info">
         <div className="col-span-1">
           <MenuPage />
         </div>
-        <div className="col-span-1 md:col-span-3 pl-0 md:pl-[60px]">
-          <div className="table-wrapper">
-            <div className="">
-              <p
-                className={`${lora.className} font-[500] text-[14px] text-[#69727d] leading-[1.8] pb-3`}
-              >
-                Hello <strong>{user?.firstName} </strong>
-                <button
-                  onClick={() => {
-                    Cookies.remove("authToken");
-                    Cookies.remove("refreshToken");
-                    Cookies.remove("user");
-                    Cookies.remove("rememberMe");
-                    window.location.href = "/my-account";
-                  }}
-                  className={`text-[#5bc0de] font-[500]`}
-                >
-                  (Log out)
-                </button>
-              </p>
-              <p
-                className={`${lora.className} font-[500] text-[14px] text-[#69727d] leading-[1.8]`}
-              >
-                From your account dashboard you can view your{" "}
-                <Link
-                  href="/my-account/orders/"
-                  className="text-[#5bc0de] font-[500]"
-                >
-                  recent orders
-                </Link>
-                , manage your{" "}
-                <Link
-                  href="/my-account/edit-address/"
-                  className="text-[#5bc0de] font-[500]"
-                >
-                  shipping and billing addresses
-                </Link>
-                , and{" "}
-                <Link
-                  href="/my-account/edit-account/"
-                  className="text-[#5bc0de] font-[500]"
-                >
-                  edit your password and account details.
-                </Link>
-              </p>
-            </div>
-          </div>
-        </div>
+        {loading ? (
+          <Loader />
+        ) : (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: filterHTMLContent(htmlContent || "", [
+                "woocommerce-MyAccount-content",
+              ]),
+            }}
+            className="text-gray-700"
+          ></div>
+        )}
       </div>
     </div>
   );
