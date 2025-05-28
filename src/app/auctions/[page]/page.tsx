@@ -53,6 +53,7 @@ const AuctionDetails = () => {
   const slug = pathname.split("/").pop();
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [bidMessage, setBidMessage] = useState("");
+  const [loginMessage, setLoginMessage] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -185,7 +186,7 @@ const AuctionDetails = () => {
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     if (!token) {
-      alert("Please log in to add to watchlist.");
+      setLoginMessage(true);
       return null;
     }
 
@@ -415,6 +416,19 @@ const AuctionDetails = () => {
                 <div className="woocommerce-message" role="alert">
                   {bidMessage}
                 </div>
+              </div>
+            )}
+            {loginMessage && (
+              <div className="woocommerce-notices-wrapper">
+                <ul className="woocommerce-error" role="alert">
+                  <li>
+                    Please Login/Register in to place your bid or buy the
+                    product.{" "}
+                    <a href="/my-account" target="_blank" className="button">
+                      Login/Register →
+                    </a>{" "}
+                  </li>
+                </ul>
               </div>
             )}
             <div className="w-full aspect-video rounded-[22px] overflow-hidden">
