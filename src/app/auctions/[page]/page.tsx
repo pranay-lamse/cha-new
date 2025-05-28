@@ -312,6 +312,29 @@ const AuctionDetails = () => {
             $("body").trigger("added_to_cart", [{}, "", $button]);
 
             // Add the 'added' class after successful add to cart
+            // Add success notice to the top of the page
+            const messageContainer = document.createElement("div");
+            messageContainer.className = "woocommerce-notices-wrapper";
+            messageContainer.innerHTML = `
+    <div class="woocommerce-message" role="alert" tabindex="-1">
+      ${slug} has been added to your cart. <a href="/cart/" class="button wc-forward">View cart</a>
+    </div>
+  `;
+
+            // Remove any existing notice to avoid duplicates
+            const existingNotice = document.querySelector(
+              ".woocommerce-notices-wrapper"
+            );
+            if (existingNotice) {
+              existingNotice.remove();
+            }
+
+            const content = document.getElementsByClassName("video-container");
+            if (content.length > 0) {
+              content[0].prepend(messageContainer);
+            }
+
+            // Add the 'added' class after successful add to cart
             target.classList.add("added");
           } catch (error) {
             console.error("Add to cart failed:", error);
