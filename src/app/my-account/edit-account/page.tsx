@@ -6,6 +6,7 @@ import axiosClientGeneralToken from "@/api/axiosClientGeneralToken";
 import {
   GET_USER_DETAILS,
   UPDATE_PASSWORD,
+  UPDATE_USER_PROFILE,
 } from "@/graphql/queries/getUserDetails";
 import Loader from "@/components/Loader";
 import axiosClient from "@/api/axiosClient";
@@ -66,8 +67,18 @@ export default function EditAccountPage() {
         },
       });
 
+      const response2 = await axiosClient.post("", {
+        query: UPDATE_USER_PROFILE, // Define this mutation as above
+        variables: {
+          id: user?.userId,
+          firstName,
+          lastName,
+          displayName,
+          email,
+        },
+      });
+
       if (response.data?.data?.updateUser?.user) {
-        alert("Password updated successfully!");
         setPassword("");
         setNewPassword("");
         setConfirmNewPassword("");
@@ -179,59 +190,34 @@ export default function EditAccountPage() {
                   </h3>
 
                   <p className="form-row">
-                    <label htmlFor="password">
-                      Current password{" "}
-                      <span
-                        className="required text-[#a00] font-bold"
-                        aria-hidden="true"
-                      >
-                        *
-                      </span>
-                    </label>
+                    <label htmlFor="password">Current password </label>
                     <input
                       type="password"
                       id="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      required
                     />
                   </p>
 
                   <p className="form-row">
-                    <label htmlFor="new-password">
-                      New password{" "}
-                      <span
-                        className="required text-[#a00] font-bold"
-                        aria-hidden="true"
-                      >
-                        *
-                      </span>
-                    </label>
+                    <label htmlFor="new-password">New password </label>
                     <input
                       type="password"
                       id="new-password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      required
                     />
                   </p>
 
                   <p className="form-row">
                     <label htmlFor="confirm-new-password">
                       Confirm new password{" "}
-                      <span
-                        className="required text-[#a00] font-bold"
-                        aria-hidden="true"
-                      >
-                        *
-                      </span>
                     </label>
                     <input
                       type="password"
                       id="confirm-new-password"
                       value={confirmNewPassword}
                       onChange={(e) => setConfirmNewPassword(e.target.value)}
-                      required
                     />
                   </p>
 
