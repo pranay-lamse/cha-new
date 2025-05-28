@@ -52,6 +52,7 @@ const AuctionDetails = () => {
   // Extract 'bonafide' from the path
   const slug = pathname.split("/").pop();
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
+  const [bidMessage, setBidMessage] = useState("");
 
   const fetchData = async () => {
     setLoading(true);
@@ -120,59 +121,6 @@ const AuctionDetails = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   if (!loading && htmlContent) {
-  //     $(function () {
-  //       $(".clock_jquery").each(function () {
-  //         const el = $(this);
-  //         const timeStr = el.data("time"); // e.g., "2025-05-15 15:33:20"
-
-  //         // Parse time manually from data-time
-  //         const [datePart, timePart] = timeStr.split(" ");
-  //         const [year, month, day] = datePart.split("-").map(Number);
-  //         const [hour, minute, second] = timePart.split(":").map(Number);
-
-  //         // Adjust by +6 hours (UTC-6 / CST)
-  //         const localTime = new Date(
-  //           Date.UTC(year, month - 1, day, hour + 6, minute, second)
-  //         );
-  //         const endTime = localTime.getTime();
-
-  //         function update() {
-  //           const now = Date.now();
-  //           const diff = endTime - now;
-
-  //           if (diff <= 0) {
-  //             el.html('<span class="countdown-expired">Auction ended</span>');
-  //             clearInterval(timer);
-  //             return;
-  //           }
-
-  //           const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  //           const h = Math.floor(
-  //             (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  //           );
-  //           const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  //           const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-  //           el.html(
-  //             `<span class="countdown_row countdown_show4">
-  //               <span class="countdown_section"><span class="countdown_amount">${d} </span><br>Day(s)</span>
-  //               <span class="countdown_section"><span class="countdown_amount">${h} </span><br>Hour(s)</span>
-  //               <span class="countdown_section"><span class="countdown_amount">${m} </span><br>Min(s)</span>
-  //               <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
-  //             </span>`
-  //           );
-  //         }
-
-  //         update();
-  //         const timer = setInterval(update, 3000);
-  //       });
-  //     });
-  //   }
-  // }, [htmlContent, loading]);
-
-  // ✅ DOM Manipulation After HTML is Injected
   useEffect(() => {
     if (!loading && htmlContent) {
       const timeoutId = setTimeout(() => {
@@ -407,8 +355,9 @@ const AuctionDetails = () => {
         auctionId: productId,
         bidAmount: bidValue,
       });
-      console.log("Bid Response:", result);
+
       fetchData();
+      setBidMessage("Your bid has been placed successfully.");
     };
 
     // Attach event listener to form
@@ -461,6 +410,13 @@ const AuctionDetails = () => {
         )?.value;
         return (
           <div key="auction.id" className="auction-deatils-page">
+            {bidMessage && (
+              <div className="woocommerce-notices-wrapper">
+                <div className="woocommerce-message" role="alert">
+                  {bidMessage}
+                </div>
+              </div>
+            )}
             <div className="w-full aspect-video rounded-[22px] overflow-hidden">
               {videoIfram ? (
                 <div
