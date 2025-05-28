@@ -266,7 +266,6 @@ const AuctionDetails = () => {
       return null;
     }
   };
-
   useEffect(() => {
     const form = document.querySelector("form.buy-now.cart");
     const submitBtn = form?.querySelector("button.single_add_to_cart_button");
@@ -275,9 +274,12 @@ const AuctionDetails = () => {
 
     // Change the type to 'button' to avoid native form submission
     submitBtn.setAttribute("type", "button");
-
-    const handleClick = async (e: Event) => {
+    const handleAddToCartClick = (e: Event) => {
       e.preventDefault();
+
+      const target = e.currentTarget as HTMLAnchorElement;
+      target.classList.add("loading"); // add loading class immediately
+      target.classList.remove("added"); // remove added class before new request
 
       const formData = new FormData(form as HTMLFormElement);
       const productId =
@@ -292,31 +294,52 @@ const AuctionDetails = () => {
       payload.append("product_id", String(productId));
       payload.append("quantity", "1");
 
-      try {
-        const baseURL = `${process.env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/custom/v1/add_to_cart`;
+      const runAsync = async () => {
+        const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}?add-to-cart=${productId}`;
 
-        const response = await axios.post(baseURL, payload.toString(), {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        });
+        if (token) {
+          const fullURL = `${baseURL}`;
+          try {
+            await axios.get(fullURL, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            });
 
-        console.log("Added to cart:", response.data);
-        fetchData();
-      } catch (error) {
-        console.error("Add to cart error:", error);
-        alert("Failed to add product to cart.");
-      }
+            // Manually trigger WooCommerce event
+            const $button = $(target);
+            $("body").trigger("added_to_cart", [{}, "", $button]);
+
+            // Add the 'added' class after successful add to cart
+            target.classList.add("added");
+          } catch (error) {
+            console.error("Add to cart failed:", error);
+          } finally {
+            target.classList.remove("loading"); // remove loading class after request finishes
+          }
+        } else {
+          target.classList.remove("loading");
+        }
+      };
+
+      runAsync();
     };
 
-    submitBtn.addEventListener("click", handleClick);
+    const buttons = document.querySelectorAll(
+      "button.single_add_to_cart_button"
+    );
+    buttons.forEach((btn) =>
+      btn.addEventListener("click", handleAddToCartClick)
+    );
 
     return () => {
-      submitBtn.removeEventListener("click", handleClick);
+      buttons.forEach((btn) =>
+        btn.removeEventListener("click", handleAddToCartClick)
+      );
     };
-  }, [token, fetchData]);
+  }, [token, htmlContent]);
+
   useEffect(() => {
     const fetchSingleProduct = async () => {
       setLoading(true);
