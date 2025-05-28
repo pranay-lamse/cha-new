@@ -67,7 +67,7 @@ export default function MyAccountPage() {
                 <p>Loading...</p>
               </div>
             ) : isAuthenticated ? (
-              <Dashboard user={user} />
+              <Dashboard  />
             ) : (
               <div className="u-columns col2-set" id="customer_login">
                   <LoginForm />

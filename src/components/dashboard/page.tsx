@@ -8,7 +8,7 @@ import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import { getToken } from "@/utils/storage";
 import axios from "axios";
-export default function EditAccountPage() {
+export default function Dashboard() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
