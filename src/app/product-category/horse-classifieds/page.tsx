@@ -18,7 +18,7 @@ export default function EditAccountPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [bidStatus, setBidStatus] = useState("active");
-
+  const [loginMessage, setLoginMessage] = useState(false);
   const token = getToken();
 
   useEffect(() => {
@@ -29,24 +29,24 @@ export default function EditAccountPage() {
     }
   }, []);
 
+  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
+
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchHtmlData(url);
+      setHtmlContent(data);
+    } catch (error) {
+      setError("Failed to fetch data. Please try again later.");
+      setHtmlContent(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
-
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const data = await fetchHtmlData(url);
-        setHtmlContent(data);
-      } catch (error) {
-        setError("Failed to fetch data. Please try again later.");
-        setHtmlContent(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (bidStatus) {
       fetchData();
     }
@@ -66,7 +66,10 @@ export default function EditAccountPage() {
             if (price.length && !details.find(".price").length) {
               price.detach().prependTo(details);
             }
-            if (title.length && !details.find(".woocommerce-loop-product__title").length) {
+            if (
+              title.length &&
+              !details.find(".woocommerce-loop-product__title").length
+            ) {
               title.detach().prependTo(details);
             }
           }
@@ -76,7 +79,9 @@ export default function EditAccountPage() {
           const details = $(this).find("ul");
           const button = $(this)
             .closest(".product")
-            .find("a.button.product_type_auction, a.button.product_type_simple");
+            .find(
+              "a.button.product_type_auction, a.button.product_type_simple"
+            );
 
           if (details.length && button.length) {
             details.after(button);
@@ -101,12 +106,18 @@ export default function EditAccountPage() {
         }
 
         // Labels
-        $(".woocommerce ul.products li.product span.woo-ua-winned-for").text("Sold via Bid");
-        $(".woocommerce ul.products li.product span.woo-ua-sold-for").text("Sold via Buy Now");
+        $(".woocommerce ul.products li.product span.woo-ua-winned-for").text(
+          "Sold via Bid"
+        );
+        $(".woocommerce ul.products li.product span.woo-ua-sold-for").text(
+          "Sold via Buy Now"
+        );
 
         // Append "How to bid" button and wrap action buttons
         $(".home_products_sec .product").each(function () {
-          const $link = $(this).find(".woocommerce-LoopProduct-link").attr("href");
+          const $link = $(this)
+            .find(".woocommerce-LoopProduct-link")
+            .attr("href");
           $(this)
             .find(".short_des_loop")
             .append(
@@ -116,19 +127,25 @@ export default function EditAccountPage() {
         });
 
         // Handle Add to Cart (WooCommerce style)
-        $("body").on("added_to_cart", function (event, fragments, cart_hash, $button) {
-          if (!$button.closest(".short_des_loop").length) return;
-          $button.closest(".short_des_loop").find(".custom_view_cart_link").remove();
+        $("body").on(
+          "added_to_cart",
+          function (event, fragments, cart_hash, $button) {
+            if (!$button.closest(".short_des_loop").length) return;
+            $button
+              .closest(".short_des_loop")
+              .find(".custom_view_cart_link")
+              .remove();
 
-          const viewCart = $("<a/>", {
-            href: "/cart/",
-            class: "added_to_cart wc-forward custom_view_cart_link",
-            title: "View cart",
-            text: "View cart",
-          });
+            const viewCart = $("<a/>", {
+              href: "/cart/",
+              class: "added_to_cart wc-forward custom_view_cart_link",
+              title: "View cart",
+              text: "View cart",
+            });
 
-          $button.after(viewCart);
-        });
+            $button.after(viewCart);
+          }
+        );
 
         // Move short_desc and add_to_cart button into layout
         $("body ul.products .product").each(function () {
@@ -158,72 +175,92 @@ export default function EditAccountPage() {
   }, [htmlContent, loading]);
 
   // Custom Add to Cart Handler with Event Trigger
-useEffect(() => {
-  const handleAddToCartClick = (e: Event) => {
-    e.preventDefault();
-
-    const target = e.currentTarget as HTMLAnchorElement;
-    target.classList.add("loading"); // add loading class immediately
-    target.classList.remove("added"); // remove added class before new request
-
-    const runAsync = async () => {
-      const relativeHref = target.getAttribute("href");
-      const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
-
-      if (relativeHref && token) {
-        const fullURL = `${baseURL}${relativeHref}`;
-        try {
-          await axios.get(fullURL, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          });
-
-          // Manually trigger WooCommerce event
-          const $button = $(target);
-          $("body").trigger("added_to_cart", [{}, "", $button]);
-
-          // Add the 'added' class after successful add to cart
-          target.classList.add("added");
-        } catch (error) {
-          console.error("Add to cart failed:", error);
-        } finally {
-          target.classList.remove("loading"); // remove loading class after request finishes
-        }
-      } else {
-        target.classList.remove("loading");
+  useEffect(() => {
+    const handleAddToCartClick = (e: Event) => {
+      e.preventDefault();
+      if (!token) {
+        fetchData();
+        setLoginMessage(true);
+        return null;
       }
+
+      const target = e.currentTarget as HTMLAnchorElement;
+      target.classList.add("loading"); // add loading class immediately
+      target.classList.remove("added"); // remove added class before new request
+
+      const runAsync = async () => {
+        const relativeHref = target.getAttribute("href");
+        const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/product-category/horse-classifieds`;
+
+        if (relativeHref && token) {
+          const fullURL = `${baseURL}${relativeHref}`;
+          try {
+            await axios.get(fullURL, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            });
+
+            // Manually trigger WooCommerce event
+            const $button = $(target);
+            $("body").trigger("added_to_cart", [{}, "", $button]);
+
+            // Add the 'added' class after successful add to cart
+            target.classList.add("added");
+          } catch (error) {
+            console.error("Add to cart failed:", error);
+          } finally {
+            target.classList.remove("loading"); // remove loading class after request finishes
+          }
+        } else {
+          target.classList.remove("loading");
+        }
+      };
+
+      runAsync();
     };
 
-    runAsync();
-  };
+    const buttons = document.querySelectorAll("a.ajax_add_to_cart");
+    buttons.forEach((btn) =>
+      btn.addEventListener("click", handleAddToCartClick)
+    );
 
-  const buttons = document.querySelectorAll("a.ajax_add_to_cart");
-  buttons.forEach((btn) => btn.addEventListener("click", handleAddToCartClick));
+    return () => {
+      buttons.forEach((btn) =>
+        btn.removeEventListener("click", handleAddToCartClick)
+      );
+    };
+  }, [token, htmlContent]);
 
-  return () => {
-    buttons.forEach((btn) => btn.removeEventListener("click", handleAddToCartClick));
-  };
-}, [token, htmlContent]);
-
-
-
-return (
-  <>
-    <div className="auctionTow-page add-loading">
-      {loading ? (
-        <Loader />
-      ) : (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: filterHTMLContent(htmlContent || "", ["site-main"]),
-          }}
-          className="text-gray-700"
-        ></div>
-      )}
-    </div>
-  </>
-);
-
+  return (
+    <>
+      <div className="auctionTow-page add-loading">
+        {loginMessage && (
+          <div key="auction.id" className="auction-deatils-page">
+            <div className="woocommerce-notices-wrapper">
+              <ul className="woocommerce-error" role="alert">
+                <li>
+                  Please Login/Register in to place your bid or buy the product.{" "}
+                  <a href="/my-account" className="button">
+                    Login/Register →
+                  </a>{" "}
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+        {loading ? (
+          <Loader />
+        ) : (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: filterHTMLContent(htmlContent || "", ["site-main"]),
+            }}
+            className="text-gray-700"
+          ></div>
+        )}
+      </div>
+    </>
+  );
 }

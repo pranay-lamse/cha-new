@@ -13,11 +13,6 @@ export const placeAuctionBid = async ({
 }) => {
   const token = getToken();
 
-  if (!token) {
-    alert("Please login first to place a bid.");
-    return null;
-  }
-
   const formData = new FormData();
   formData.append("uwa_bid_value", bidAmount.toString());
   formData.append("bid", auctionId.toString());
@@ -36,7 +31,6 @@ export const placeAuctionBid = async ({
       }
     );
 
-    console.log("Bid placed successfully:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("Bid failed:", error.response?.data || error.message);

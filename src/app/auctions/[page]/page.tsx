@@ -52,6 +52,8 @@ const AuctionDetails = () => {
   // Extract 'bonafide' from the path
   const slug = pathname.split("/").pop();
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
+  const [bidMessage, setBidMessage] = useState("");
+  const [loginMessage, setLoginMessage] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -120,59 +122,6 @@ const AuctionDetails = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   if (!loading && htmlContent) {
-  //     $(function () {
-  //       $(".clock_jquery").each(function () {
-  //         const el = $(this);
-  //         const timeStr = el.data("time"); // e.g., "2025-05-15 15:33:20"
-
-  //         // Parse time manually from data-time
-  //         const [datePart, timePart] = timeStr.split(" ");
-  //         const [year, month, day] = datePart.split("-").map(Number);
-  //         const [hour, minute, second] = timePart.split(":").map(Number);
-
-  //         // Adjust by +6 hours (UTC-6 / CST)
-  //         const localTime = new Date(
-  //           Date.UTC(year, month - 1, day, hour + 6, minute, second)
-  //         );
-  //         const endTime = localTime.getTime();
-
-  //         function update() {
-  //           const now = Date.now();
-  //           const diff = endTime - now;
-
-  //           if (diff <= 0) {
-  //             el.html('<span class="countdown-expired">Auction ended</span>');
-  //             clearInterval(timer);
-  //             return;
-  //           }
-
-  //           const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  //           const h = Math.floor(
-  //             (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  //           );
-  //           const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  //           const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-  //           el.html(
-  //             `<span class="countdown_row countdown_show4">
-  //               <span class="countdown_section"><span class="countdown_amount">${d} </span><br>Day(s)</span>
-  //               <span class="countdown_section"><span class="countdown_amount">${h} </span><br>Hour(s)</span>
-  //               <span class="countdown_section"><span class="countdown_amount">${m} </span><br>Min(s)</span>
-  //               <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
-  //             </span>`
-  //           );
-  //         }
-
-  //         update();
-  //         const timer = setInterval(update, 3000);
-  //       });
-  //     });
-  //   }
-  // }, [htmlContent, loading]);
-
-  // ✅ DOM Manipulation After HTML is Injected
   useEffect(() => {
     if (!loading && htmlContent) {
       const timeoutId = setTimeout(() => {
@@ -237,7 +186,7 @@ const AuctionDetails = () => {
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     if (!token) {
-      alert("Please log in to add to watchlist.");
+      setLoginMessage(true);
       return null;
     }
 
@@ -266,6 +215,103 @@ const AuctionDetails = () => {
       return null;
     }
   };
+  useEffect(() => {
+    const form = document.querySelector("form.buy-now.cart");
+    const submitBtn = form?.querySelector("button.single_add_to_cart_button");
+
+    if (!form || !submitBtn) return;
+
+    // Change the type to 'button' to avoid native form submission
+    submitBtn.setAttribute("type", "button");
+    const handleAddToCartClick = (e: Event) => {
+      e.preventDefault();
+
+      const target = e.currentTarget as HTMLAnchorElement;
+      target.classList.add("loading"); // add loading class immediately
+      target.classList.remove("added"); // remove added class before new request
+
+      const formData = new FormData(form as HTMLFormElement);
+      const productId =
+        formData.get("product_id") || formData.get("add-to-cart");
+
+      if (!productId) {
+        alert("Product ID missing");
+        return;
+      }
+
+      const payload = new URLSearchParams();
+      payload.append("product_id", String(productId));
+      payload.append("quantity", "1");
+
+      const runAsync = async () => {
+        const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}?add-to-cart=${productId}`;
+
+        if (token) {
+          const fullURL = `${baseURL}`;
+          try {
+            await axios.get(fullURL, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            });
+
+            // Manually trigger WooCommerce event
+            const $button = $(target);
+            $("body").trigger("added_to_cart", [{}, "", $button]);
+
+            // Add the 'added' class after successful add to cart
+            // Add success notice to the top of the page
+            const messageContainer = document.createElement("div");
+            messageContainer.className = "woocommerce-notices-wrapper";
+            messageContainer.innerHTML = `
+    <div class="woocommerce-message" role="alert" tabindex="-1">
+      ${slug} has been added to your cart. <a href="/cart/" class="button wc-forward">View cart</a>
+    </div>
+  `;
+
+            // Remove any existing notice to avoid duplicates
+            const existingNotice = document.querySelector(
+              ".woocommerce-notices-wrapper"
+            );
+            if (existingNotice) {
+              existingNotice.remove();
+            }
+
+            const content = document.getElementsByClassName("video-container");
+            if (content.length > 0) {
+              content[0].prepend(messageContainer);
+            }
+
+            // Add the 'added' class after successful add to cart
+            target.classList.add("added");
+          } catch (error) {
+            console.error("Add to cart failed:", error);
+          } finally {
+            target.classList.remove("loading"); // remove loading class after request finishes
+          }
+        } else {
+          target.classList.remove("loading");
+        }
+      };
+
+      runAsync();
+    };
+
+    const buttons = document.querySelectorAll(
+      "button.single_add_to_cart_button"
+    );
+    buttons.forEach((btn) =>
+      btn.addEventListener("click", handleAddToCartClick)
+    );
+
+    return () => {
+      buttons.forEach((btn) =>
+        btn.removeEventListener("click", handleAddToCartClick)
+      );
+    };
+  }, [token, htmlContent]);
+
   useEffect(() => {
     const fetchSingleProduct = async () => {
       setLoading(true);
@@ -298,6 +344,11 @@ const AuctionDetails = () => {
       e.stopPropagation(); // Stop event from propagating further
       /* setLoading(true); */
 
+      if (!token) {
+        setLoginMessage(true);
+        return null;
+      }
+
       const form = $(e.target); // Get the form element
 
       // Extract form values
@@ -310,8 +361,9 @@ const AuctionDetails = () => {
         auctionId: productId,
         bidAmount: bidValue,
       });
-      console.log("Bid Response:", result);
+
       fetchData();
+      setBidMessage("Your bid has been placed successfully.");
     };
 
     // Attach event listener to form
@@ -332,7 +384,7 @@ const AuctionDetails = () => {
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] p-4 my-10 sm:my-10">
-      {data.map((auction: any, index: number) => {
+      {data?.map((auction: any, index: number) => {
         const isEven = index % 2 === 0;
         const imageFirst =
           auction.images.length > 0 ? auction.images[0].src : imagePlaceholder;
@@ -364,6 +416,26 @@ const AuctionDetails = () => {
         )?.value;
         return (
           <div key="auction.id" className="auction-deatils-page">
+            {bidMessage && (
+              <div className="woocommerce-notices-wrapper">
+                <div className="woocommerce-message" role="alert">
+                  {bidMessage}
+                </div>
+              </div>
+            )}
+            {loginMessage && (
+              <div className="woocommerce-notices-wrapper">
+                <ul className="woocommerce-error" role="alert">
+                  <li>
+                    Please Login/Register in to place your bid or buy the
+                    product.{" "}
+                    <a href="/my-account" className="button">
+                      Login/Register →
+                    </a>{" "}
+                  </li>
+                </ul>
+              </div>
+            )}
             <div className="w-full aspect-video rounded-[22px] overflow-hidden">
               {videoIfram ? (
                 <div
@@ -423,15 +495,6 @@ const AuctionDetails = () => {
                   ></div>
                 )}
               </div>
-              {/* {startDateEntry && endDateEntry ? (
-                <Timer
-                  title=""
-                  startDate={startDateEntry}
-                  endDate={endDateEntry}
-                />
-              ) : (
-                ""
-              )} */}
             </div>
             {loading ? (
               <Loader />
@@ -441,6 +504,16 @@ const AuctionDetails = () => {
                   __html: filterHTMLContent(htmlContent || "", [
                     "uwa_auction_product_ajax_change",
                   ]),
+                }}
+              ></div>
+            )}
+            {loading ? (
+              <Loader />
+            ) : (
+              <div
+                className="mb-2"
+                dangerouslySetInnerHTML={{
+                  __html: filterHTMLContent(htmlContent || "", ["buy-now"]),
                 }}
               ></div>
             )}
