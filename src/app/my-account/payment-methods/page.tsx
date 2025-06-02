@@ -47,7 +47,7 @@ export default function EditAccountPage() {
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] payment-page px-3 md:px-0">
       <div className="e-my-account-tab e-my-account-tab__dashboard">
-        <div className="myaccount-info">
+        <div className="woocommerce myaccount-info">
           <div className="woocommerce-MyAccount-navigation col-span-1">
             <MenuPage />
           </div>

@@ -112,7 +112,7 @@ export default function PaymentMethodPage() {
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px]">
       <div className="e-my-account-tab e-my-account-tab__dashboard">
-        <div className="myaccount-info">
+        <div className="woocommerce myaccount-info">
           <div className="woocommerce-MyAccount-navigation">
             <MenuPage />
           </div>
