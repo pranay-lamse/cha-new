@@ -1114,7 +1114,7 @@ body span.countdown_section {
   margin: 0 -1px 24px 0;
   text-align: left;
   width: 100%;
-  border-collapse: separate;
+
   border-radius: 5px;
   background-color: transparent;
 }
@@ -1152,7 +1152,7 @@ body span.countdown_section {
   margin: 0 -1px 24px 0;
   text-align: left;
   width: 100%;
-  border-collapse: separate;
+
   border-radius: 5px;
 }
 
@@ -1525,7 +1525,7 @@ body .woocommerce ul.products li.product .button {
   margin: 0 -1px 24px 0;
   text-align: left;
   width: 100%;
-  border-collapse: separate;
+
   border-radius: 5px;
 }
 
@@ -1764,7 +1764,7 @@ table.shop_table.shop_table_responsive.tbl_bidauc_list a.button.uwa_checkout_all
 .payment-page table.woocommerce-MyAccount-paymentMethods.shop_table.shop_table_responsive.account-payment-methods-table {
   text-align: left;
   width: 100%;
-  border-collapse: separate;
+
   border-radius: 5px;
 }
 
@@ -3084,7 +3084,7 @@ table thead:first-child tr:first-child th {
 }
 
 .woocommerce table.shop_table {
-  border: 1px solid rgba(0, 0, 0, .1);
+  border: 1px solid rgba(0, 0, 0, .1) !important;
   margin: 0 -1px 24px 0;
   text-align: left;
   width: 100%;
