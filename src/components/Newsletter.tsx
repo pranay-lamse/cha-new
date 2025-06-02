@@ -51,7 +51,7 @@ export const Newsletter = () => {
       payload.append("form_fields[field_493edd0]", formData.email);
       payload.append("form_fields[field_1c8282a]", formData.phone);
 
-      await axios.post(
+      const resposonse = await axios.post(
         "https://classichorseauction.com/stage/wp-admin/admin-ajax.php",
         payload.toString(),
         {
@@ -61,12 +61,12 @@ export const Newsletter = () => {
         }
       );
 
-      /*  if (response.data.success) {
+      if (resposonse.data.success) {
         setSuccess(true);
         setFormData({ name: "", email: "", phone: "" });
       } else {
-        setError(response.data?.data?.message || "Submission failed.");
-      } */
+        setError(resposonse.data?.data?.message || "Submission failed.");
+      }
     } catch (err: any) {
       console.error("Error:", err);
       setError("Something went wrong. Please try again.");
