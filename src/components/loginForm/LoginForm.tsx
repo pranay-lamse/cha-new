@@ -134,6 +134,35 @@ export const LoginForm = () => {
 
   return (
     <>
+      {loginerrormessage && (
+        <div className="woocommerce-notices-wrapper">
+          <ul className="woocommerce-error" role="alert">
+            <li>
+              <strong>ERROR</strong>: The username or password you entered is
+              incorrect.{" "}
+              <a
+                href="/my-account/lost-password/"
+                title="Password Lost and Found"
+              >
+                Lost your password
+              </a>
+              ?{" "}
+            </li>
+          </ul>
+        </div>
+      )}
+
+      {loginsuccessmessage && (
+        <div className="woocommerce-notices-wrapper">
+          <ul className="woocommerce-success" role="alert">
+            <li>
+              <div
+                dangerouslySetInnerHTML={{ __html: loginsuccessmessage || "" }}
+              ></div>
+            </li>
+          </ul>
+        </div>
+      )}
       <div className="u-column1 col-1">
         <h2>Login</h2>
 
@@ -237,19 +266,6 @@ export const LoginForm = () => {
  */}
           <input type="hidden" name="redirect" value="/" />
         </form>
-
-        {loginerrormessage && (
-          <div
-            className="mt-4 p-3 border border-red-500 bg-red-100 text-red-700 rounded"
-            dangerouslySetInnerHTML={{ __html: loginerrormessage || "" }} // Inject HTML safely
-          />
-        )}
-        {loginsuccessmessage && (
-          <div
-            className="mt-4 p-3 border border-green-500 bg-green-100 text-green-700 rounded"
-            dangerouslySetInnerHTML={{ __html: loginsuccessmessage || "" }} // Inject HTML safely
-          />
-        )}
       </div>
     </>
   );
