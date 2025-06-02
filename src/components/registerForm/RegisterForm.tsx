@@ -263,23 +263,29 @@ export const RegisterForm = () => {
 
         console.log("Formatted data to submit:", formattedData); // For debugging
 
-        const responseagain = await updateAddresscreate(
-          "/wp-json/custom/v1/update-billing",
-          formattedData
-        );
-        setFormData({
-          firstName: "",
-          lastName: "",
-          company: "",
-          country: "",
-          address1: "",
-          address2: "",
-          city: "",
-          state: "",
-          postcode: "",
-          phone: "",
-          email: "",
-        });
+        try {
+          const responseagain = await updateAddresscreate(
+            "/wp-json/custom/v1/update-billing",
+            formattedData
+          );
+          setFormData({
+            firstName: "",
+            lastName: "",
+            company: "",
+            country: "",
+            address1: "",
+            address2: "",
+            city: "",
+            state: "",
+            postcode: "",
+            phone: "",
+            email: "",
+          });
+        } catch (updateError) {
+          console.warn("Address update failed:", updateError);
+          // Optionally show a non-blocking message
+          // setErrorMessage("Partial success: registration done, but address update failed.");
+        }
       } // Reset form data after submission
     } catch (err: any) {
       console.error("Error registering user", err);
