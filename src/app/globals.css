@@ -1119,6 +1119,8 @@ body span.countdown_section {
   background-color: transparent;
 }
 
+
+
 .checkout-page .woocommerce table.shop_table th {
   font-weight: 700;
   padding: 9px 12px;
@@ -3143,6 +3145,11 @@ table thead:first-child tr:first-child th {
   padding-bottom: 9px;
   padding-left: 0;
   padding-top: 9px;
+}
+
+.e-my-account-tab__downloads .woocommerce-MyAccount-content-wrapper,
+.elementor-widget-woocommerce-my-account .e-my-account-tab__orders .woocommerce-MyAccount-content-wrapper {
+  padding: 16px 30px 3px 30px;
 }
 
 body .uwa_buttons button.button.alt {
