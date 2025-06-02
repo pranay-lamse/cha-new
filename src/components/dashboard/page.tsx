@@ -77,7 +77,7 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto w-full lg:w-[1170px] px-2">
-      <div className="myaccount-info">
+      <div className="woocommerce myaccount-info">
         <div className="woocommerce-MyAccount-navigation col-span-1">
           <MenuPage />
         </div>

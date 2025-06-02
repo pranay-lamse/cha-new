@@ -58,7 +58,7 @@ export default function MyAccountPage() {
 
   return (
     <ApolloProvider client={client}>
-      <div className="container mx-auto w-full sm:w-11/12 lg:w-[1140px] px-4 md:px-0">
+      <div className="container  mx-auto w-full sm:w-11/12 lg:w-[1140px] px-4 md:px-0">
         <div className="e-my-account-tab e-my-account-tab__dashboard w-full p-2">
           <div className="woocommerce my-account-mobile">
             <div className="woocommerce-notices-wrapper"></div>
