@@ -365,9 +365,9 @@ export const RegisterForm = () => {
         <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
           <label htmlFor="company">
             Company name (optional)&nbsp;
-            <span className="required" aria-hidden="true">
+            {/*   <span className="required" aria-hidden="true">
               *
-            </span>
+            </span> */}
           </label>
           <input
             type="text"
