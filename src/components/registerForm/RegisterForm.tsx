@@ -268,24 +268,24 @@ export const RegisterForm = () => {
             "/wp-json/custom/v1/update-billing",
             formattedData
           );
-          setFormData({
-            firstName: "",
-            lastName: "",
-            company: "",
-            country: "",
-            address1: "",
-            address2: "",
-            city: "",
-            state: "",
-            postcode: "",
-            phone: "",
-            email: "",
-          });
         } catch (updateError) {
           console.warn("Address update failed:", updateError);
           // Optionally show a non-blocking message
           // setErrorMessage("Partial success: registration done, but address update failed.");
         }
+        setFormData({
+          firstName: "",
+          lastName: "",
+          company: "",
+          country: "",
+          address1: "",
+          address2: "",
+          city: "",
+          state: "",
+          postcode: "",
+          phone: "",
+          email: "",
+        });
       } // Reset form data after submission
     } catch (err: any) {
       console.error("Error registering user", err);
@@ -297,6 +297,28 @@ export const RegisterForm = () => {
 
   return (
     <>
+      {errormessage && (
+        <div className="woocommerce-notices-wrapper">
+          <ul className="woocommerce-error" role="alert">
+            <li>
+              <div
+                dangerouslySetInnerHTML={{ __html: errormessage || "" }}
+              ></div>
+            </li>
+          </ul>
+        </div>
+      )}
+      {successmessage && (
+        <div className="woocommerce-notices-wrapper">
+          <ul className="woocommerce-success" role="alert">
+            <li>
+              <div
+                dangerouslySetInnerHTML={{ __html: successmessage || "" }}
+              ></div>
+            </li>
+          </ul>
+        </div>
+      )}
       <div className="u-column2 col-2 mt-4 sm:mt-0">
         <h2>Register</h2>
         <form
@@ -371,6 +393,7 @@ export const RegisterForm = () => {
               id="firstName"
               value={formData.firstName}
               onChange={handleChange}
+              required
             />
           </p>
           <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
@@ -387,6 +410,7 @@ export const RegisterForm = () => {
               id="lastName"
               value={formData.lastName}
               onChange={handleChange}
+              required
             />
           </p>
           <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
@@ -445,6 +469,7 @@ export const RegisterForm = () => {
               id="address1"
               value={formData.address1}
               onChange={handleChange}
+              required
             />
           </p>
           <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
@@ -461,6 +486,7 @@ export const RegisterForm = () => {
               id="city"
               value={formData.city}
               onChange={handleChange}
+              required
             />
           </p>
           <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
@@ -536,19 +562,6 @@ export const RegisterForm = () => {
             </button>
           </p>
         </form>
-
-        {errormessage && (
-          <div
-            className="mt-4 p-3 border border-red-500 bg-red-100 text-red-700 rounded"
-            dangerouslySetInnerHTML={{ __html: errormessage || "" }} // Inject HTML safely
-          />
-        )}
-        {successmessage && (
-          <div
-            className="mt-4 p-3 border border-green-500 bg-green-100 text-green-700 rounded"
-            dangerouslySetInnerHTML={{ __html: successmessage || "" }} // Inject HTML safely
-          />
-        )}
       </div>
     </>
   );
