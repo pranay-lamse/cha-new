@@ -363,7 +363,7 @@ const AuctionDetails = () => {
       });
 
       fetchData();
-      setBidMessage("Your bid has been placed successfully.");
+      setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
     };
 
     // Attach event listener to form
