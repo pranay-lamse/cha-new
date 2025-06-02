@@ -200,7 +200,7 @@ export const RegisterForm = () => {
     if (errormessage) {
       const timer = setTimeout(() => {
         setErrorMessage("");
-      }, 5000); // 5 seconds
+      }, 10000); // 5 seconds
 
       return () => clearTimeout(timer);
     }
@@ -210,7 +210,7 @@ export const RegisterForm = () => {
     if (successmessage) {
       const timer = setTimeout(() => {
         setSuccessMessage("");
-      }, 5000); // 5 seconds
+      }, 10000); // 5 seconds
 
       return () => clearTimeout(timer);
     }
@@ -263,23 +263,29 @@ export const RegisterForm = () => {
 
         console.log("Formatted data to submit:", formattedData); // For debugging
 
-        const responseagain = await updateAddresscreate(
-          "/wp-json/custom/v1/update-billing",
-          formattedData
-        );
-        setFormData({
-          firstName: "",
-          lastName: "",
-          company: "",
-          country: "",
-          address1: "",
-          address2: "",
-          city: "",
-          state: "",
-          postcode: "",
-          phone: "",
-          email: "",
-        });
+        try {
+          const responseagain = await updateAddresscreate(
+            "/wp-json/custom/v1/update-billing",
+            formattedData
+          );
+          setFormData({
+            firstName: "",
+            lastName: "",
+            company: "",
+            country: "",
+            address1: "",
+            address2: "",
+            city: "",
+            state: "",
+            postcode: "",
+            phone: "",
+            email: "",
+          });
+        } catch (updateError) {
+          console.warn("Address update failed:", updateError);
+          // Optionally show a non-blocking message
+          // setErrorMessage("Partial success: registration done, but address update failed.");
+        }
       } // Reset form data after submission
     } catch (err: any) {
       console.error("Error registering user", err);
@@ -290,257 +296,270 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className="u-column2 col-2 mt-4 sm:mt-0">
-      <h2>Register</h2>
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        className="woocommerce-form woocommerce-form-register register"
-      >
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="reg_username">
-            Username&nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="text"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="username"
-            id="reg_username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="reg_email">
-            Email address&nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="email"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="email"
-            id="reg_email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="reg_password">
-            Password&nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="password"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="password"
-            id="reg_password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </p>
-        <StripePayment /> <br />
-        <strong> Billing details </strong> <br />
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="firstName">
-            First Name&nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="text"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="firstName"
-            id="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="lastName">
-            Last Name&nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="text"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="lastName"
-            id="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-          />
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="company">
-            Company name (optional)&nbsp;
-            {/*   <span className="required" aria-hidden="true">
+    <>
+      {errormessage && (
+        <div className="woocommerce-notices-wrapper">
+          <ul className="woocommerce-error" role="alert">
+            <li>
+              <div
+                dangerouslySetInnerHTML={{ __html: errormessage || "" }}
+              ></div>
+            </li>
+          </ul>
+        </div>
+      )}
+
+      {successmessage && (
+        <div className="woocommerce-notices-wrapper">
+          <ul className="woocommerce-error" role="alert">
+            <li>
+              <div
+                dangerouslySetInnerHTML={{ __html: successmessage || "" }}
+              ></div>
+            </li>
+          </ul>
+        </div>
+      )}
+      <div className="u-column2 col-2 mt-4 sm:mt-0">
+        <h2>Register</h2>
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="woocommerce-form woocommerce-form-register register"
+        >
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="reg_username">
+              Username&nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="text"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="username"
+              id="reg_username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="reg_email">
+              Email address&nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="email"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="email"
+              id="reg_email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="reg_password">
+              Password&nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="password"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="password"
+              id="reg_password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </p>
+          <StripePayment /> <br />
+          <strong> Billing details </strong> <br />
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="firstName">
+              First Name&nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="text"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="firstName"
+              id="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+            />
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="lastName">
+              Last Name&nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="text"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="lastName"
+              id="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+            />
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="company">
+              Company name (optional)&nbsp;
+              {/*   <span className="required" aria-hidden="true">
               *
             </span> */}
-          </label>
-          <input
-            type="text"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="company"
-            id="company"
-            value={formData.company}
-            onChange={handleChange}
-          />
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="componay_name">
-            Country / Region &nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
+            </label>
+            <input
+              type="text"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="company"
+              id="company"
+              value={formData.company}
+              onChange={handleChange}
+            />
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="componay_name">
+              Country / Region &nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+              <select
+                className="woocommerce-Input woocommerce-Input--select input-select"
+                name="country"
+                id="country"
+                value={formData.country} // ✅ Correct way to set the selected option
+                onChange={handleChange} // ✅ Handle changes dynamically
+              >
+                <option value="">Select country</option>
+                {loading ? (
+                  <option disabled>Loading...</option>
+                ) : (
+                  countries.map((country) => (
+                    <option key={country.code} value={country.code}>
+                      {country.name.toLowerCase()}
+                    </option>
+                  ))
+                )}
+              </select>
+            </label>
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="address1">
+              Street address &nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="text"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="address1"
+              id="address1"
+              value={formData.address1}
+              onChange={handleChange}
+            />
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="city">
+              Town / City &nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="text"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="city"
+              id="city"
+              value={formData.city}
+              onChange={handleChange}
+            />
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="componay_name">
+              State &nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
             <select
               className="woocommerce-Input woocommerce-Input--select input-select"
-              name="country"
-              id="country"
-              value={formData.country} // ✅ Correct way to set the selected option
-              onChange={handleChange} // ✅ Handle changes dynamically
+              name="state"
+              id="state"
+              required
+              onChange={handleChange}
+              value={formData?.state} // ✅ Correct way to manage selected option
             >
-              <option value="">Select country</option>
-              {loading ? (
-                <option disabled>Loading...</option>
-              ) : (
-                countries.map((country) => (
-                  <option key={country.code} value={country.code}>
-                    {country.name.toLowerCase()}
-                  </option>
-                ))
-              )}
+              <option value="">Select a state</option>
+              {states.map((state) => (
+                <option key={state.id} value={state.id}>
+                  {state.name}
+                </option>
+              ))}
             </select>
-          </label>
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="address1">
-            Street address &nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="text"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="address1"
-            id="address1"
-            value={formData.address1}
-            onChange={handleChange}
-          />
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="city">
-            Town / City &nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="text"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="city"
-            id="city"
-            value={formData.city}
-            onChange={handleChange}
-          />
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="componay_name">
-            State &nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <select
-            className="woocommerce-Input woocommerce-Input--select input-select"
-            name="state"
-            id="state"
-            required
-            onChange={handleChange}
-            value={formData?.state} // ✅ Correct way to manage selected option
-          >
-            <option value="">Select a state</option>
-            {states.map((state) => (
-              <option key={state.id} value={state.id}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="postcode">
-            ZIP Code &nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="text"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="postcode"
-            id="postcode"
-            value={formData.postcode}
-            onChange={handleChange}
-          />
-        </p>
-        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="phone">
-            Phone &nbsp;
-            <span className="required" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            type="text"
-            className="woocommerce-Input woocommerce-Input--text input-text"
-            name="phone"
-            id="phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </p>
-        <p>
-          Your personal data will be used to support your experience throughout
-          this website, to manage access to your account, and for other purposes
-          described in our
-          <Link href="/privacy-policy"> Privacy Policy</Link>
-        </p>
-        <p className="form-row form-row-wide">
-          <button
-            type="submit"
-            className="woocommerce-Button woocommerce-button button woocommerce-form-register__submit cursor-pointer"
-            name="register"
-            value="Register"
-            disabled={loading}
-          >
-            Register
-          </button>
-        </p>
-      </form>
-      {errormessage && (
-        <div
-          className="mt-4 p-3 border border-red-500 bg-red-100 text-red-700 rounded"
-          dangerouslySetInnerHTML={{ __html: errormessage || "" }} // Inject HTML safely
-        />
-      )}
-      {successmessage && (
-        <div
-          className="mt-4 p-3 border border-green-500 bg-green-100 text-green-700 rounded"
-          dangerouslySetInnerHTML={{ __html: successmessage || "" }} // Inject HTML safely
-        />
-      )}
-    </div>
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="postcode">
+              ZIP Code &nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="text"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="postcode"
+              id="postcode"
+              value={formData.postcode}
+              onChange={handleChange}
+            />
+          </p>
+          <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label htmlFor="phone">
+              Phone &nbsp;
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              type="text"
+              className="woocommerce-Input woocommerce-Input--text input-text"
+              name="phone"
+              id="phone"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </p>
+          <p>
+            Your personal data will be used to support your experience
+            throughout this website, to manage access to your account, and for
+            other purposes described in our
+            <Link href="/privacy-policy"> Privacy Policy</Link>
+          </p>
+          <p className="form-row form-row-wide">
+            <button
+              type="submit"
+              className="woocommerce-Button woocommerce-button button woocommerce-form-register__submit cursor-pointer"
+              name="register"
+              value="Register"
+              disabled={loading}
+            >
+              Register
+            </button>
+          </p>
+        </form>
+      </div>
+    </>
   );
 };
