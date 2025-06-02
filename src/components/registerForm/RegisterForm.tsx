@@ -196,6 +196,26 @@ export const RegisterForm = () => {
     fetchCountries();
   }, []);
 
+  useEffect(() => {
+    if (errormessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 5000); // 5 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [errormessage]);
+
+  useEffect(() => {
+    if (successmessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 5000); // 5 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [successmessage]);
+
   /* end */
   const formRef = useRef<HTMLFormElement>(null);
   const handleSubmit = async (e: any) => {
