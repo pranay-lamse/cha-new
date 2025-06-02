@@ -3215,6 +3215,41 @@ button.single_add_to_cart_button.button.alt span.woocommerce-Price-amount.amount
   margin-left: 7px;
 }
 
+.woocommerce-error,
+.woocommerce-info,
+.woocommerce-message {
+  padding: 1em 2em 1em 3.5em;
+  margin: 0 0 2em;
+  position: relative;
+  background-color: #f6f5f8;
+  color: #515151;
+  border-top: 3px solid #720eec;
+  list-style: none outside;
+  width: auto;
+  word-wrap: break-word;
+}
+
+.woocommerce-message {
+  border-top-color: #8fae1b;
+}
+
+.woocommerce-error::before,
+.woocommerce-info::before,
+.woocommerce-message::before {
+  font-family: WooCommerce;
+  content: "\e028";
+  content: "\e028" /"";
+  display: inline-block;
+  position: absolute;
+  top: 1em;
+  left: 1.5em;
+}
+
+.woocommerce-message::before {
+  content: "\e015";
+  color: #8fae1b;
+}
+
 @media (max-width: 767px) {
   .woocommerce-MyAccount-navigation {
     width: 100%;
