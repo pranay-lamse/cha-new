@@ -200,7 +200,7 @@ export const RegisterForm = () => {
     if (errormessage) {
       const timer = setTimeout(() => {
         setErrorMessage("");
-      }, 5000); // 5 seconds
+      }, 10000); // 5 seconds
 
       return () => clearTimeout(timer);
     }
@@ -210,7 +210,7 @@ export const RegisterForm = () => {
     if (successmessage) {
       const timer = setTimeout(() => {
         setSuccessMessage("");
-      }, 5000); // 5 seconds
+      }, 10000); // 5 seconds
 
       return () => clearTimeout(timer);
     }

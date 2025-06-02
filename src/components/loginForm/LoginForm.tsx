@@ -49,7 +49,7 @@ export const LoginForm = () => {
     if (loginerrormessage) {
       const timer = setTimeout(() => {
         setLoginErrorMessage("");
-      }, 5000); // Hide after 5 seconds
+      }, 10000); // Hide after 5 seconds
 
       return () => clearTimeout(timer);
     }
@@ -59,7 +59,7 @@ export const LoginForm = () => {
     if (loginsuccessmessage) {
       const timer = setTimeout(() => {
         setLoginSuccessMessage("");
-      }, 5000); // Hide after 5 seconds
+      }, 10000); // Hide after 5 seconds
 
       return () => clearTimeout(timer);
     }
