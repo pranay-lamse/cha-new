@@ -3086,11 +3086,15 @@ table thead:first-child tr:first-child th {
 }
 
 .woocommerce table.shop_table {
-  border: 1px solid rgba(0, 0, 0, .1) !important;
+  border: 1px solid rgba(0, 0, 0, .1);
   margin: 0 -1px 24px 0;
   text-align: left;
   width: 100%;
   border-radius: 5px;
+}
+
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce-pagination {
+  padding: 16px 0;
 }
 
 .e-my-account-tab__dashboard:not(.e-my-account-tab__dashboard--custom) .shop_table,
@@ -3122,7 +3126,8 @@ table thead:first-child tr:first-child th {
   font-size: 11px;
 }
 
-.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce .shop_table .button {
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce .shop_table .button,
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce-pagination .button {
   background: transparent;
   border-color: #5bc0de;
   border-radius: 3px;
@@ -3148,8 +3153,34 @@ table thead:first-child tr:first-child th {
 }
 
 .e-my-account-tab__downloads .woocommerce-MyAccount-content-wrapper,
-.elementor-widget-woocommerce-my-account .e-my-account-tab__orders .woocommerce-MyAccount-content-wrapper {
+.e-my-account-tab__orders .woocommerce-MyAccount-content-wrapper {
   padding: 16px 30px 3px 30px;
+}
+
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce .shop_table .button,
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce-pagination .button {
+  background: transparent;
+  border-color: #5bc0de;
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 2px;
+  color: #dcc373;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce .shop_table .button:hover,
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce .order-again .button:hover,
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce .woocommerce-pagination .button:hover,
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom).e-my-account-tab__payment-methods .woocommerce-MyAccount-content-wrapper .button:hover,
+.e-my-account-tab:not(.e-my-account-tab__dashboard--custom) .woocommerce-pagination .button:hover {
+  background-color: #dcc373;
+  color: #0f335f;
+}
+
+.e-my-account-tab .woocommerce-MyAccount-content-wrapper {
+  padding: 16px 30px 3px 30px !important;
+  border: 1px solid #d5d8dc !important;
 }
 
 body .uwa_buttons button.button.alt {
@@ -3185,6 +3216,22 @@ button.single_add_to_cart_button.button.alt span.woocommerce-Price-amount.amount
 }
 
 @media (max-width: 767px) {
+  .woocommerce-MyAccount-navigation {
+    width: 100%;
+  }
+
+  .woocommerce-MyAccount-content-outer {
+    float: right;
+    padding-left: 0px;
+    width: 100%;
+  }
+
+  .myaccount-info {
+    display: flex;
+    flex-direction: column;
+    padding: 30px 0px;
+  }
+
   .order-received table.shop_table tbody tr td {
     display: table-cell !important;
     text-align: left !important;
