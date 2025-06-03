@@ -491,9 +491,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               className="woocommerce-Button woocommerce-button button woocommerce-form-register__submit cursor-pointer"
               name="register"
               value="Register"
-              disabled={isRegistering}
+              disabled={isRegistering} // or your loading variable name
             >
-              {isRegistering ? "Registering..." : "Register"}
+              {isRegistering ? <span className="spinner"></span> : "Register"}
             </button>
           </p>
         </form>
