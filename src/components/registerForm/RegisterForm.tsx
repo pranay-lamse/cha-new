@@ -116,7 +116,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     { id: "WI", name: "Wisconsin" },
     { id: "WY", name: "Wyoming" },
   ]);
-
+  const [isRegistering, setIsRegistering] = useState(false);
   const [selectedState, setSelectedState] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
@@ -172,7 +172,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const formRef = useRef<HTMLFormElement>(null);
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    setIsRegistering(true);
     try {
       const response = await registerUser({
         variables: {
@@ -247,6 +247,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
       setLoginErrorMessage("Registration failed. Please try again.");
       /* toast.error(err.message); */
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -489,9 +491,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               className="woocommerce-Button woocommerce-button button woocommerce-form-register__submit cursor-pointer"
               name="register"
               value="Register"
-              disabled={loading}
+              disabled={isRegistering}
             >
-              Register
+              {isRegistering ? "Registering..." : "Register"}
             </button>
           </p>
         </form>
