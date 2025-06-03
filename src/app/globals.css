@@ -347,7 +347,9 @@ a.woocommerce-privacy-policy-link,
   width: 100%;
 }
 
-button.woocommerce-button {
+button.woocommerce-button,
+.woocommerce-error .button,
+.woocommerce-success .button {
   border: 1px solid #dac172 !IMPORTANT;
   padding: 15px 25px !important;
   background: #dac172 !important;
@@ -366,7 +368,9 @@ button.woocommerce-button {
   font-weight: 700 !important;
 }
 
-button.woocommerce-button:hover {
+button.woocommerce-button:hover,
+.woocommerce-error .button:hover,
+.woocommerce-success .button:hover {
   background: transparent !IMPORTANT;
   color: #dac172 !important;
 }
@@ -1412,21 +1416,7 @@ button#place_order:hover,
   display: none;
 }
 
-.woocommerce-error,
-.woocommerce-info,
-.woocommerce-message,
-.woocommerce-success {
-  padding: 1em 2em 1em 3.5em;
-  margin: 0 0 2em;
-  position: relative;
-  background-color: #f6f5f8;
-  color: #515151;
-  border-top: 3px solid #1e85be;
-  list-style: none outside;
-  width: auto;
-  word-wrap: break-word;
-  font-size: 15px !important;
-}
+
 
 .woocommerce-info::before {
   color: #1e85be;
@@ -3229,11 +3219,13 @@ button.single_add_to_cart_button.button.alt span.woocommerce-Price-amount.amount
   color: #515151;
   border-top: 3px solid #720eec;
   list-style: none outside;
-  width: auto;
   word-wrap: break-word;
   font-size: 16px !important;
-  font-family: "Noto Serif", sans-serif;
+  font-family: "raleway", sans-serif;
+  display: inline-block;
+  width: 100%;
 }
+
 
 .woocommerce-message {
   border-top-color: #8fae1b;
@@ -3283,6 +3275,15 @@ form.woocommerce-form.woocommerce-form-register.register form span {
 
 .auctionTow-page ul.products li.product {
   opacity: 0;
+}
+
+.woocommerce .woocommerce-error .button,
+.woocommerce .woocommerce-info .button,
+.woocommerce .woocommerce-message .button,
+.woocommerce-page .woocommerce-error .button,
+.woocommerce-page .woocommerce-info .button,
+.woocommerce-page .woocommerce-message .button {
+  float: right;
 }
 
 @media (max-width: 767px) {
