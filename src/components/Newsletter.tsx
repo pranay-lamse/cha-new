@@ -125,9 +125,9 @@ export const Newsletter = () => {
           >
             {isSubmitting ? "Submitting..." : "Subscribe"}
           </button>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
+          {error && <p className="text-red-500 mt-2 form-error">{error}</p>}
           {success && (
-            <p className="text-green-500 mt-2">Subscribed successfully! 🎉</p>
+            <p className="text-white mt-2 form-success">Your submission was successful.</p>
           )}
         </form>
       </div>

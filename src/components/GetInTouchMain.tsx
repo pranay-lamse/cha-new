@@ -46,7 +46,7 @@ export const GetInTouchMain = ({ isContact = false }) => {
       );
 
       const text = await res.text();
-      setResponse("Success!");
+      setResponse("Your submission was successful.");
     } catch (err) {
       console.error(err);
       setResponse("Error submitting form.");
