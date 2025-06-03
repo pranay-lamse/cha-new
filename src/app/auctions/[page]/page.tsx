@@ -226,9 +226,16 @@ const AuctionDetails = () => {
     const handleAddToCartClick = (e: Event) => {
       e.preventDefault();
 
-      const target = e.currentTarget as HTMLAnchorElement;
-      target.classList.add("loading"); // add loading class immediately
-      target.classList.remove("added"); // remove added class before new request
+      const target = e.currentTarget as HTMLButtonElement;
+      target.classList.add("loading");
+      target.classList.remove("added");
+
+      // Avoid duplicate spinners
+      if (!target.querySelector(".spinner")) {
+        const spinner = document.createElement("span");
+        spinner.className = "spinner";
+        target.appendChild(spinner);
+      }
 
       const formData = new FormData(form as HTMLFormElement);
       const productId =
@@ -236,41 +243,34 @@ const AuctionDetails = () => {
 
       if (!productId) {
         alert("Product ID missing");
+        target.classList.remove("loading");
+        const existingSpinner = target.querySelector(".spinner");
+        if (existingSpinner) existingSpinner.remove();
         return;
       }
-
-      const payload = new URLSearchParams();
-      payload.append("product_id", String(productId));
-      payload.append("quantity", "1");
 
       const runAsync = async () => {
         const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}?add-to-cart=${productId}`;
 
         if (token) {
-          const fullURL = `${baseURL}`;
           try {
-            await axios.get(fullURL, {
+            await axios.get(baseURL, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
               withCredentials: true,
             });
 
-            // Manually trigger WooCommerce event
-            const $button = $(target);
-            $("body").trigger("added_to_cart", [{}, "", $button]);
+            $("body").trigger("added_to_cart", [{}, "", $(target)]);
 
-            // Add the 'added' class after successful add to cart
-            // Add success notice to the top of the page
             const messageContainer = document.createElement("div");
             messageContainer.className = "woocommerce-notices-wrapper";
             messageContainer.innerHTML = `
-    <div class="woocommerce-message" role="alert" tabindex="-1">
-      ${slug} has been added to your cart. <a href="/cart/" class="button wc-forward">View cart</a>
-    </div>
-  `;
+          <div class="woocommerce-message" role="alert" tabindex="-1">
+            ${slug} has been added to your cart. <a href="/cart/" class="button wc-forward">View cart</a>
+          </div>
+        `;
 
-            // Remove any existing notice to avoid duplicates
             const existingNotice = document.querySelector(
               ".woocommerce-notices-wrapper"
             );
@@ -283,15 +283,18 @@ const AuctionDetails = () => {
               content[0].prepend(messageContainer);
             }
 
-            // Add the 'added' class after successful add to cart
             target.classList.add("added");
           } catch (error) {
             console.error("Add to cart failed:", error);
           } finally {
-            target.classList.remove("loading"); // remove loading class after request finishes
+            target.classList.remove("loading");
+            const spinner = target.querySelector(".spinner");
+            if (spinner) spinner.remove();
           }
         } else {
           target.classList.remove("loading");
+          const spinner = target.querySelector(".spinner");
+          if (spinner) spinner.remove();
         }
       };
 
@@ -340,35 +343,59 @@ const AuctionDetails = () => {
 
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
-      e.preventDefault(); // Prevent default form submission
-      e.stopPropagation(); // Stop event from propagating further
-      /* setLoading(true); */
+      e.preventDefault();
+      e.stopPropagation();
 
       if (!token) {
         setLoginMessage(true);
-        return null;
+        return;
       }
 
-      const form = $(e.target); // Get the form element
+      const form = $(e.target);
+      const button = form.find("#placebidbutton");
 
-      // Extract form values
       const bidValue = form.find("#uwa_bid_value").val();
-      const productId = form.find("input[name='product_id']").val();
-      const userId = form.find("input[name='user_id']").val();
 
-      const result = await placeAuctionBid({
-        productId: productId,
-        auctionId: productId,
-        bidAmount: bidValue,
-      });
+      if (!bidValue || isNaN(Number(bidValue))) {
+        alert("Please enter your bid before placing it.");
+        return;
+      }
 
-      fetchData();
-      setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
+      // Add spinner and disable button
+      button.prop("disabled", true);
+      button.prepend('<span class="spinner" id="bid-spinner"></span>');
+      button
+        .contents()
+        .filter(function () {
+          return this.nodeType === 3;
+        })
+        .first()
+        .replaceWith(" Placing bid...");
+
+      try {
+        const bidValue = form.find("#uwa_bid_value").val();
+        const productId = form.find("input[name='product_id']").val();
+        const userId = form.find("input[name='user_id']").val();
+
+        await placeAuctionBid({
+          productId: productId,
+          auctionId: productId,
+          bidAmount: bidValue,
+        });
+
+        fetchData();
+        setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
+      } catch (err) {
+        console.error("Bid failed:", err);
+      } finally {
+        // Remove spinner and restore button
+        button.prop("disabled", false);
+        $("#bid-spinner").remove();
+        button.text("Custom Bid");
+      }
     };
 
-    // Attach event listener to form
     $(document).on("submit", "#uwa_auction_form", handleFormSubmit);
-
     return () => {
       $(document).off("submit", "#uwa_auction_form", handleFormSubmit);
     };
