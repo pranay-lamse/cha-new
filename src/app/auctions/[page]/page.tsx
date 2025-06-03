@@ -340,35 +340,52 @@ const AuctionDetails = () => {
 
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
-      e.preventDefault(); // Prevent default form submission
-      e.stopPropagation(); // Stop event from propagating further
-      /* setLoading(true); */
+      e.preventDefault();
+      e.stopPropagation();
 
       if (!token) {
         setLoginMessage(true);
-        return null;
+        return;
       }
 
-      const form = $(e.target); // Get the form element
+      const form = $(e.target);
+      const button = form.find("#placebidbutton");
 
-      // Extract form values
-      const bidValue = form.find("#uwa_bid_value").val();
-      const productId = form.find("input[name='product_id']").val();
-      const userId = form.find("input[name='user_id']").val();
+      // Add spinner and disable button
+      button.prop("disabled", true);
+      button.prepend('<span class="spinner" id="bid-spinner"></span>');
+      button
+        .contents()
+        .filter(function () {
+          return this.nodeType === 3;
+        })
+        .first()
+        .replaceWith(" Placing bid...");
 
-      const result = await placeAuctionBid({
-        productId: productId,
-        auctionId: productId,
-        bidAmount: bidValue,
-      });
+      try {
+        const bidValue = form.find("#uwa_bid_value").val();
+        const productId = form.find("input[name='product_id']").val();
+        const userId = form.find("input[name='user_id']").val();
 
-      fetchData();
-      setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
+        await placeAuctionBid({
+          productId: productId,
+          auctionId: productId,
+          bidAmount: bidValue,
+        });
+
+        fetchData();
+        setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
+      } catch (err) {
+        console.error("Bid failed:", err);
+      } finally {
+        // Remove spinner and restore button
+        button.prop("disabled", false);
+        $("#bid-spinner").remove();
+        button.text("Custom Bid");
+      }
     };
 
-    // Attach event listener to form
     $(document).on("submit", "#uwa_auction_form", handleFormSubmit);
-
     return () => {
       $(document).off("submit", "#uwa_auction_form", handleFormSubmit);
     };
