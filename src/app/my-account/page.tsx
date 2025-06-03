@@ -80,7 +80,36 @@ export default function MyAccountPage() {
       <div className="container  mx-auto w-full sm:w-11/12 lg:w-[1140px] px-4 md:px-0">
         <div className="e-my-account-tab e-my-account-tab__dashboard w-full p-2">
           <div className="woocommerce my-account-mobile">
-            <div className="woocommerce-notices-wrapper"></div>
+            <div className="woocommerce-notices-wrapper">
+              {loginErrorMessage && (
+                <div className="woocommerce-notices-wrapper">
+                  <ul className="woocommerce-error" role="alert">
+                    <li>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: loginErrorMessage || "",
+                        }}
+                      ></div>
+                    </li>
+                  </ul>
+                </div>
+              )}
+
+              {loginSuccessMessage && (
+                <div className="woocommerce-notices-wrapper">
+                  <ul className="woocommerce-success" role="alert">
+                    <li>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: loginSuccessMessage || "",
+                        }}
+                      ></div>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+
             {loading || isAuthenticated === null ? ( // Ensure loading or undefined auth state is handled
               <div className="flex justify-center items-center min-h-[300px]">
                 <p>Loading...</p>

@@ -78,13 +78,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
           Cookies.set("rememberMe", "true", cookieOptions);
         }
 
-        setLoginSuccessMessage(decodeHtmlEntities("Login successful"));
+        setLoginSuccessMessage("Login successful");
 
         window.location.reload();
       }
     } catch (error: any) {
       setLoginErrorMessage(
-        decodeHtmlEntities("The username or password you entered is incorrect.")
+        "The username or password you entered is incorrect."
       );
     }
   };
@@ -117,35 +117,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   return (
     <>
-      {loginerrormessage && (
-        <div className="woocommerce-notices-wrapper">
-          <ul className="woocommerce-error" role="alert">
-            <li>
-              <strong>ERROR</strong>: The username or password you entered is
-              incorrect.{" "}
-              <a
-                href="/my-account/lost-password/"
-                title="Password Lost and Found"
-              >
-                Lost your password
-              </a>
-              ?{" "}
-            </li>
-          </ul>
-        </div>
-      )}
-
-      {loginsuccessmessage && (
-        <div className="woocommerce-notices-wrapper">
-          <ul className="woocommerce-success" role="alert">
-            <li>
-              <div
-                dangerouslySetInnerHTML={{ __html: loginsuccessmessage || "" }}
-              ></div>
-            </li>
-          </ul>
-        </div>
-      )}
       <div className="u-column1 col-1">
         <h2>Login</h2>
 
