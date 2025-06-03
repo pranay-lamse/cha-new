@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import Link from "next/link";
 import {
   Elements,
   CardNumberElement,
@@ -103,7 +104,7 @@ const CheckoutForm = () => {
           checked={termsAccepted}
           onChange={(e) => setTermsAccepted(e.target.checked)}
         />
-        <span>I have read and agree to the website terms and conditions *</span>
+        <span>I have read and agree to the website <Link href="/terms-conditions-buyers"> terms and conditions</Link> *</span>
       </div>{" "}
       <br />
       {/* <button

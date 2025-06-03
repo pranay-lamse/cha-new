@@ -128,7 +128,9 @@ span {
   box-shadow: none;
   text-shadow: none;
 }
-
+button.woocommerce-Button.woocommerce-button.button.woocommerce-form-register__submit.cursor-pointer {
+    margin-top: 15px;
+}
 h2 {
   font-family: "Marcellus", "Marcellus Fallback";
   font-size: 45px;
