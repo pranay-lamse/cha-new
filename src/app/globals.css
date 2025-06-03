@@ -347,7 +347,8 @@ a.woocommerce-privacy-policy-link,
   width: 100%;
 }
 
-.woocommerce .button,
+.woocommerce-form-login__submit,
+.woocommerce-form-register__submit,
 .woocommerce-error .button,
 .woocommerce-success .button {
   border: 1px solid #dac172 !IMPORTANT;
@@ -368,7 +369,8 @@ a.woocommerce-privacy-policy-link,
   font-weight: 700 !important;
 }
 
-.woocommerce .button:hover,
+.woocommerce-form-login__submit:hover,
+.woocommerce-form-register__submit:hover,
 .woocommerce-error .button:hover,
 .woocommerce-success .button:hover {
   background: transparent !IMPORTANT;
