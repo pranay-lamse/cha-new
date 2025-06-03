@@ -197,7 +197,7 @@ const EditAccountPage = () => {
   }, [htmlContent, loading]);
 
   return (
-    <div className="auctionTow-page all-auctions-page">
+    <div className="auctionTow-page all-auctions-page auction_products">
       {loading ? (
         <div className="flex justify-center items-center min-h-screen">
           <Loader />

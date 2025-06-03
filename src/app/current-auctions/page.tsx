@@ -262,7 +262,7 @@ export default function EditAccountPage() {
   }, [htmlContent, loading]);
 
   return (
-    <div className="auctionTow-page all-auctions-page">
+    <div className="auctionTow-page all-auctions-page auction_products">
       {loading ? (
         <Loader />
       ) : (
