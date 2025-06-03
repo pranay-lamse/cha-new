@@ -203,7 +203,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               value="Log in"
               disabled={loading}
             >
-              {loading ? "Logging in..." : "Log in"}
+              {loading ? <span className="spinner"></span> : "Log in"}
             </button>
           </p>
 
