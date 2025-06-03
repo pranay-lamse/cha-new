@@ -34,7 +34,9 @@ export const AuctionsByCategory = async ({
     <>
       <div className="grid">
         <div className="title-all">
-          <h1 className={`${marcellus.className} text-center text-5xl`}>
+          <h1
+            className={`${marcellus.className} uppercase text-center text-5xl`}
+          >
             {title}
           </h1>
         </div>

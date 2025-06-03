@@ -24,146 +24,158 @@ import { marcellus, raleway } from "@/config/fonts";
 
 export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
-   const [loading, setLoading] = useState<boolean>(true);
-   const [error, setError] = useState<string | null>(null);
-   const [bidStatus, setBidStatus] = useState("active");
- 
-  
-   useEffect(() => {
-     if (typeof window !== "undefined") {
-       const params = new URLSearchParams(window.location.search);
-       const status = params.get("bid_status") || "active";
-       setBidStatus(status);
-     }
-   }, []);
- 
-   useEffect(() => {
-     const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/leatherwood-trail-horses`;
- 
-     const fetchData = async () => {
-       setLoading(true);
-       setError(null);
- 
-       try {
-         const data = await fetchHtmlData(url);
-         setHtmlContent(data);
-       } catch (error) {
-         setError("Failed to fetch data. Please try again later.");
-         setHtmlContent(null);
-       } finally {
-         setLoading(false);
-       }
-     };
- 
-     if (bidStatus) {
-       fetchData();
-     }
-   }, [bidStatus]);
- 
-   useEffect(() => {
-     if (!loading && htmlContent) {
-       setTimeout(() => {
-         $(".product").each(function () {
-           const price = $(this).find(".price");
-           const title = $(this).find(".woocommerce-loop-product__title");
-           const details = $(this).find(".short_des_loop");
- 
-           if (details.length) {
-             if (price.length && !details.find(".price").length) {
-               price.detach().prependTo(details);
-             }
-             if (
-               title.length &&
-               !details.find(".woocommerce-loop-product__title").length
-             ) {
-               title.detach().prependTo(details);
-             }
-           }
-         });
- 
-         $(".short_des_loop").each(function () {
-           const details = $(this).find("ul");
-           const button = $(this)
-             .closest(".product")
-             .find(
-               "a.button.product_type_auction, a.button.product_type_simple"
-             );
- 
-           if (details.length && button.length) {
-             details.after(button);
-           }
-         });
- 
-         function reorderProducts() {
-           const windowWidth = $(window)?.width() || 0;
- 
-           if (windowWidth > 768) {
-             $(".products .product").each(function (index) {
-               const $image = $(this).find(".woocommerce-LoopProduct-link");
-               const $description = $(this).find(".short_des_loop");
- 
-               if ($image.length && $description.length) {
-                 if (index % 2 === 0) {
-                   $image.insertBefore($description);
-                 } else {
-                   $description.insertBefore($image);
-                 }
-               }
-             });
-           } else {
-             $(".products .product").each(function () {
-               const $image = $(this).find(".woocommerce-LoopProduct-link");
-               const $description = $(this).find(".short_des_loop");
- 
-               if ($image.length && $description.length) {
-                 $image.insertBefore($description);
-               }
-             });
-           }
-         }
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [bidStatus, setBidStatus] = useState("active");
 
-           $(".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid").text("Sold via Bid");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const status = params.get("bid_status") || "active";
+      setBidStatus(status);
+    }
+  }, []);
 
-        $(".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for").text("Sold via Buy Now");
+  useEffect(() => {
+    const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/leatherwood-trail-horses`;
 
-        $(".home_products_sec .product").each(function(){
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
 
-        const $link = $(this).find(".woocommerce-LoopProduct-link").attr("href");
+      try {
+        const data = await fetchHtmlData(url);
+        setHtmlContent(data);
+      } catch (error) {
+        setError("Failed to fetch data. Please try again later.");
+        setHtmlContent(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        $(this).find(".short_des_loop").append("<a href='"+$link+"#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>");
+    if (bidStatus) {
+      fetchData();
+    }
+  }, [bidStatus]);
 
-        $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+  useEffect(() => {
+    if (!loading && htmlContent) {
+      setTimeout(() => {
+        $(".product").each(function () {
+          const price = $(this).find(".price");
+          const title = $(this).find(".woocommerce-loop-product__title");
+          const details = $(this).find(".short_des_loop");
 
-    });
+          if (details.length) {
+            if (price.length && !details.find(".price").length) {
+              price.detach().prependTo(details);
+            }
+            if (
+              title.length &&
+              !details.find(".woocommerce-loop-product__title").length
+            ) {
+              title.detach().prependTo(details);
+            }
+          }
+        });
+
+        $(".short_des_loop").each(function () {
+          const details = $(this).find("ul");
+          const button = $(this)
+            .closest(".product")
+            .find(
+              "a.button.product_type_auction, a.button.product_type_simple"
+            );
+
+          if (details.length && button.length) {
+            details.after(button);
+          }
+        });
+
+        function reorderProducts() {
+          const windowWidth = $(window)?.width() || 0;
+
+          if (windowWidth > 768) {
+            $(".products .product").each(function (index) {
+              const $image = $(this).find(".woocommerce-LoopProduct-link");
+              const $description = $(this).find(".short_des_loop");
+
+              if ($image.length && $description.length) {
+                if (index % 2 === 0) {
+                  $image.insertBefore($description);
+                } else {
+                  $description.insertBefore($image);
+                }
+              }
+            });
+          } else {
+            $(".products .product").each(function () {
+              const $image = $(this).find(".woocommerce-LoopProduct-link");
+              const $description = $(this).find(".short_des_loop");
+
+              if ($image.length && $description.length) {
+                $image.insertBefore($description);
+              }
+            });
+          }
+        }
+
+        $(
+          ".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid"
+        ).text("Sold via Bid");
+
+        $(
+          ".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for"
+        ).text("Sold via Buy Now");
+
+        $(".home_products_sec .product").each(function () {
+          const $link = $(this)
+            .find(".woocommerce-LoopProduct-link")
+            .attr("href");
+
+          $(this)
+            .find(".short_des_loop")
+            .append(
+              "<a href='" +
+                $link +
+                "#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>"
+            );
+
+          $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+        });
 
         if (window.location.href.indexOf("bidding") > -1) {
+          console.log("yes");
 
-            console.log("yes");
-
-      $('html, body').animate({
-
-       scrollTop: $("#bidding_sec").offset() && $("#bidding_sec").offset()?.top ? $("#bidding_sec").offset()!.top - 300 : 0
-
-      });
+          $("html, body").animate({
+            scrollTop:
+              $("#bidding_sec").offset() && $("#bidding_sec").offset()?.top
+                ? $("#bidding_sec").offset()!.top - 300
+                : 0,
+          });
         }
- 
-         reorderProducts();
-         $(window).on("resize", reorderProducts);
- 
-         return () => {
-           $(window).off("resize", reorderProducts);
-         };
-       }, 100);
-     }
-   }, [htmlContent, loading]);
 
+        reorderProducts();
+        $(window).on("resize", reorderProducts);
+
+        return () => {
+          $(window).off("resize", reorderProducts);
+        };
+      }, 100);
+    }
+  }, [htmlContent, loading]);
 
   useEffect(() => {
     // Ensure the Facebook SDK is loaded
-    if (typeof window !== "undefined" && !document.getElementById("facebook-jssdk")) {
+    if (
+      typeof window !== "undefined" &&
+      !document.getElementById("facebook-jssdk")
+    ) {
       const script = document.createElement("script");
       script.id = "facebook-jssdk";
-      script.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0";
+      script.src =
+        "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0";
       script.async = true;
       script.defer = true;
       script.crossOrigin = "anonymous";
@@ -186,7 +198,7 @@ export default function EditAccountPage() {
     <div className="auctionTow-page">
       <div className="title-all">
         <h1
-          className={`${marcellus.className} text-center text-[26px] md:text-5xl font-bold`}
+          className={`${marcellus.className} uppercase text-center text-[26px] md:text-5xl font-extrabold`}
         >
           Leatherwood Farm Trail Horses
         </h1>
@@ -229,14 +241,14 @@ export default function EditAccountPage() {
                 data-hide-cover="false"
                 data-show-facepile="true"
               >
-              <blockquote
-                cite="https://www.facebook.com/105127196018771"
-                className="fb-xfbml-parse-ignore"
-              >
-                <a href="https://www.facebook.com/105127196018771">
-                  Leatherwood Farm Trail Horses
-                </a>
-              </blockquote>
+                <blockquote
+                  cite="https://www.facebook.com/105127196018771"
+                  className="fb-xfbml-parse-ignore"
+                >
+                  <a href="https://www.facebook.com/105127196018771">
+                    Leatherwood Farm Trail Horses
+                  </a>
+                </blockquote>
               </div>
             </div>
             <div className="w-full md:w-2/3 p-0 md:p-1">
@@ -295,17 +307,17 @@ export default function EditAccountPage() {
         <Loader />
       ) : (
         <div className="auctionTow-page">
-      {loading ? (
-        <Loader />
-      ) : (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: filterHTMLContent(htmlContent || "", ["products"]),
-          }}
-          className="text-gray-700"
-        ></div>
-      )}
-    </div>
+          {loading ? (
+            <Loader />
+          ) : (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: filterHTMLContent(htmlContent || "", ["products"]),
+              }}
+              className="text-gray-700"
+            ></div>
+          )}
+        </div>
       )}
     </div>
   );

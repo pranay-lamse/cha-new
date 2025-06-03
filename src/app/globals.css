@@ -1653,7 +1653,7 @@ form.checkout_coupon.woocommerce-form-coupon p {
 
 .coupon button.button,
 .cart-page td.actions button.button,
-.wc-proceed-to-checkout {
+.wc-proceed-to-checkout button {
   border: 1px solid #dac172 !important;
   padding: 15px 25px !important;
   background: #dac172 !important;
@@ -1675,7 +1675,7 @@ form.checkout_coupon.woocommerce-form-coupon p {
 
 .coupon button.button:hover,
 .cart-page td.actions button.button:hover,
-.wc-proceed-to-checkout:hover {
+.wc-proceed-to-checkout button:hover {
   background: transparent !important;
   border: 1px solid #dac172 !important;
   color: #dac172 !important;
