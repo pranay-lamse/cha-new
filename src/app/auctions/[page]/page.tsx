@@ -226,6 +226,11 @@ const AuctionDetails = () => {
     const handleAddToCartClick = (e: Event) => {
       e.preventDefault();
 
+      if (!token) {
+        setLoginMessage(true);
+        return null;
+      }
+
       const target = e.currentTarget as HTMLButtonElement;
       target.classList.add("loading");
       target.classList.remove("added");
