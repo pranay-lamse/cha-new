@@ -105,7 +105,7 @@ export default function EditAccountPage() {
         }
 
         reorderProducts();
-
+        $(".auctionTow-page ul.products li.product").css("opacity", "1");
         if (typeof window !== "undefined") {
           $(window).on("resize", reorderProducts);
         }
