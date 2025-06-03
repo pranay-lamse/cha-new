@@ -1414,7 +1414,8 @@ button#place_order:hover,
 
 .woocommerce-error,
 .woocommerce-info,
-.woocommerce-message {
+.woocommerce-message,
+.woocommerce-success {
   padding: 1em 2em 1em 3.5em;
   margin: 0 0 2em;
   position: relative;
@@ -3219,7 +3220,8 @@ button.single_add_to_cart_button.button.alt span.woocommerce-Price-amount.amount
 
 .woocommerce-error,
 .woocommerce-info,
-.woocommerce-message {
+.woocommerce-message,
+.woocommerce-success {
   padding: 1em 2em 1em 3.5em;
   margin: 0 0 2em;
   position: relative;
@@ -3239,7 +3241,8 @@ button.single_add_to_cart_button.button.alt span.woocommerce-Price-amount.amount
 
 .woocommerce-error::before,
 .woocommerce-info::before,
-.woocommerce-message::before {
+.woocommerce-message::before,
+.woocommerce-success::before {
   font-family: WooCommerce;
   content: "\e028";
   content: "\e028" /"";
@@ -3249,7 +3252,8 @@ button.single_add_to_cart_button.button.alt span.woocommerce-Price-amount.amount
   left: 1.5em;
 }
 
-.woocommerce-message::before {
+.woocommerce-message::before,
+.woocommerce-success::before {
   content: "\e015";
   color: #8fae1b;
 }
@@ -3853,4 +3857,8 @@ form.woocommerce-form.woocommerce-form-register.register form span {
 
 .woocommerce-error {
   border-top-color: #b81c23;
+}
+
+.woocommerce-success {
+  border-top-color: green;
 }
