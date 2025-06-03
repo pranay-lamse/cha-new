@@ -80,7 +80,7 @@ const AuctionDetails = () => {
 
   // --- Combined jQuery click handlers ---
   useEffect(() => {
-    const handleClick = function (e: JQuery.ClickEvent) {
+    const handleClick = function (this: any, e: JQuery.ClickEvent) {
       e.preventDefault();
       const auctionId = $(this).data("auction-id");
       if (auctionId) {
