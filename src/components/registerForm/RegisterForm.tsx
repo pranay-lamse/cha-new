@@ -149,39 +149,6 @@ export const RegisterForm = () => {
     }
   };
 
-  /*  const handleSubmitaddress = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formattedData: Record<string, string> = {};
-
-    // Format the data as required
-    for (const key in formData) {
-      if (formData.hasOwnProperty(key)) {
-        // Convert camelCase keys to snake_case keys with underscores
-        const formattedKey = key
-          .replace(/([A-Z])/g, "_$1") // Add underscore before uppercase letters
-          .toLowerCase(); // Convert to lowercase
-        formattedData[formattedKey] = formData[key as keyof typeof formData];
-      }
-    }
-
-    // Add user ID to the payload
-    formattedData["id"] = user?.userId; // Replace with dynamic ID if needed
-
-    console.log("Formatted data to submit:", formattedData); // For debugging
-
-    const response = await updateAddress(
-      "/wp-json/custom/v1/update-billing",
-      formattedData
-    );
-    if (response) {
-      alert("Address updated successfully!");
-      window.location.reload(); // Reload the page to reflect changes
-    } else {
-      alert("Failed to update address. Please try again.");
-    }
-  }; */
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
