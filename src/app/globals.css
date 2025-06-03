@@ -3859,6 +3859,10 @@ form.woocommerce-form.woocommerce-form-register.register form span {
   border-top-color: #b81c23;
 }
 
+.woocommerce-success {
+  border-top-color: #8fae1b;
+}
+
 .spinner {
   border: 2px solid #f3f3f3;
   /* Light grey */
