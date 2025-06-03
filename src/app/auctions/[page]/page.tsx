@@ -67,6 +67,12 @@ const AuctionDetails = () => {
       setHtmlContent(null);
     } finally {
       setLoading(false);
+      const noticeWrapper = document.querySelector("body");
+      if (noticeWrapper) {
+        noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        console.log("Element not found");
+      }
     }
   };
 
@@ -229,6 +235,12 @@ const AuctionDetails = () => {
       } finally {
         target.classList.remove("loading");
         target.querySelector(".spinner")?.remove();
+        const noticeWrapper = document.querySelector("body");
+        if (noticeWrapper) {
+          noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          console.log("Element not found");
+        }
       }
     };
 
@@ -260,6 +272,12 @@ const AuctionDetails = () => {
         setData({});
       } finally {
         setLoading(false);
+        const noticeWrapper = document.querySelector("body");
+        if (noticeWrapper) {
+          noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          console.log("Element not found");
+        }
       }
     };
     fetchSingleProduct();
@@ -311,6 +329,13 @@ const AuctionDetails = () => {
         button.prop("disabled", false);
         $("#bid-spinner").remove();
         button.text("Custom Bid");
+
+        const noticeWrapper = document.querySelector("body");
+        if (noticeWrapper) {
+          noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          console.log("Element not found");
+        }
       }
     };
 
