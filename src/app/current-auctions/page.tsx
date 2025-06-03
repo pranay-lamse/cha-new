@@ -181,6 +181,8 @@ export default function EditAccountPage() {
             );
 
           $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+
+          $(".auctionTow-page ul.products li.product").css("opacity", "1");
         });
 
         if (window.location.href.indexOf("bidding") > -1) {

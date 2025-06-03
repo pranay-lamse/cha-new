@@ -128,9 +128,11 @@ span {
   box-shadow: none;
   text-shadow: none;
 }
+
 button.woocommerce-Button.woocommerce-button.button.woocommerce-form-register__submit.cursor-pointer {
-    margin-top: 15px;
+  margin-top: 15px;
 }
+
 h2 {
   font-family: "Marcellus", "Marcellus Fallback";
   font-size: 45px;
@@ -3273,6 +3275,10 @@ form.woocommerce-form.woocommerce-form-register.register form span a {
 
 form.woocommerce-form.woocommerce-form-register.register form span {
   margin: 0px;
+}
+
+.auctionTow-page ul.products li.product {
+  opacity: 0;
 }
 
 @media (max-width: 767px) {

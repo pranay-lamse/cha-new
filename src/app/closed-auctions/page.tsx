@@ -101,7 +101,7 @@ export default function EditAccountPage() {
             details.after(button);
           }
         });
-
+        $(".auctionTow-page ul.products li.product").css("opacity", "1");
         // function reorderProducts() {
         //   if (typeof window !== "undefined") {
         //     const windowWidth = $(window)?.width() || 0; // Prevent undefined issue
@@ -199,7 +199,7 @@ export default function EditAccountPage() {
   }, [htmlContent, loading]);
 
   return (
-    <div className="auctionTow-page all-auctions-page">
+    <div className="auctionTow-page all-auctions-page closed_auction">
       {loading ? (
         <Loader />
       ) : (

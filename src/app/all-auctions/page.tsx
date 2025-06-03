@@ -188,6 +188,7 @@ const EditAccountPage = () => {
           $wrapper2.append(products1);
         }
       }, 200);
+      $(".auctionTow-page ul.products li.product").css("opacity", "1");
       return () => {
         clearTimeout(timeoutId);
         $(window).off("resize");

@@ -299,13 +299,9 @@ export const RegisterForm = () => {
     <>
       {errormessage && (
         <div className="woocommerce-notices-wrapper">
-          <ul className="woocommerce-error" role="alert">
-            <li>
-              <div
-                dangerouslySetInnerHTML={{ __html: errormessage || "" }}
-              ></div>
-            </li>
-          </ul>
+          <div className="woocommerce-error" role="alert">
+            <div dangerouslySetInnerHTML={{ __html: errormessage || "" }}></div>
+          </div>
         </div>
       )}
       {successmessage && (
