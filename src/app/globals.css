@@ -347,7 +347,6 @@ a.woocommerce-privacy-policy-link,
   width: 100%;
 }
 
-button.woocommerce-button,
 .woocommerce-error .button,
 .woocommerce-success .button {
   border: 1px solid #dac172 !IMPORTANT;
@@ -368,7 +367,7 @@ button.woocommerce-button,
   font-weight: 700 !important;
 }
 
-button.woocommerce-button:hover,
+
 .woocommerce-error .button:hover,
 .woocommerce-success .button:hover {
   background: transparent !IMPORTANT;
@@ -3277,7 +3276,7 @@ form.woocommerce-form.woocommerce-form-register.register form span {
   opacity: 0;
 }
 
-.woocommerce .woocommerce-error .button,
+.woocommerce-error .button,
 .woocommerce .woocommerce-info .button,
 .woocommerce .woocommerce-message .button,
 .woocommerce-page .woocommerce-error .button,
