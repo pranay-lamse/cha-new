@@ -26,17 +26,19 @@ const LOGIN_USER = `
   }
 `;
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  setLoginSuccessMessage: (msg: string) => void;
+  setLoginErrorMessage: (msg: string) => void;
+}
+export const LoginForm: React.FC<LoginFormProps> = ({
+  setLoginSuccessMessage,
+  setLoginErrorMessage,
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [loginerrormessage, setLoginErrorMessage] = useState<string | null>(
-    null
-  );
-  const [loginsuccessmessage, setLoginSuccessMessage] = useState<string | null>(
-    null
-  );
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -45,25 +47,6 @@ export const LoginForm = () => {
     return doc.documentElement.textContent;
   };
 
-  useEffect(() => {
-    if (loginerrormessage) {
-      const timer = setTimeout(() => {
-        setLoginErrorMessage("");
-      }, 10000); // Hide after 5 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [loginerrormessage]);
-
-  useEffect(() => {
-    if (loginsuccessmessage) {
-      const timer = setTimeout(() => {
-        setLoginSuccessMessage("");
-      }, 10000); // Hide after 5 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [loginsuccessmessage]);
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -95,13 +78,13 @@ export const LoginForm = () => {
           Cookies.set("rememberMe", "true", cookieOptions);
         }
 
-        setLoginSuccessMessage(decodeHtmlEntities("Login successful"));
+        setLoginSuccessMessage("Login successful");
 
         window.location.reload();
       }
     } catch (error: any) {
       setLoginErrorMessage(
-        decodeHtmlEntities("The username or password you entered is incorrect.")
+        "The username or password you entered is incorrect."
       );
     }
   };
@@ -134,35 +117,6 @@ export const LoginForm = () => {
 
   return (
     <>
-      {loginerrormessage && (
-        <div className="woocommerce-notices-wrapper">
-          <ul className="woocommerce-error" role="alert">
-            <li>
-              <strong>ERROR</strong>: The username or password you entered is
-              incorrect.{" "}
-              <a
-                href="/my-account/lost-password/"
-                title="Password Lost and Found"
-              >
-                Lost your password
-              </a>
-              ?{" "}
-            </li>
-          </ul>
-        </div>
-      )}
-
-      {loginsuccessmessage && (
-        <div className="woocommerce-notices-wrapper">
-          <ul className="woocommerce-success" role="alert">
-            <li>
-              <div
-                dangerouslySetInnerHTML={{ __html: loginsuccessmessage || "" }}
-              ></div>
-            </li>
-          </ul>
-        </div>
-      )}
       <div className="u-column1 col-1">
         <h2>Login</h2>
 
