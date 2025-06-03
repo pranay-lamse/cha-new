@@ -550,7 +550,7 @@ export const RegisterForm = () => {
             other purposes described in our
             <Link href="/privacy-policy"> Privacy Policy</Link>
           </p>
-          <p className="form-row form-row-wide">
+          <p className="form-row form-row-wide mt-2">
             <button
               type="submit"
               className="woocommerce-Button woocommerce-button button woocommerce-form-register__submit cursor-pointer"
