@@ -117,6 +117,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       Cookies.remove("wordpress_sec_*");
     } catch (err) {
       console.error("Error logging out", err);
+    } finally {
+      const noticeWrapper = document.querySelector("body");
+      if (noticeWrapper) {
+        noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        console.log("Element not found");
+      }
     }
   };
 

@@ -249,6 +249,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       /* toast.error(err.message); */
     } finally {
       setIsRegistering(false);
+      const noticeWrapper = document.querySelector("body");
+      if (noticeWrapper) {
+        noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        console.log("Element not found");
+      }
     }
   };
 
