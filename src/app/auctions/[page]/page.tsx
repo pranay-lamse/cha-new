@@ -447,7 +447,7 @@ const AuctionDetails = () => {
           (item: any) => item.key === "coggins"
         )?.value;
         return (
-          <div key="auction.id" className="auction-deatils-page">
+          <div key="auction.id" className="woocommerce auction-deatils-page">
             {bidMessage && (
               <div className="woocommerce-notices-wrapper">
                 <div className="woocommerce-message" role="alert">
