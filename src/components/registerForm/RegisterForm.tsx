@@ -36,16 +36,21 @@ const REGISTER_USER = gql`
     }
   }
 `;
-
-export const RegisterForm = () => {
+interface RegisterFormProps {
+  setLoginSuccessMessage: (msg: string) => void;
+  setLoginErrorMessage: (msg: string) => void;
+}
+export const RegisterForm: React.FC<RegisterFormProps> = ({
+  setLoginSuccessMessage,
+  setLoginErrorMessage,
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [errormessage, setErrorMessage] = useState<string | null>(null);
-  const [successmessage, setSuccessMessage] = useState<string | null>(null);
+
   const [registerUser, { data, loading, error }] = useMutation(REGISTER_USER);
   const decodeHtmlEntities = (text: any) => {
     const doc = new DOMParser().parseFromString(text, "text/html");
@@ -163,26 +168,6 @@ export const RegisterForm = () => {
     fetchCountries();
   }, []);
 
-  useEffect(() => {
-    if (errormessage) {
-      const timer = setTimeout(() => {
-        setErrorMessage("");
-      }, 10000); // 5 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [errormessage]);
-
-  useEffect(() => {
-    if (successmessage) {
-      const timer = setTimeout(() => {
-        setSuccessMessage("");
-      }, 10000); // 5 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [successmessage]);
-
   /* end */
   const formRef = useRef<HTMLFormElement>(null);
   const handleSubmit = async (e: any) => {
@@ -201,7 +186,9 @@ export const RegisterForm = () => {
       });
 
       if (response.data.registerUser.user) {
-        setSuccessMessage(decodeHtmlEntities("Registration Successful"));
+        setLoginSuccessMessage(
+          "Registration Successfully! You can now log in."
+        );
         formRef.current?.reset(); // Reset the form fields
 
         setUsername("");
@@ -257,33 +244,14 @@ export const RegisterForm = () => {
     } catch (err: any) {
       console.error("Error registering user", err);
       /* alert(err.message) */
-      setErrorMessage(decodeHtmlEntities(err.message));
+
+      setLoginErrorMessage("Registration failed. Please try again.");
       /* toast.error(err.message); */
     }
   };
 
   return (
     <>
-      {errormessage && (
-        <div className="woocommerce-notices-wrapper">
-          <ul className="woocommerce-error" role="alert">
-            <li>
-              <div
-                dangerouslySetInnerHTML={{ __html: errormessage || "" }}
-              ></div>
-            </li>
-          </ul>
-        </div>
-      )}
-      {successmessage && (
-        <div className="woocommerce-notices-wrapper">
-          <div className="woocommerce-success" role="alert">
-            <div
-              dangerouslySetInnerHTML={{ __html: successmessage || "" }}
-            ></div>
-          </div>
-        </div>
-      )}
       <div className="u-column2 col-2 mt-4 sm:mt-0">
         <h2>Register</h2>
         <form

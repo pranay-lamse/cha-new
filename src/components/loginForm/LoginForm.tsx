@@ -26,17 +26,19 @@ const LOGIN_USER = `
   }
 `;
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  setLoginSuccessMessage: (msg: string) => void;
+  setLoginErrorMessage: (msg: string) => void;
+}
+const LoginForm: React.FC<LoginFormProps> = ({
+  setLoginSuccessMessage,
+  setLoginErrorMessage,
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [loginerrormessage, setLoginErrorMessage] = useState<string | null>(
-    null
-  );
-  const [loginsuccessmessage, setLoginSuccessMessage] = useState<string | null>(
-    null
-  );
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -45,25 +47,6 @@ export const LoginForm = () => {
     return doc.documentElement.textContent;
   };
 
-  useEffect(() => {
-    if (loginerrormessage) {
-      const timer = setTimeout(() => {
-        setLoginErrorMessage("");
-      }, 10000); // Hide after 5 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [loginerrormessage]);
-
-  useEffect(() => {
-    if (loginsuccessmessage) {
-      const timer = setTimeout(() => {
-        setLoginSuccessMessage("");
-      }, 10000); // Hide after 5 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [loginsuccessmessage]);
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 

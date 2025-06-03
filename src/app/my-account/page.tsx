@@ -1,7 +1,7 @@
 "use client";
 import { RegisterForm } from "@/components/registerForm/RegisterForm";
 import "../globals.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ApolloProvider } from "@apollo/client";
 import client from "../../lib/apolloClient";
 import { LoginForm } from "@/components/loginForm/LoginForm";
@@ -29,6 +29,8 @@ export default function MyAccountPage() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  const [loginSuccessMessage, setLoginSuccessMessage] = useState<string>("");
+  const [loginErrorMessage, setLoginErrorMessage] = useState<string>("");
 
   const { user, loading, isAuthenticated } = useAuth();
   console.log("user", user);
@@ -56,6 +58,23 @@ export default function MyAccountPage() {
     });
   };
 
+  useEffect(() => {
+    if (loginSuccessMessage) {
+      const timer = setTimeout(() => {
+        setLoginSuccessMessage("");
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [loginSuccessMessage]);
+  useEffect(() => {
+    if (loginErrorMessage) {
+      const timer = setTimeout(() => {
+        setLoginErrorMessage("");
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [loginErrorMessage]);
+
   return (
     <ApolloProvider client={client}>
       <div className="container  mx-auto w-full sm:w-11/12 lg:w-[1140px] px-4 md:px-0">
@@ -70,8 +89,14 @@ export default function MyAccountPage() {
               <Dashboard />
             ) : (
               <div className="u-columns col2-set" id="customer_login">
-                <LoginForm />
-                <RegisterForm />
+                <LoginForm
+                  setLoginErrorMessage={setLoginErrorMessage}
+                  setLoginSuccessMessage={setLoginSuccessMessage}
+                />
+                <RegisterForm
+                  setLoginErrorMessage={setLoginErrorMessage}
+                  setLoginSuccessMessage={setLoginSuccessMessage}
+                />
               </div>
             )}
           </div>
