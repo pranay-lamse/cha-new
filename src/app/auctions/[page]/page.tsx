@@ -351,6 +351,13 @@ const AuctionDetails = () => {
       const form = $(e.target);
       const button = form.find("#placebidbutton");
 
+      const bidValue = form.find("#uwa_bid_value").val();
+
+      if (!bidValue || isNaN(Number(bidValue))) {
+        alert("Please enter your bid before placing it.");
+        return;
+      }
+
       // Add spinner and disable button
       button.prop("disabled", true);
       button.prepend('<span class="spinner" id="bid-spinner"></span>');
