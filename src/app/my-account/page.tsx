@@ -4,10 +4,11 @@ import "../globals.css";
 import React, { useEffect, useState } from "react";
 import { ApolloProvider } from "@apollo/client";
 import client from "../../lib/apolloClient";
-import { LoginForm } from "@/components/loginForm/LoginForm";
+
 import { useAuth } from "../providers/UserProvider";
 import Cookies from "js-cookie";
 import Dashboard from "@/components/dashboard/page";
+import { LoginForm } from "@/components/loginForm/LoginForm";
 
 export default function MyAccountPage() {
   const [username, setUsername] = useState("");

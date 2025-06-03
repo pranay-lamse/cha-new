@@ -30,7 +30,7 @@ interface LoginFormProps {
   setLoginSuccessMessage: (msg: string) => void;
   setLoginErrorMessage: (msg: string) => void;
 }
-const LoginForm: React.FC<LoginFormProps> = ({
+export const LoginForm: React.FC<LoginFormProps> = ({
   setLoginSuccessMessage,
   setLoginErrorMessage,
 }) => {
