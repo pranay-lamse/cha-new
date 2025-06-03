@@ -59,7 +59,7 @@ export default function MyAccountPage() {
     });
   };
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (loginSuccessMessage) {
       const timer = setTimeout(() => {
         setLoginSuccessMessage("");
@@ -74,7 +74,7 @@ export default function MyAccountPage() {
       }, 10000);
       return () => clearTimeout(timer);
     }
-  }, [loginErrorMessage]);
+  }, [loginErrorMessage]); */
 
   return (
     <ApolloProvider client={client}>
