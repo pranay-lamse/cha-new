@@ -46,9 +46,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     const doc = new DOMParser().parseFromString(text, "text/html");
     return doc.documentElement.textContent;
   };
-
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
+    setLoginErrorMessage("");
+    setLoginSuccessMessage("");
 
     try {
       const response = await axiosClient.post("", {
@@ -86,6 +89,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       setLoginErrorMessage(
         "The username or password you entered is incorrect."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -196,28 +201,17 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               className="woocommerce-button button woocommerce-form-login__submit"
               name="login"
               value="Log in"
-              /* disabled={loading} */
+              disabled={loading}
             >
-              Log in
+              {loading ? "Logging in..." : "Log in"}
             </button>
           </p>
-
-          {/*  {error && (
-          <p className="woocommerce-error">
-            There was an error logging in. Please try again.
-          </p>
-        )} */}
 
           <p className="woocommerce-LostPassword lost_password">
             <Link href="/my-account/lost-password/">Lost your password?</Link>
           </p>
           <br />
-          {/* <p className="woocommerce-LostPassword lost_password">
-          <a className="cursor-pointer" onClick={handleLogout}>
-            Logout
-          </a>
-        </p>
- */}
+
           <input type="hidden" name="redirect" value="/" />
         </form>
       </div>
