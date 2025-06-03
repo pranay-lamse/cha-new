@@ -41,27 +41,29 @@ interface Props {
 }
 
 const AuctionDetails = () => {
-  // Removed duplicate declaration of htmlContent
   const [bidStatus, setBidStatus] = useState("active");
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
-
-  const pathname = usePathname();
-  const token = getToken();
-  // Extract 'bonafide' from the path
-  const slug = pathname.split("/").pop();
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [bidMessage, setBidMessage] = useState("");
   const [loginMessage, setLoginMessage] = useState(false);
 
+  const pathname = usePathname();
+  const token = getToken();
+  const slug = pathname.split("/").pop();
+  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}`;
+
+  // --- Centralized HTML Fetch ---
   const fetchData = async () => {
     setLoading(true);
+    setError(null);
 
     try {
       const data = await fetchHtmlData(url);
       setHtmlContent(data);
     } catch (error) {
+      setError("Failed to fetch data. Please try again later.");
       setHtmlContent(null);
     } finally {
       setLoading(false);
@@ -69,173 +71,121 @@ const AuctionDetails = () => {
   };
 
   useEffect(() => {
-    const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/current-auctions`;
-
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const data = await fetchHtmlData(url);
-        setHtmlContent(data);
-      } catch (error) {
-        setError("Failed to fetch data. Please try again later.");
-        setHtmlContent(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [bidStatus]);
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  // --- Combined jQuery click handlers ---
   useEffect(() => {
-    $(document).on("click", ".add-uwa", function (e) {
+    const handleClick = function (e: JQuery.ClickEvent) {
       e.preventDefault();
-
       const auctionId = $(this).data("auction-id");
-
       if (auctionId) {
         handleWatchListSubmit(auctionId);
       }
-    });
-  }, []);
+    };
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {}, 5000); // Apply the update after a short delay // Apply the update after a short delay // Apply the update after a short delay
+    $(document).on("click", ".add-uwa, .remove-uwa", handleClick);
 
-    return () => clearTimeout(timeout); // Cleanup
-  }, []);
-
-  useEffect(() => {
-    $(document).on("click", ".remove-uwa", function (e) {
-      e.preventDefault();
-
-      const auctionId = $(this).data("auction-id");
-
-      if (auctionId) {
-        handleWatchListSubmit(auctionId);
-      }
-    });
+    return () => {
+      $(document).off("click", ".add-uwa, .remove-uwa", handleClick);
+    };
   }, []);
 
   useEffect(() => {
     if (!loading && htmlContent) {
       const timeoutId = setTimeout(() => {
-        // -------------------------
-        // Reorder Product Elements
-        // -------------------------
-        $(function () {
-          $(".clock_jquery").each(function () {
-            const el = $(this);
-            const timeStr = el.data("time"); // e.g. "2025-05-15 15:33:20"
+        $(".clock_jquery").each(function () {
+          const el = $(this);
+          const timeStr = el.data("time");
+          const [datePart, timePart] = timeStr.split(" ");
+          const [year, month, day] = datePart.split("-").map(Number);
+          const [hour, minute, second] = timePart.split(":").map(Number);
+          const localTime = new Date(
+            Date.UTC(year, month - 1, day, hour + 6, minute, second)
+          );
+          const endTime = localTime.getTime();
 
-            // Parse time manually from data-time
-            const [datePart, timePart] = timeStr.split(" ");
-            const [year, month, day] = datePart.split("-").map(Number);
-            const [hour, minute, second] = timePart.split(":").map(Number);
-
-            // Adjust by +6 hours (UTC-6 / CST)
-            const localTime = new Date(
-              Date.UTC(year, month - 1, day, hour + 6, minute, second)
-            );
-            const endTime = localTime.getTime();
-
-            function update() {
-              const now = Date.now();
-              const diff = endTime - now;
-
-              if (diff <= 0) {
-                el.html('<span class="countdown-expired">Auction ended</span>');
-                clearInterval(timer);
-                return;
-              }
-
-              const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-              const h = Math.floor(
-                (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-              );
-              const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-              const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-              el.html(
-                `<span class="countdown_row countdown_show4">
-        <span class="countdown_section"><span class="countdown_amount">${d}, </span><br>Day(s)</span>
-        <span class="countdown_section"><span class="countdown_amount">${h}, </span><br>Hour(s)</span>
-        <span class="countdown_section"><span class="countdown_amount">${m}, </span><br>Min(s)</span>
-        <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
-      </span>`
-              );
+          function update() {
+            const now = Date.now();
+            const diff = endTime - now;
+            if (diff <= 0) {
+              el.html('<span class="countdown-expired">Auction ended</span>');
+              clearInterval(timer);
+              return;
             }
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor(
+              (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-            update();
-            const timer = setInterval(update, 1000);
-          });
+            el.html(`
+            <span class="countdown_row countdown_show4">
+              <span class="countdown_section"><span class="countdown_amount">${d}, </span><br>Day(s)</span>
+              <span class="countdown_section"><span class="countdown_amount">${h}, </span><br>Hour(s)</span>
+              <span class="countdown_section"><span class="countdown_amount">${m}, </span><br>Min(s)</span>
+              <span class="countdown_section"><span class="countdown_amount">${s}</span><br>Sec(s)</span>
+            </span>`);
+          }
+
+          update();
+          const timer = setInterval(update, 1000);
         });
       }, 200);
 
-      return () => {
-        clearTimeout(timeoutId);
-        $(window).off("resize");
-      };
+      return () => clearTimeout(timeoutId);
     }
   }, [htmlContent, loading]);
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     if (!token) {
       setLoginMessage(true);
-      return null;
+      return;
     }
 
     try {
-      const response = await axios.get(
+      await axios.get(
         `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-admin/admin-ajax.php`,
         {
-          params: {
-            "uwa-ajax": "watchlist",
-            post_id: auctionId,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          params: { "uwa-ajax": "watchlist", post_id: auctionId },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (response) {
-        fetchData();
-        /* window.location.reload(); */
-      }
+      fetchData();
     } catch (error: any) {
       console.error(
         "Error adding to watchlist:",
         error.response?.data || error.message
       );
-      return null;
     }
   };
+
+  // --- Add to Cart Button Handler ---
   useEffect(() => {
     const form = document.querySelector("form.buy-now.cart");
     const submitBtn = form?.querySelector("button.single_add_to_cart_button");
 
     if (!form || !submitBtn) return;
 
-    // Change the type to 'button' to avoid native form submission
     submitBtn.setAttribute("type", "button");
-    const handleAddToCartClick = (e: Event) => {
+
+    const handleAddToCartClick = async (e: Event) => {
       e.preventDefault();
 
       if (!token) {
         setLoginMessage(true);
-        return null;
+        return;
       }
 
       const target = e.currentTarget as HTMLButtonElement;
       target.classList.add("loading");
       target.classList.remove("added");
 
-      // Avoid duplicate spinners
       if (!target.querySelector(".spinner")) {
         const spinner = document.createElement("span");
         spinner.className = "spinner";
@@ -249,61 +199,37 @@ const AuctionDetails = () => {
       if (!productId) {
         alert("Product ID missing");
         target.classList.remove("loading");
-        const existingSpinner = target.querySelector(".spinner");
-        if (existingSpinner) existingSpinner.remove();
+        target.querySelector(".spinner")?.remove();
         return;
       }
 
-      const runAsync = async () => {
-        const baseURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}?add-to-cart=${productId}`;
-
-        if (token) {
-          try {
-            await axios.get(baseURL, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              withCredentials: true,
-            });
-
-            $("body").trigger("added_to_cart", [{}, "", $(target)]);
-
-            const messageContainer = document.createElement("div");
-            messageContainer.className = "woocommerce-notices-wrapper";
-            messageContainer.innerHTML = `
-          <div class="woocommerce-message" role="alert" tabindex="-1">
-            ${slug} has been added to your cart. <a href="/cart/" class="button wc-forward">View cart</a>
-          </div>
-        `;
-
-            const existingNotice = document.querySelector(
-              ".woocommerce-notices-wrapper"
-            );
-            if (existingNotice) {
-              existingNotice.remove();
-            }
-
-            const content = document.getElementsByClassName("video-container");
-            if (content.length > 0) {
-              content[0].prepend(messageContainer);
-            }
-
-            target.classList.add("added");
-          } catch (error) {
-            console.error("Add to cart failed:", error);
-          } finally {
-            target.classList.remove("loading");
-            const spinner = target.querySelector(".spinner");
-            if (spinner) spinner.remove();
+      try {
+        await axios.get(
+          `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}?add-to-cart=${productId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
           }
-        } else {
-          target.classList.remove("loading");
-          const spinner = target.querySelector(".spinner");
-          if (spinner) spinner.remove();
-        }
-      };
+        );
 
-      runAsync();
+        $("body").trigger("added_to_cart", [{}, "", $(target)]);
+
+        const messageContainer = document.createElement("div");
+        messageContainer.className = "woocommerce-notices-wrapper";
+        messageContainer.innerHTML = `
+        <div class="woocommerce-message" role="alert" tabindex="-1">
+          ${slug} has been added to your cart. <a href="/cart/" class="button wc-forward">View cart</a>
+        </div>`;
+        document.querySelector(".woocommerce-notices-wrapper")?.remove();
+        document.querySelector(".video-container")?.prepend(messageContainer);
+
+        target.classList.add("added");
+      } catch (error) {
+        console.error("Add to cart failed:", error);
+      } finally {
+        target.classList.remove("loading");
+        target.querySelector(".spinner")?.remove();
+      }
     };
 
     const buttons = document.querySelectorAll(
@@ -320,6 +246,7 @@ const AuctionDetails = () => {
     };
   }, [token, htmlContent]);
 
+  // --- Product Fetch for Page ---
   useEffect(() => {
     const fetchSingleProduct = async () => {
       setLoading(true);
@@ -327,12 +254,7 @@ const AuctionDetails = () => {
         const response = await axiosClientGeneralTokenCustomApi.get(
           `/wp-json/wc/v3/products?slug=${slug}`
         );
-
-        if (response.data) {
-          setData(response.data);
-        } else {
-          setData({});
-        }
+        setData(response.data || {});
       } catch (error) {
         console.error("Error fetching about data:", error);
         setData({});
@@ -340,12 +262,10 @@ const AuctionDetails = () => {
         setLoading(false);
       }
     };
-
     fetchSingleProduct();
   }, []);
 
-  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/${slug}`;
-
+  // --- Bid Form Submission ---
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
       e.preventDefault();
@@ -358,7 +278,6 @@ const AuctionDetails = () => {
 
       const form = $(e.target);
       const button = form.find("#placebidbutton");
-
       const bidValue = form.find("#uwa_bid_value").val();
 
       if (!bidValue || isNaN(Number(bidValue))) {
@@ -366,7 +285,6 @@ const AuctionDetails = () => {
         return;
       }
 
-      // Add spinner and disable button
       button.prop("disabled", true);
       button.prepend('<span class="spinner" id="bid-spinner"></span>');
       button
@@ -378,12 +296,9 @@ const AuctionDetails = () => {
         .replaceWith(" Placing bid...");
 
       try {
-        const bidValue = form.find("#uwa_bid_value").val();
         const productId = form.find("input[name='product_id']").val();
-        const userId = form.find("input[name='user_id']").val();
-
         await placeAuctionBid({
-          productId: productId,
+          productId,
           auctionId: productId,
           bidAmount: bidValue,
         });
@@ -393,7 +308,6 @@ const AuctionDetails = () => {
       } catch (err) {
         console.error("Bid failed:", err);
       } finally {
-        // Remove spinner and restore button
         button.prop("disabled", false);
         $("#bid-spinner").remove();
         button.text("Custom Bid");
