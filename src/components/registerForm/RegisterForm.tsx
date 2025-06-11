@@ -40,6 +40,13 @@ interface RegisterFormProps {
   setLoginSuccessMessage: (msg: string) => void;
   setLoginErrorMessage: (msg: string) => void;
 }
+
+declare global {
+  interface Window {
+    setStripeUserId: (id: string) => void;
+    triggerStripePayment: (id: string) => any;
+  }
+}
 export const RegisterForm: React.FC<RegisterFormProps> = ({
   setLoginSuccessMessage,
   setLoginErrorMessage,
@@ -147,6 +154,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsRegistering(true);
+
     try {
       const response = await registerUser({
         variables: {
@@ -202,6 +210,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           // Optionally show a non-blocking message
           // setErrorMessage("Partial success: registration done, but address update failed.");
         }
+        console.log(
+          "response.data.registerUser.user.userId",
+          response.data.registerUser.user.userId
+        );
+        window.triggerStripePayment(response.data.registerUser.user.userId);
+        // Check every 100ms
         setFormData({
           firstName: "",
           lastName: "",

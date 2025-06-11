@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import Link from "next/link";
 import {
@@ -26,10 +26,19 @@ const CheckoutFormContent = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  const userIdRef = useRef<string | null>(null); // ✅ Hold userId from outside
+
   const handleCardPayment = async () => {
     setIsLoading(true);
     setError(null);
     setSuccess(null);
+
+    const userId = userIdRef.current; // ✅ use dynamic userId
+    if (!userId) {
+      setError("User ID is missing.");
+      setIsLoading(false);
+      return;
+    }
 
     if (!termsAccepted) {
       setError("Please accept the terms and conditions.");
@@ -67,17 +76,17 @@ const CheckoutFormContent = () => {
       const response = await axios.post("/api/wordpress/updatePaymentMethod", {
         customerId: user?.stripe_customer_id,
         paymentMethodId: paymentMethod?.id,
-        userId: user?.userId || "1675",
+        userId: userId,
       });
 
-      if (response.status === 200) {
+      /* if (response.status === 200) {
         setSuccess("Payment method updated successfully.");
         setTimeout(() => {
           window.location.href = "/my-account/payment-methods";
         }, 2000);
       } else {
         setError("Server error while updating payment method.");
-      }
+      } */
     } catch (err: any) {
       setError(
         err.response?.data?.message || "An error occurred. Please try again."
@@ -86,6 +95,18 @@ const CheckoutFormContent = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    // ✅ Set global functions to be used after registration
+    (window as any).triggerStripePayment = (id: string) => {
+      userIdRef.current = id;
+      handleCardPayment();
+    };
+
+    return () => {
+      delete (window as any).triggerStripePayment;
+    };
+  }, [stripe, elements, termsAccepted]);
 
   const cardElementOptions = {
     style: {
@@ -124,7 +145,7 @@ const CheckoutFormContent = () => {
           onChange={(e) => setTermsAccepted(e.target.checked)}
         />
         <span>
-          I have read and agree to the website{" "}
+          I agree to the{" "}
           <Link
             href="/terms-conditions-buyers"
             className="underline text-blue-600"
@@ -135,14 +156,14 @@ const CheckoutFormContent = () => {
         </span>
       </div>
 
-      {/* <button
+      <button
         type="button"
         disabled={!stripe || isLoading}
         onClick={handleCardPayment}
         className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
       >
-        {isLoading ? "Processing..." : "Pay Now"}
-      </button> */}
+        Add
+      </button>
     </div>
   );
 };
