@@ -41,7 +41,6 @@ interface Props {
 }
 
 const AuctionDetails = () => {
-  const [bidStatus, setBidStatus] = useState("active");
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
@@ -75,10 +74,6 @@ const AuctionDetails = () => {
       }
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [bidStatus]);
 
   useEffect(() => {
     fetchData();
