@@ -5,11 +5,13 @@ import { fetchHtmlData } from "@/lib/fetchHtmlData";
 import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import $ from "jquery";
+import { useRouter } from "next/navigation";
 
 export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const fetchData = async () => {
     try {
@@ -26,15 +28,30 @@ export default function EditAccountPage() {
     }
   };
 
-  // 🚀 Fetch data immediately
   useEffect(() => {
     fetchData();
   }, []);
 
-  // ✅ DOM Manipulation After HTML Injection
   useEffect(() => {
     if (!loading && htmlContent) {
       const timeoutId = setTimeout(() => {
+        // ✅ Client-side routing for both "Bid now" and "How to bid"
+        $(document).on(
+          "click",
+          "a.product_type_auction, #hwa_button",
+          function (e) {
+            const href = $(this).attr("href");
+            if (!href) return;
+
+            const url = new URL(href, window.location.origin);
+            const path = url.pathname;
+            const hash = url.hash;
+
+            e.preventDefault();
+            router.push(path + hash);
+          }
+        );
+
         $(".clock_jquery").each(function () {
           const el = $(this);
           const timeStr = el.data("time");
@@ -152,8 +169,6 @@ export default function EditAccountPage() {
           $bdi.prepend(currency);
         });
 
-        sortProductsPriceDescending();
-
         function sortProductsPriceDescending() {
           [
             ".home_products_sec:not(.closed_auctions) ul.products",
@@ -171,9 +186,15 @@ export default function EditAccountPage() {
             $wrapper.append(products);
           });
         }
-      }, 0); // run asap after paint
 
-      return () => clearTimeout(timeoutId);
+        sortProductsPriceDescending();
+      }, 0);
+
+      return () => {
+        clearTimeout(timeoutId);
+        $(document).off("click", "a.product_type_auction");
+        $(document).off("click", "#hwa_button");
+      };
     }
   }, [htmlContent, loading]);
 
