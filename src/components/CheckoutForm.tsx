@@ -10,22 +10,26 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-/* import apiClient from "./apiClient"; // Axios instance */
 import { env } from "@/env";
+import axios from "axios";
+import { useAuth } from "@/app/providers/UserProvider";
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
-const CheckoutForm = () => {
+const CheckoutFormContent = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const { user } = useAuth();
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [termsAccepted, setTermsAccepted] = useState(false); // Checkbox state
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleCardPayment = async () => {
     setIsLoading(true);
+    setError(null);
+    setSuccess(null);
 
     if (!termsAccepted) {
       setError("Please accept the terms and conditions.");
@@ -33,36 +37,51 @@ const CheckoutForm = () => {
       return;
     }
 
-    if (!stripe || !elements) return;
+    if (!stripe || !elements) {
+      setError("Stripe has not loaded yet.");
+      setIsLoading(false);
+      return;
+    }
 
     const cardNumberElement = elements.getElement(CardNumberElement);
-    const cardExpiryElement = elements.getElement(CardExpiryElement);
-    const cardCvcElement = elements.getElement(CardCvcElement);
+
+    if (!cardNumberElement) {
+      setError("Card number input is missing.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const { paymentMethod, error } = await stripe.createPaymentMethod({
-        type: "card",
-        card: cardNumberElement!,
-      });
+      const { paymentMethod, error: stripeError } =
+        await stripe.createPaymentMethod({
+          type: "card",
+          card: cardNumberElement,
+        });
 
-      if (error) {
-        setError(error.message || "Payment failed. Please try again.");
+      if (stripeError) {
+        setError(stripeError.message || "Payment failed. Please try again.");
         setIsLoading(false);
         return;
       }
 
-      // Send payment method ID to your backend
-      /* const response = await apiClient.post("/api/payment", {
+      const response = await axios.post("/api/wordpress/updatePaymentMethod", {
+        customerId: user?.stripe_customer_id,
         paymentMethodId: paymentMethod?.id,
+        userId: user?.userId || "1675",
       });
 
-      if (response.data.success) {
-        setSuccess("Payment successful! Stripe User ID saved successfully.");
+      if (response.status === 200) {
+        setSuccess("Payment method updated successfully.");
+        setTimeout(() => {
+          window.location.href = "/my-account/payment-methods";
+        }, 2000);
       } else {
-        setError("Payment failed. Please try again.");
-      } */
+        setError("Server error while updating payment method.");
+      }
     } catch (err: any) {
-      setError(err.message || "An error occurred. Please try again.");
+      setError(
+        err.response?.data?.message || "An error occurred. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -80,12 +99,12 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+    <div className="space-y-4 pt-2">
       <div>
         <label className="block text-sm font-medium mb-1">Card Number*</label>
         <CardNumberElement options={cardElementOptions} />
-      </div>{" "}
-      <br />
+      </div>
+
       <div className="flex gap-4">
         <div className="flex-1">
           <label className="block text-sm font-medium mb-1">Expiration*</label>
@@ -96,39 +115,41 @@ const CheckoutForm = () => {
           <label className="block text-sm font-medium mb-1">CVV*</label>
           <CardCvcElement options={cardElementOptions} />
         </div>
-      </div>{" "}
-      <br />
+      </div>
+
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
           checked={termsAccepted}
           onChange={(e) => setTermsAccepted(e.target.checked)}
         />
-        <span>I have read and agree to the website <Link href="/terms-conditions-buyers"> terms and conditions</Link> *</span>
-      </div>{" "}
-      <br />
-      {/* <button
-        type="submit"
+        <span>
+          I have read and agree to the website{" "}
+          <Link
+            href="/terms-conditions-buyers"
+            className="underline text-blue-600"
+          >
+            terms and conditions
+          </Link>{" "}
+          *
+        </span>
+      </div>
+
+      <button
+        type="button"
         disabled={!stripe || isLoading}
+        onClick={handleCardPayment}
         className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
       >
         {isLoading ? "Processing..." : "Pay Now"}
-      </button> */}
-      {error && (
-        <div className="mt-2 p-2 bg-red-100 text-red-700 rounded">{error}</div>
-      )}
-      {success && (
-        <div className="mt-2 p-2 bg-green-100 text-green-700 rounded">
-          {success}
-        </div>
-      )}
-    </form>
+      </button>
+    </div>
   );
 };
 
 const StripePayment = () => (
   <Elements stripe={stripePromise}>
-    <CheckoutForm />
+    <CheckoutFormContent />
   </Elements>
 );
 

@@ -293,7 +293,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               required
             />
           </p>
-          {/*   <StripePayment /> <br /> */}
+          <StripePayment /> <br />
           <strong> Billing details </strong> <br />
           <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
             <label htmlFor="firstName">
