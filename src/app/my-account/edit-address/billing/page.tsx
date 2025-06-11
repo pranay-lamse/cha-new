@@ -219,7 +219,7 @@ export default function EditAccountPage() {
                 <h2 className="text-[24px] sm:text-[45px] font-[500] font-[Marcellus] text-[#000] leading-[1.2] py-6">
                   Billing address
                 </h2>
-                <div className="woocommerce p-4 sm:p-[16px] sm:px-[30px] border border-[#d5d8dc] rounded-[3px]">
+                <div className="woocommerce">
                   <form
                     onSubmit={handleSubmit}
                     className="woocommerce-form woocommerce-form-register register"
