@@ -18,7 +18,7 @@ export default function CheckoutPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [bidStatus, setBidStatus] = useState<string>("active"); // State to store bidStatus
+  const [bidStatus, setBidStatus] = useState<string>(""); // State to store bidStatus
   const token = getToken();
   const router = useRouter();
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/checkout`;
@@ -26,8 +26,27 @@ export default function CheckoutPage() {
   // Fetch bidStatus from URL search parameters on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const bidStatusValue = params.get("bid_status") || "active"; // Fallback to 'active'
-    setBidStatus(bidStatusValue); // Set bidStatus in the state
+    const bidStatusValue = params.get("pay-uwa-auction");
+    if (bidStatusValue) {
+      setBidStatus(bidStatusValue);
+      const handleAddToCartClick = async (e: Event) => {
+        e.preventDefault();
+
+        try {
+          await axios.get(
+            `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/auctions/silver-cat-daddy?add-to-cart=${bidStatusValue}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+              withCredentials: true,
+            }
+          );
+        } catch (error) {
+        } finally {
+        }
+      };
+      handleAddToCartClick(new Event("click")); // Simulate click to trigger the function
+    }
+    // Ensure a string is always set
   }, []); // This effect runs only once after the component mounts
   const fetchData = async () => {
     setLoading(true);
