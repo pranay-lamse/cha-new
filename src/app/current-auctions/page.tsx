@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import MenuPage from "@/components/my-account-menu/page";
+
 import Loader from "@/components/Loader";
 import { fetchHtmlData } from "@/lib/fetchHtmlData";
 import { env } from "@/env";
@@ -11,15 +11,6 @@ export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [bidStatus, setBidStatus] = useState("active");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const status = params.get("bid_status") || "active";
-      setBidStatus(status);
-    }
-  }, []);
 
   useEffect(() => {
     const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/current-auctions`;
@@ -40,7 +31,7 @@ export default function EditAccountPage() {
     };
 
     fetchData();
-  }, [bidStatus]);
+  }, []);
 
   // ✅ DOM Manipulation After HTML is Injected
   useEffect(() => {
@@ -127,37 +118,6 @@ export default function EditAccountPage() {
             details.after(button);
           }
         });
-
-        // function reorderProducts() {
-        //   const windowWidth = $(window)?.width() || 0;
-
-        //   if (windowWidth > 768) {
-        //     $(".products .product").each(function (index) {
-        //       const $image = $(this).find(".woocommerce-LoopProduct-link");
-        //       const $description = $(this).find(".short_des_loop");
-
-        //       if ($image.length && $description.length) {
-        //         if (index % 2 === 0) {
-        //           $image.insertBefore($description);
-        //         } else {
-        //           $description.insertBefore($image);
-        //         }
-        //       }
-        //     });
-        //   } else {
-        //     $(".products .product").each(function () {
-        //       const $image = $(this).find(".woocommerce-LoopProduct-link");
-        //       const $description = $(this).find(".short_des_loop");
-
-        //       if ($image.length && $description.length) {
-        //         $image.insertBefore($description); // reset order on mobile
-        //       }
-        //     });
-        //   }
-        // }
-
-        // reorderProducts();
-        // $(window).on("resize", reorderProducts);
 
         $(
           ".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid"
