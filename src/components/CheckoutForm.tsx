@@ -135,14 +135,14 @@ const CheckoutFormContent = () => {
         </span>
       </div>
 
-      <button
+      {/* <button
         type="button"
         disabled={!stripe || isLoading}
         onClick={handleCardPayment}
         className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
       >
         {isLoading ? "Processing..." : "Pay Now"}
-      </button>
+      </button> */}
     </div>
   );
 };
