@@ -134,7 +134,10 @@ span {
 button.woocommerce-Button.woocommerce-button.button.woocommerce-form-register__submit.cursor-pointer {
   margin-top: 15px;
 }
-
+.auctionTow-page  .woocommerce-notices-wrapper {
+    max-width: 1170px;
+    margin: 0 auto;
+}
 h2 {
   font-family: "Marcellus", "Marcellus Fallback";
   font-size: 45px;
@@ -1655,7 +1658,7 @@ form.checkout_coupon.woocommerce-form-coupon p {
 
 .coupon button.button,
 .cart-page td.actions button.button,
-.wc-proceed-to-checkout button {
+.wc-proceed-to-checkout button, a.checkout-button.button.alt.wc-forward {
   border: 1px solid #dac172 !important;
   padding: 15px 25px !important;
   background: #dac172 !important;
@@ -1677,12 +1680,15 @@ form.checkout_coupon.woocommerce-form-coupon p {
 
 .coupon button.button:hover,
 .cart-page td.actions button.button:hover,
-.wc-proceed-to-checkout button:hover {
+.wc-proceed-to-checkout button:hover, a.checkout-button.button.alt.wc-forward:hover {
   background: transparent !important;
   border: 1px solid #dac172 !important;
   color: #dac172 !important;
 }
-
+.quantity input {
+    padding: 10px;
+    font-size: 14px;
+}
 table.shop_table.shop_table_responsive.tbl_bidauc_list a.button.uwa_checkout_all {
   background: transparent;
   border-color: var(--tables-buttons-border-color, #5bc0de);
