@@ -1,4 +1,5 @@
-import axiosClientGeneralToken from "@/api/axiosClientGeneralToken";
+import axiosClient from "@/api/axiosClient";
+import axiosClientwithApi from "@/api/axiosClientwithApi";
 
 /**
  * Update address with dynamic data
@@ -11,7 +12,7 @@ export const updateAddresscreate = async (
   data: Record<string, any> // Dynamic data structure
 ): Promise<string> => {
   try {
-    const response = await axiosClientGeneralToken.post(url, data);
+    const response = await axiosClientwithApi.post(url, data);
     return response.data || "<p>No content available.</p>";
   } catch (error: any) {
     console.error("Error updating data:", error);
