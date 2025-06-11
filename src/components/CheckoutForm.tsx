@@ -160,7 +160,9 @@ const CheckoutFormContent = () => {
         type="button"
         disabled={!stripe || isLoading}
         onClick={handleCardPayment}
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50 d-none"
+        style={{
+          display: "none !important",
+        }}
       >
         Add
       </button>
