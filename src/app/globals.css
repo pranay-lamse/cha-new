@@ -3253,7 +3253,8 @@ button.single_add_to_cart_button.button.alt span.woocommerce-Price-amount.amount
 }
 
 form.woocommerce-form.woocommerce-form-register.register p:not(.form-row),
-form.woocommerce-form.woocommerce-form-register.register form span {
+form.woocommerce-form.woocommerce-form-register.register form span,
+.acceptance span {
   font-size: 12px;
   font-family: "Cormorant SC" !IMPORTANT;
   font-weight: 700;
@@ -3261,19 +3262,23 @@ form.woocommerce-form.woocommerce-form-register.register form span {
   margin-top: 10px;
   line-height: 1.8em;
   letter-spacing: 1px;
+  margin: 0px;
+}
+
+.acceptance span {
+  font-size: 14px;
 }
 
 form.woocommerce-form.woocommerce-form-register.register p:not(.form-row) a,
-form.woocommerce-form.woocommerce-form-register.register form span a {
+form.woocommerce-form.woocommerce-form-register.register form span a,
+.acceptance span a {
   color: #5bc0de;
   font-weight: 600;
   font-family: 'Raleway';
   text-transform: lowercase;
 }
 
-form.woocommerce-form.woocommerce-form-register.register form span {
-  margin: 0px;
-}
+
 
 .auction_products ul.products li.product {
   opacity: 0;
@@ -3286,6 +3291,17 @@ form.woocommerce-form.woocommerce-form-register.register form span {
 .woocommerce-page .woocommerce-info .button,
 .woocommerce-page .woocommerce-message .button {
   float: right;
+}
+
+.StripeElement {
+  box-sizing: border-box;
+  border: 1px solid transparent !IMPORTANT;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px 0 #e6ebf1 !important;
+  transition: box-shadow 150ms ease !important;
+  padding: 10px 12px;
+  height: 40px;
+  margin-top: 10px;
 }
 
 @media (max-width: 767px) {

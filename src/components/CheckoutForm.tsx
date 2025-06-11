@@ -120,25 +120,28 @@ const CheckoutFormContent = () => {
   };
 
   return (
-    <div className="space-y-4 pt-2">
-      <div>
+    <div className="space-y-4 pt-2 stripe-form">
+      <p className="form-row form-row-wide">
+        <strong>Enter your Credit Card Details:</strong>
+      </p>
+      <div className="form-row form-row-wide">
         <label className="block text-sm font-medium mb-1">Card Number*</label>
         <CardNumberElement options={cardElementOptions} />
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 form-row form-row-wide">
         <div className="flex-1">
           <label className="block text-sm font-medium mb-1">Expiration*</label>
           <CardExpiryElement options={cardElementOptions} />
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 form-row form-row-wide">
           <label className="block text-sm font-medium mb-1">CVV*</label>
           <CardCvcElement options={cardElementOptions} />
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center acceptance gap-2 form-row form-row-wide">
         <input
           type="checkbox"
           checked={termsAccepted}
