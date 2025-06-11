@@ -160,6 +160,7 @@ const CheckoutFormContent = () => {
       </div>
 
       <button
+      className="add_button"
         type="button"
         disabled={!stripe || isLoading}
         onClick={handleCardPayment}

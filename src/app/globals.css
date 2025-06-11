@@ -128,7 +128,9 @@ span {
   box-shadow: none;
   text-shadow: none;
 }
-
+.stripe-form .add_button{
+  display: none;
+}
 button.woocommerce-Button.woocommerce-button.button.woocommerce-form-register__submit.cursor-pointer {
   margin-top: 15px;
 }
