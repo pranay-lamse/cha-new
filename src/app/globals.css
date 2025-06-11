@@ -1793,13 +1793,14 @@ table.shop_table.shop_table_responsive.tbl_bidauc_list a.button.uwa_checkout_all
 }
 
 .payment-page .woocommerce-MyAccount-content-wrapper a.button {
-  border-width: 2px;
+  border-width: 2px !important;
   color: #dcc373;
-  border-color: #5bc0de;
+  border: 2px solid #5bc0de !IMPORTANT;
   padding: 5px 10px;
   font-size: 12px;
   border-radius: 3px;
   font-weight: 700;
+  background: transparent;
 }
 
 .payment-page .woocommerce-MyAccount-content-wrapper a.button:hover {
@@ -3174,7 +3175,7 @@ table thead:first-child tr:first-child th {
 }
 
 .e-my-account-tab .woocommerce-MyAccount-content-wrapper {
-  padding: 16px 30px 3px 30px !important;
+  padding: 16px 30px 16px 30px !important;
   border: 1px solid #d5d8dc !important;
 }
 

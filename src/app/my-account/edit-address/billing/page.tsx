@@ -205,28 +205,107 @@ export default function EditAccountPage() {
     fetchCountries();
   }, []);
   return (
-    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] my-10 sm:my-20 px-3 md:px-0">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 myaccount-info">
-        <div className="col-span-1">
-          <MenuPage />
-        </div>
-        <div className="col-span-1 md:col-span-3 md:pl-[60px]">
-          {loading ? (
-            <Loader />
-          ) : (
-            <>
-              <h2 className="text-[24px] sm:text-[45px] font-[500] font-[Marcellus] text-[#000] leading-[1.2] py-6">
-                Billing address
-              </h2>
-              <div className="woocommerce p-4 sm:p-[16px] sm:px-[30px] border border-[#d5d8dc] rounded-[3px]">
-                <form
-                  onSubmit={handleSubmit}
-                  className="woocommerce-form woocommerce-form-register register"
-                >
-                  <div className="w-full flex flex-col md:flex-row gap-4">
-                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide w-full md:w-1/2">
-                      <label htmlFor="firstName">
-                        First name&nbsp;
+    <div className="container  mx-auto w-full sm:w-11/12 lg:w-[1170px] px-2">
+      <div className="e-my-account-tab e-my-account-tab__dashboard">
+        <div className="woocommerce myaccount-info">
+          <div className="woocommerce-MyAccount-navigation col-span-1">
+            <MenuPage />
+          </div>
+          <div className="woocommerce-MyAccount-content-outer">
+            {loading ? (
+              <Loader />
+            ) : (
+              <>
+                <h2 className="text-[24px] sm:text-[45px] font-[500] font-[Marcellus] text-[#000] leading-[1.2] py-6">
+                  Billing address
+                </h2>
+                <div className="woocommerce p-4 sm:p-[16px] sm:px-[30px] border border-[#d5d8dc] rounded-[3px]">
+                  <form
+                    onSubmit={handleSubmit}
+                    className="woocommerce-form woocommerce-form-register register"
+                  >
+                    <div className="w-full flex flex-col md:flex-row gap-4">
+                      <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide w-full md:w-1/2">
+                        <label htmlFor="firstName">
+                          First name&nbsp;
+                          <span className="required" aria-hidden="true">
+                            *
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          className="woocommerce-Input woocommerce-Input--text input-text"
+                          name="firstName"
+                          id="firstName"
+                          value={formData?.firstName}
+                          onChange={handleChange}
+                          required
+                        />
+                      </p>
+                      <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide w-full md:w-1/2">
+                        <label htmlFor="lastName">
+                          Last name&nbsp;
+                          <span className="required" aria-hidden="true">
+                            *
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          className="woocommerce-Input woocommerce-Input--text input-text"
+                          name="lastName"
+                          id="lastName"
+                          value={formData?.lastName}
+                          onChange={handleChange}
+                          required
+                        />
+                      </p>
+                    </div>
+
+                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                      <label htmlFor="company">
+                        Company name (optional)&nbsp;
+                      </label>
+                      <input
+                        type="text"
+                        className="woocommerce-Input woocommerce-Input--text input-text"
+                        name="company"
+                        value={formData?.company}
+                        onChange={handleChange}
+                        id="company"
+                      />
+                    </p>
+
+                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                      <label htmlFor="country">
+                        Country / Region&nbsp;
+                        <span className="required" aria-hidden="true">
+                          *
+                        </span>
+                      </label>
+                      <select
+                        className="woocommerce-Input woocommerce-Input--select input-select"
+                        name="country"
+                        id="country"
+                        value={formData.country} // ✅ Correct way to set the selected option
+                        onChange={handleChange} // ✅ Handle changes dynamically
+                        required
+                      >
+                        <option value="">Select country</option>
+                        {loading ? (
+                          <option disabled>Loading...</option>
+                        ) : (
+                          countries.map((country) => (
+                            <option key={country.code} value={country.code}>
+                              {country.name.toLowerCase()}
+                            </option>
+                          ))
+                        )}
+                      </select>
+                    </p>
+
+                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                      <label htmlFor="address1">
+                        Street address&nbsp;
                         <span className="required" aria-hidden="true">
                           *
                         </span>
@@ -234,16 +313,26 @@ export default function EditAccountPage() {
                       <input
                         type="text"
                         className="woocommerce-Input woocommerce-Input--text input-text"
-                        name="firstName"
-                        id="firstName"
-                        value={formData?.firstName}
+                        name="address1"
+                        id="address1"
+                        value={formData?.address1}
                         onChange={handleChange}
                         required
                       />
+                      <input
+                        type="text"
+                        className="woocommerce-Input woocommerce-Input--text input-text mt-2 extra-input"
+                        placeholder="Apartment, suite, unit, etc. (optional)"
+                        name="address2"
+                        id="address2"
+                        onChange={handleChange}
+                        value={formData?.address2}
+                      />
                     </p>
-                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide w-full md:w-1/2">
-                      <label htmlFor="lastName">
-                        Last name&nbsp;
+
+                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                      <label htmlFor="city">
+                        Town / City&nbsp;
                         <span className="required" aria-hidden="true">
                           *
                         </span>
@@ -251,197 +340,110 @@ export default function EditAccountPage() {
                       <input
                         type="text"
                         className="woocommerce-Input woocommerce-Input--text input-text"
-                        name="lastName"
-                        id="lastName"
-                        value={formData?.lastName}
+                        name="city"
+                        id="city"
                         onChange={handleChange}
+                        value={formData?.city}
                         required
                       />
                     </p>
-                  </div>
 
-                  <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                    <label htmlFor="company">
-                      Company name (optional)&nbsp;
-                    </label>
-                    <input
-                      type="text"
-                      className="woocommerce-Input woocommerce-Input--text input-text"
-                      name="company"
-                      value={formData?.company}
-                      onChange={handleChange}
-                      id="company"
-                    />
-                  </p>
-
-                  <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                    <label htmlFor="country">
-                      Country / Region&nbsp;
-                      <span className="required" aria-hidden="true">
-                        *
-                      </span>
-                    </label>
-                    <select
-                      className="woocommerce-Input woocommerce-Input--select input-select"
-                      name="country"
-                      id="country"
-                      value={formData.country} // ✅ Correct way to set the selected option
-                      onChange={handleChange} // ✅ Handle changes dynamically
-                      required
-                    >
-                      <option value="">Select country</option>
-                      {loading ? (
-                        <option disabled>Loading...</option>
-                      ) : (
-                        countries.map((country) => (
-                          <option key={country.code} value={country.code}>
-                            {country.name.toLowerCase()}
+                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                      <label htmlFor="state">
+                        State&nbsp;
+                        <span className="required" aria-hidden="true">
+                          *
+                        </span>
+                      </label>
+                      <select
+                        className="woocommerce-Input woocommerce-Input--select input-select"
+                        name="state"
+                        id="state"
+                        required
+                        onChange={handleChange}
+                        value={formData?.state} // ✅ Correct way to set the selected option
+                      >
+                        <option value="">Select a state</option>
+                        {states.map((state) => (
+                          <option
+                            key={state.id}
+                            value={formData.state}
+                            selected={billing?.state === state.id}
+                          >
+                            {state.name}
                           </option>
-                        ))
-                      )}
-                    </select>
-                  </p>
+                        ))}
+                      </select>
+                    </p>
 
-                  <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                    <label htmlFor="address1">
-                      Street address&nbsp;
-                      <span className="required" aria-hidden="true">
-                        *
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      className="woocommerce-Input woocommerce-Input--text input-text"
-                      name="address1"
-                      id="address1"
-                      value={formData?.address1}
-                      onChange={handleChange}
-                      required
-                    />
-                    <input
-                      type="text"
-                      className="woocommerce-Input woocommerce-Input--text input-text mt-2 extra-input"
-                      placeholder="Apartment, suite, unit, etc. (optional)"
-                      name="address2"
-                      id="address2"
-                      onChange={handleChange}
-                      value={formData?.address2}
-                    />
-                  </p>
+                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                      <label htmlFor="postcode">
+                        ZIP Code&nbsp;
+                        <span className="required" aria-hidden="true">
+                          *
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        className="woocommerce-Input woocommerce-Input--text input-text"
+                        name="postcode"
+                        id="postcode"
+                        value={formData?.postcode}
+                        required
+                      />
+                    </p>
 
-                  <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                    <label htmlFor="city">
-                      Town / City&nbsp;
-                      <span className="required" aria-hidden="true">
-                        *
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      className="woocommerce-Input woocommerce-Input--text input-text"
-                      name="city"
-                      id="city"
-                      onChange={handleChange}
-                      value={formData?.city}
-                      required
-                    />
-                  </p>
+                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                      <label htmlFor="phone">
+                        Phone&nbsp;
+                        <span className="required" aria-hidden="true">
+                          *
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        className="woocommerce-Input woocommerce-Input--text input-text"
+                        name="phone"
+                        id="phone"
+                        onChange={handleChange}
+                        value={formData?.phone}
+                        required
+                      />
+                    </p>
 
-                  <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                    <label htmlFor="state">
-                      State&nbsp;
-                      <span className="required" aria-hidden="true">
-                        *
-                      </span>
-                    </label>
-                    <select
-                      className="woocommerce-Input woocommerce-Input--select input-select"
-                      name="state"
-                      id="state"
-                      required
-                      onChange={handleChange}
-                      value={formData?.state} // ✅ Correct way to set the selected option
-                    >
-                      <option value="">Select a state</option>
-                      {states.map((state) => (
-                        <option
-                          key={state.id}
-                          value={formData.state}
-                          selected={billing?.state === state.id}
-                        >
-                          {state.name}
-                        </option>
-                      ))}
-                    </select>
-                  </p>
+                    <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                      <label htmlFor="email">
+                        Email address&nbsp;
+                        <span className="required" aria-hidden="true">
+                          *
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        className="woocommerce-Input woocommerce-Input--text input-text"
+                        name="email"
+                        id="email"
+                        onChange={handleChange}
+                        value={formData?.email}
+                        required
+                      />
+                    </p>
 
-                  <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                    <label htmlFor="postcode">
-                      ZIP Code&nbsp;
-                      <span className="required" aria-hidden="true">
-                        *
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      className="woocommerce-Input woocommerce-Input--text input-text"
-                      name="postcode"
-                      id="postcode"
-                      value={formData?.postcode}
-                      required
-                    />
-                  </p>
-
-                  <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                    <label htmlFor="phone">
-                      Phone&nbsp;
-                      <span className="required" aria-hidden="true">
-                        *
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      className="woocommerce-Input woocommerce-Input--text input-text"
-                      name="phone"
-                      id="phone"
-                      onChange={handleChange}
-                      value={formData?.phone}
-                      required
-                    />
-                  </p>
-
-                  <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                    <label htmlFor="email">
-                      Email address&nbsp;
-                      <span className="required" aria-hidden="true">
-                        *
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      className="woocommerce-Input woocommerce-Input--text input-text"
-                      name="email"
-                      id="email"
-                      onChange={handleChange}
-                      value={formData?.email}
-                      required
-                    />
-                  </p>
-
-                  <p className="form-row form-row-wide">
-                    <button
-                      type="submit"
-                      className="woocommerce-Button woocommerce-button button woocommerce-form-register__submit"
-                      name="register"
-                      value="Register"
-                    >
-                      Save address
-                    </button>
-                  </p>
-                </form>
-              </div>
-            </>
-          )}
+                    <p className="form-row form-row-wide">
+                      <button
+                        type="submit"
+                        className="woocommerce-Button woocommerce-button button woocommerce-form-register__submit"
+                        name="register"
+                        value="Register"
+                      >
+                        Save address
+                      </button>
+                    </p>
+                  </form>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

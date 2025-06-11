@@ -37,13 +37,13 @@ export default function EditAddress() {
   }, []);
 
   return (
-    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] px-3 md:px-0">
+    <div className="container  mx-auto w-full sm:w-11/12 lg:w-[1170px] px-2">
       <div className="e-my-account-tab e-my-account-tab__dashboard">
         <div className="woocommerce myaccount-info">
           <div className="woocommerce-MyAccount-navigation col-span-1">
             <MenuPage />
           </div>
-          <div className="woocommerce-MyAccount-content-outer col-span-1 md:col-span-3 md:pl-[60px]">
+          <div className="woocommerce-MyAccount-content-outer">
             {loading ? (
               <Loader />
             ) : (
@@ -112,13 +112,13 @@ export default function EditAddress() {
                           {shipping.address2 && <br />}
                           {shipping.address2}
                           <br />
-                          {shipping.city}, {shipping.state} {shipping.postcode}
+                          {shipping.city} {shipping.state} {shipping.postcode}
                           <br />
                           {shipping.country}
                         </address>
                       ) : (
                         <p className="text-[14px] text-gray-500">
-                          No shipping address available.
+                          You have not set up this type of address yet.
                         </p>
                       )}
                     </div>
