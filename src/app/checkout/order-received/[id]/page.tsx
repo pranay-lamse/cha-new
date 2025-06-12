@@ -14,34 +14,56 @@ import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import axios from "axios";
 import { getToken } from "@/utils/storage";
+
+import { usePathname, useSearchParams } from "next/navigation";
+
 export default function CheckoutPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const token = getToken();
-  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/checkout/order-received/17055/?key=wc_order_8vJsIqAWKuTSA`;
 
   // Fetch bidStatus from URL search parameters on mount
+
+  const pathname = usePathname(); // e.g. "/checkout/order-received/17139"
+  const searchParams = useSearchParams(); // for key=...
+
+  const [finalUrl, setFinalUrl] = useState("");
+
+  useEffect(() => {
+    const orderKey = searchParams.get("key"); // get 'key' param
+    const pathSegments = pathname.split("/"); // split path
+    const orderId = pathSegments[pathSegments.length - 1]; // get last segment = orderId
+
+    if (orderId && orderKey) {
+      const newUrl = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/checkout/order-received/${orderId}/?key=${orderKey}`;
+      setFinalUrl(newUrl);
+
+      // optional: auto send request
+      // fetch(newUrl).then(res => res.text()).then(console.log);
+    }
+  }, [pathname, searchParams]);
 
   const fetchData = async () => {
     setLoading(true);
     setError(null);
-
-    try {
-      const data = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      });
-      if (data && data.data) {
-        setHtmlContent(data.data);
+    if (finalUrl) {
+      try {
+        const data = await axios.get(finalUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+        if (data && data.data) {
+          setHtmlContent(data.data);
+        }
+      } catch (error) {
+        setError("Failed to fetch data. Please try again later.");
+        setHtmlContent(null);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setError("Failed to fetch data. Please try again later.");
-      setHtmlContent(null);
-    } finally {
-      setLoading(false);
     }
   };
   // Fetch HTML content based on bidStatus
