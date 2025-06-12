@@ -230,9 +230,14 @@ export default function CheckoutPage() {
 
         const formData = new FormData(form);
 
+        if (!token) {
+          alert("You must be logged in to place an order.");
+          return;
+        }
+
         try {
           const response = await axios.post(
-            "https://classichorseauction.com/stage/?wc-ajax=checkout",
+            `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/?wc-ajax=checkout`,
             formData,
             {
               headers: {
