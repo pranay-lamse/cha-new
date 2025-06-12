@@ -252,6 +252,9 @@ export default function CheckoutPage() {
             window.location.href = `${cleanedPath}`;
 
             console.log("Redirecting to:", cleanedPath);
+          } else if (response.data.result === "failure") {
+            //show error message
+            alert("Please  fill all the required fields.");
           }
           // Optional: Redirect to a success page
           // window.location.href = "/order-success";
