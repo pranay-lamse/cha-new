@@ -207,6 +207,8 @@ export default function CheckoutPage() {
     const form = document.forms.namedItem("checkout");
 
     const handleClick = async (e: Event) => {
+      e.preventDefault(); // Prevent default button behavior
+      console.log("Place order button clicked");
       if (!(checkbox as HTMLInputElement)?.checked) {
         e.preventDefault();
         alert(
