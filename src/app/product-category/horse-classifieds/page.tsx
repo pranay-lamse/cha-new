@@ -12,6 +12,7 @@ import Image from "next/image";
 import { marcellus, raleway } from "@/config/fonts";
 import axios from "axios";
 import { getToken } from "@/utils/storage";
+import { useRouter } from "next/navigation";
 
 export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
@@ -173,7 +174,20 @@ export default function EditAccountPage() {
       }, 100);
     }
   }, [htmlContent, loading]);
+  const router = useRouter();
+  const [redirectUrl, setRedirectUrl] = useState("/my-account");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname + window.location.search;
+      setRedirectUrl(`/my-account?redirect=${encodeURIComponent(currentPath)}`);
+    }
+  }, []);
+
+  const handleRedirect = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    router.push(redirectUrl);
+  };
   // Custom Add to Cart Handler with Event Trigger
   useEffect(() => {
     const handleAddToCartClick = (e: Event) => {
@@ -237,17 +251,19 @@ export default function EditAccountPage() {
     <>
       <div className="auctionTow-page add-loading">
         {loginMessage && (
-          <div key="auction.id" className="auction-deatils-page">
-            <div className="woocommerce-notices-wrapper">
-              <ul className="woocommerce-error" role="alert">
-                <li>
-                  Please Login/Register in to place your bid or buy the product.{" "}
-                  <a href="/my-account" className="button">
-                    Login/Register →
-                  </a>{" "}
-                </li>
-              </ul>
-            </div>
+          <div className="woocommerce-notices-wrapper">
+            <ul className="woocommerce-error" role="alert">
+              <li>
+                Please Login/Register to place your bid or buy the product.{" "}
+                <a
+                  href={redirectUrl}
+                  onClick={handleRedirect}
+                  className="button"
+                >
+                  Login/Register →
+                </a>{" "}
+              </li>
+            </ul>
           </div>
         )}
         {loading ? (
