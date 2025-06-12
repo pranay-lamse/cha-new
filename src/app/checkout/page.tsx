@@ -247,9 +247,6 @@ export default function CheckoutPage() {
               withCredentials: true, // Ensure session/cookies are sent
             }
           );
- console.log(response.data.result);
-  console.log(response.data.redirect);
-          /* console.log("Checkout success:", response.data); */
 
           if (response.data.result === "success" && response.data.redirect) {
             const redirectUrl = new URL(response.data.redirect);
@@ -259,7 +256,7 @@ export default function CheckoutPage() {
               redirectUrl.pathname.replace(/^\/stage/, "") + redirectUrl.search;
 
             // Redirect to local frontend without /stage
-            alert("Order placed successfully!");
+
             window.location.href = `${cleanedPath}`;
 
             console.log("Redirecting to:", cleanedPath);
