@@ -247,7 +247,8 @@ export default function CheckoutPage() {
               withCredentials: true, // Ensure session/cookies are sent
             }
           );
-
+ console.log(response.data.result);
+  console.log(response.data.redirect);
           /* console.log("Checkout success:", response.data); */
 
           if (response.data.result === "success" && response.data.redirect) {
@@ -260,6 +261,8 @@ export default function CheckoutPage() {
             // Redirect to local frontend without /stage
             alert("Order placed successfully!");
             window.location.href = `${cleanedPath}`;
+
+            console.log("Redirecting to:", cleanedPath);
           }
           // Optional: Redirect to a success page
           // window.location.href = "/order-success";
