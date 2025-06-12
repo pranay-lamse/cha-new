@@ -4082,3 +4082,11 @@ form.woocommerce-form.woocommerce-form-register.register form span a,
 .payment_box.payment_method_stripe {
   display: block !important;
 }
+
+fieldset#wc-stripe-cc-form {
+  display: none;
+}
+
+li.woocommerce-SavedPaymentMethods-new {
+  display: none;
+}
