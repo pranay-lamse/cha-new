@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-import { useMutation } from "@apollo/client";
-import gql from "graphql-tag";
-import { useRouter } from "next/router";
+
+import { useRouter } from "next/navigation"; //
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { toast } from "react-toastify";
-import { generateSiteUrlSign } from "@/utils/generateSiteUrlSign";
-import { useApolloClient } from "@apollo/client";
 
-import client from "@/lib/apolloClient";
 import axiosClient from "@/api/axiosClient";
 import { env } from "@/env";
+import { useSearchParams } from "next/navigation";
 // Define the GraphQL mutation for login
 const LOGIN_USER = `
   mutation LoginUser($username: String!, $password: String!) {
@@ -38,15 +34,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const router = useRouter();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const decodeHtmlEntities = (text: any) => {
-    const doc = new DOMParser().parseFromString(text, "text/html");
-    return doc.documentElement.textContent;
-  };
+
   const [loading, setLoading] = useState(false);
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/my-account";
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
@@ -83,7 +79,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
         setLoginSuccessMessage("Login successful");
 
-        window.location.reload();
+        router.push(redirectTo);
       }
     } catch (error: any) {
       setLoginErrorMessage(
@@ -91,39 +87,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       );
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await fetch(
-        `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-login.php?action=logout`,
-        {
-          method: "GET",
-          credentials: "include", // Ensure cookies are sent
-        }
-      );
-      // Remove authentication tokens and user info from cookies
-      Cookies.remove("authToken");
-      Cookies.remove("refreshToken");
-      Cookies.remove("user");
-      Cookies.remove("rememberMe"); // Optional, if rememberMe was set
-
-      // Redirect the user to the login page or refresh to reset state
-      /* router.push("/login"); */ // Modify if using Next.js routing
-      /* window.location.reload(); */
-
-      Cookies.remove("wordpress_logged_in_*");
-      Cookies.remove("wordpress_sec_*");
-    } catch (err) {
-      console.error("Error logging out", err);
-    } finally {
-      const noticeWrapper = document.querySelector("body");
-      if (noticeWrapper) {
-        noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else {
-        console.log("Element not found");
-      }
     }
   };
 

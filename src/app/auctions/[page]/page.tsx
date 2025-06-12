@@ -18,7 +18,7 @@ import { ProductGalleryPage } from "@/components/ProductGallery";
 import { MoreDetails } from "@/components/MoreDetails";
 import Loader from "@/components/Loader";
 import DocumentCard from "@/components/Document";
-import { redirect, usePathname } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import $ from "jquery";
 
 import axios from "axios";
@@ -340,6 +340,21 @@ const AuctionDetails = () => {
     };
   }, []);
 
+  const router = useRouter();
+  const [redirectUrl, setRedirectUrl] = useState("/my-account");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname + window.location.search;
+      setRedirectUrl(`/my-account?redirect=${encodeURIComponent(currentPath)}`);
+    }
+  }, []);
+
+  const handleRedirect = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    router.push(redirectUrl);
+  };
+
   const imagePlaceholder = "/assets/img/placeholder.png";
   if (loading)
     return (
@@ -393,9 +408,12 @@ const AuctionDetails = () => {
               <div className="woocommerce-notices-wrapper">
                 <ul className="woocommerce-error" role="alert">
                   <li>
-                    Please Login/Register in to place your bid or buy the
-                    product.{" "}
-                    <a href="/my-account" className="button">
+                    Please Login/Register to place your bid or buy the product.{" "}
+                    <a
+                      href={redirectUrl}
+                      onClick={handleRedirect}
+                      className="button"
+                    >
                       Login/Register →
                     </a>{" "}
                   </li>
