@@ -15,12 +15,6 @@ export default function EditAccountPage() {
   const [bidStatus, setBidStatus] = useState<string>("active"); // State to store bidStatus
   const token = getToken();
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const bidStatusValue = params.get("bid_status") || "active"; // Fallback to 'active'
-    setBidStatus(bidStatusValue); // Set bidStatus in the state
-  }, []); // This effect runs only once after the component mounts
-
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/orders`; // ✅ Dynamic URL
   const fetchData = async () => {
     setLoading(true);
@@ -36,40 +30,6 @@ export default function EditAccountPage() {
       setLoading(false);
     }
   };
-
-  const handleLogout = () => {
-    try {
-      // Remove authentication tokens and user info from cookies
-      Cookies.remove("authToken");
-      Cookies.remove("refreshToken");
-      Cookies.remove("user");
-      Cookies.remove("rememberMe"); // Optional, if rememberMe was set
-      window.location.href = "/my-account";
-    } catch (err) {
-      console.error("Error logging out", err);
-    }
-  };
-
-  useEffect(() => {
-    const handleLogoutClick = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "A" &&
-        target.textContent?.trim().toLowerCase() === "log out"
-      ) {
-        e.preventDefault();
-
-        // Call your logout function here
-        handleLogout();
-      }
-    };
-
-    document.addEventListener("click", handleLogoutClick);
-
-    return () => {
-      document.removeEventListener("click", handleLogoutClick);
-    };
-  }, []);
 
   useEffect(() => {
     fetchData();
