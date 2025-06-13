@@ -42,7 +42,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/my-account";
+  const redirectTo = searchParams.get("redirect") || "/my-account/orders";
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
