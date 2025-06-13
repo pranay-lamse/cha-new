@@ -191,16 +191,6 @@ export default function CheckoutPage() {
     };
   }, [htmlContent, token]);
 
-  /* useEffect(() => {
-    if (!htmlContent) return;
-
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style); // Clean up
-    };
-  }, [htmlContent]); */
-
   useEffect(() => {
     const button = document.getElementById("place_order");
     const checkbox = document.getElementById("terms");
@@ -249,7 +239,7 @@ export default function CheckoutPage() {
 
             // Redirect to local frontend without /stage
 
-            window.location.href = `${cleanedPath}`;
+            router.push(cleanedPath);
 
             console.log("Redirecting to:", cleanedPath);
           } else if (response.data.result === "failure") {
