@@ -1,11 +1,11 @@
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface CardDetailsProps {
   sourceId: string | null;
 }
 
-const CardDetails = ({ sourceId   }: CardDetailsProps) => {
+const CardDetails = ({ sourceId }: CardDetailsProps) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -31,6 +31,10 @@ const CardDetails = ({ sourceId   }: CardDetailsProps) => {
 
     loadCardDetails();
   }, [sourceId]);
+  const router = useRouter();
+  const handleClick = () => {
+    router.push("/my-account/payment-methods/add-payment-method/");
+  };
 
   if (loading) return <p>Loading card details...</p>;
 
@@ -59,12 +63,12 @@ const CardDetails = ({ sourceId   }: CardDetailsProps) => {
         <p className="text-red-500">No card details found.</p>
       )}
 
-      <Link
+      <button
+        onClick={handleClick}
         className="payment-button border-2 border-[#5bc0de] px-2 py-1 text-[#dcc373] text-[14px] rounded font-bold hover:bg-[#dcc373] hover:text-[#0f335f] hover:no-underline mt-4 w-full md:w-auto inline-block"
-        href="/my-account/payment-methods/add-payment-method/"
       >
         Add payment method
-      </Link>
+      </button>
     </div>
   );
 };
