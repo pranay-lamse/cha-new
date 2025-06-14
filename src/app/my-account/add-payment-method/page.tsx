@@ -15,7 +15,7 @@ import axiosClientGeneralTokenCustomApi from "@/api/axiosClientGeneralTokenCusto
 import { useAuth } from "@/app/providers/UserProvider";
 import axiosClient from "@/api/axiosClient";
 import axiosClientwithApi from "@/api/axiosClientwithApi";
-
+import { useRouter } from "next/navigation"; //
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string);
 
 const CheckoutForm = () => {
@@ -31,7 +31,7 @@ const CheckoutForm = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<{ credit_card?: string } | null>(null);
   const [customerId, setCustomerId] = useState<string | null>("");
-
+  const router = useRouter();
   const fetchPaymentMethods = async () => {
     setLoading(true);
     try {
@@ -81,7 +81,7 @@ const CheckoutForm = () => {
       }
 
       if (paymentMethod?.id) {
-        await axiosClientwithApi.post(
+        const result = await axiosClientwithApi.post(
           "/wp-json/custom-api/v1/update-payment-method",
           {
             customerId: customerId,
@@ -99,6 +99,10 @@ const CheckoutForm = () => {
             },
           }
         );
+
+        if (result.data.success) {
+          router.push("/my-account/payment-methods");
+        }
 
         /* window.location.href = "/my-account/payment-methods"; */
       } else {
