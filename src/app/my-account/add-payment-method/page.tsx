@@ -17,7 +17,15 @@ import { useAuth } from "@/app/providers/UserProvider";
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string);
 
 const CheckoutForm = () => {
-  const { user, loading: authLoading, isAuthenticated } = useAuth(); // ✅ Access user data
+  const {
+    user,
+    loading: authLoading,
+    isAuthenticated,
+  } = useAuth() as {
+    user: { userId?: string; name?: string; email?: string } | null;
+    loading: boolean;
+    isAuthenticated: boolean;
+  }; // ✅ Access user data
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<{ credit_card?: string } | null>(null);
   const [customerId, setCustomerId] = useState<string | null>("");
@@ -59,6 +67,10 @@ const CheckoutForm = () => {
       const { paymentMethod, error } = await stripe.createPaymentMethod({
         type: "card",
         card: elements.getElement(CardElement)!,
+        billing_details: {
+          name: user?.name || "Unknown", // Replace with actual field
+          email: user?.email || "no-email@example.com", // Replace with actual field
+        },
       });
 
       if (error) {
@@ -71,9 +83,14 @@ const CheckoutForm = () => {
           customerId: customerId,
           paymentMethodId: paymentMethod?.id,
           userId: user?.userId,
+          fingerprint: "MIWqR4mqZ3SOrQyf",
+          card_type: paymentMethod?.card?.brand,
+          expiry_month: paymentMethod?.card?.exp_month,
+          expiry_year: paymentMethod?.card?.exp_year,
+          last4: paymentMethod?.card?.last4,
         });
 
-        window.location.href = "/my-account/payment-methods";
+        /* window.location.href = "/my-account/payment-methods"; */
       } else {
         console.error("Source conversion failed.");
       }
