@@ -13,6 +13,7 @@ import {
 import { env } from "@/env";
 import axios from "axios";
 import { useAuth } from "@/app/providers/UserProvider";
+import axiosClientwithApi from "@/api/axiosClientwithApi";
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
@@ -65,6 +66,10 @@ const CheckoutFormContent = () => {
         await stripe.createPaymentMethod({
           type: "card",
           card: cardNumberElement,
+          billing_details: {
+            name: user?.name || "Unknown", // Replace with actual field
+            email: user?.email || "no-email@example.com", // Replace with actual field
+          },
         });
 
       if (stripeError) {
@@ -73,20 +78,24 @@ const CheckoutFormContent = () => {
         return;
       }
 
-      const response = await axios.post("/api/wordpress/updatePaymentMethod", {
-        customerId: user?.stripe_customer_id,
-        paymentMethodId: paymentMethod?.id,
-        userId: userId,
-      });
-
-      /* if (response.status === 200) {
-        setSuccess("Payment method updated successfully.");
-        setTimeout(() => {
-          window.location.href = "/my-account/payment-methods";
-        }, 2000);
-      } else {
-        setError("Server error while updating payment method.");
-      } */
+      const response = await axiosClientwithApi.post(
+        "/wp-json/custom-api/v1/update-payment-method",
+        {
+          customerId: user?.stripe_customer_id,
+          paymentMethodId: paymentMethod?.id,
+          userId: userId,
+          fingerprint: "MIWqR4mqZ3SOrQyf",
+          card_type: paymentMethod?.card?.brand,
+          expiry_month: paymentMethod?.card?.exp_month,
+          expiry_year: paymentMethod?.card?.exp_year,
+          last4: paymentMethod?.card?.last4,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // ✅ Required for WP to parse JSON
+          },
+        }
+      );
     } catch (err: any) {
       setError(
         err.response?.data?.message || "An error occurred. Please try again."
@@ -160,7 +169,7 @@ const CheckoutFormContent = () => {
       </div>
 
       <button
-      className="add_button"
+        className="add_button"
         type="button"
         disabled={!stripe || isLoading}
         onClick={handleCardPayment}
