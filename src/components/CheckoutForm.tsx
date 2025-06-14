@@ -96,6 +96,15 @@ const CheckoutFormContent = () => {
           },
         }
       );
+
+      const cardExpiryElement = elements.getElement(CardExpiryElement);
+      const cardCvcElement = elements.getElement(CardCvcElement);
+
+      cardNumberElement?.clear();
+      cardExpiryElement?.clear();
+      cardCvcElement?.clear();
+
+      setTermsAccepted(false);
     } catch (err: any) {
       setError(
         err.response?.data?.message || "An error occurred. Please try again."
