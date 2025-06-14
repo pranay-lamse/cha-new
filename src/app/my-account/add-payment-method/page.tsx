@@ -13,6 +13,8 @@ import axios from "axios";
 import { env } from "@/env";
 import axiosClientGeneralTokenCustomApi from "@/api/axiosClientGeneralTokenCustomApi";
 import { useAuth } from "@/app/providers/UserProvider";
+import axiosClient from "@/api/axiosClient";
+import axiosClientwithApi from "@/api/axiosClientwithApi";
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string);
 
@@ -79,16 +81,24 @@ const CheckoutForm = () => {
       }
 
       if (paymentMethod?.id) {
-        await axios.post("/api/wordpress/updatePaymentMethod", {
-          customerId: customerId,
-          paymentMethodId: paymentMethod?.id,
-          userId: user?.userId,
-          fingerprint: "MIWqR4mqZ3SOrQyf",
-          card_type: paymentMethod?.card?.brand,
-          expiry_month: paymentMethod?.card?.exp_month,
-          expiry_year: paymentMethod?.card?.exp_year,
-          last4: paymentMethod?.card?.last4,
-        });
+        await axiosClientwithApi.post(
+          "/wp-json/custom-api/v1/update-payment-method",
+          {
+            customerId: customerId,
+            paymentMethodId: paymentMethod?.id,
+            userId: user?.userId,
+            fingerprint: "MIWqR4mqZ3SOrQyf",
+            card_type: paymentMethod?.card?.brand,
+            expiry_month: paymentMethod?.card?.exp_month,
+            expiry_year: paymentMethod?.card?.exp_year,
+            last4: paymentMethod?.card?.last4,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json", // ✅ Required for WP to parse JSON
+            },
+          }
+        );
 
         /* window.location.href = "/my-account/payment-methods"; */
       } else {
