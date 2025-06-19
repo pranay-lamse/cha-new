@@ -1394,6 +1394,7 @@ ul.woocommerce-SavedPaymentMethods.wc-saved-payment-methods {
   line-height: 1.5;
   color: #000;
   text-transform: none !important;
+  text-align: left;
 }
 
 .checkout-page a.woocommerce-privacy-policy-link,
