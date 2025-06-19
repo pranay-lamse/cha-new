@@ -277,7 +277,13 @@ const AuctionDetails = () => {
     };
     fetchSingleProduct();
   }, []);
-
+  useEffect(() => {
+    const message = localStorage.getItem("bidMessage");
+    if (message) {
+      setBidMessage(message);
+      localStorage.removeItem("bidMessage");
+    }
+  }, []);
   // --- Bid Form Submission ---
   useEffect(() => {
     const handleFormSubmit = async (e: JQuery.SubmitEvent) => {
@@ -315,9 +321,13 @@ const AuctionDetails = () => {
           auctionId: productId,
           bidAmount: bidValue,
         });
-
-        fetchData();
-        setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
+        localStorage.setItem(
+          "bidMessage",
+          `Your bid of $${bidValue} has been placed successfully!`
+        );
+        window.location.reload();
+        // fetchData();
+        // setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
       } catch (err) {
         console.error("Bid failed:", err);
       } finally {
@@ -527,8 +537,16 @@ const AuctionDetails = () => {
               )}
 
               <div className="flex flex-col md:flex-row items-center gap-2 DocumentCard">
-                <DocumentCard name="HEALTH DOC" src={prepurchase_exam.url} />
-                <DocumentCard name="COGGINS" src={COGGINS.url} />
+                {prepurchase_exam.url ? (
+                  <DocumentCard name="HEALTH DOC" src={prepurchase_exam.url} />
+                ) : (
+                  ""
+                )}
+                {COGGINS.url ? (
+                  <DocumentCard name="COGGINS" src={COGGINS.url} />
+                ) : (
+                  ""
+                )}
               </div>
               {/* Rules  */}
               {more_information ? (
