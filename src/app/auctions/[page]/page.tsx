@@ -98,23 +98,6 @@ const AuctionDetails = () => {
 
   useEffect(() => {
     if (!loading && htmlContent) {
-      const isSold =
-        htmlContent.includes("woo-ua-sold-for") ||
-        htmlContent.includes("sold_for");
-
-      if (isSold) {
-        // ✅ Inject style to hide countdown elements
-        const style = document.createElement("style");
-        style.innerHTML = `
-        .uwa_auction_product_countdown.uwa-main-auction-product-loop.uwa_auction_product_countdown.clock_jquery {
-          display: none !important;
-        }
-      `;
-        document.head.appendChild(style);
-
-        // ✅ Don't run countdown timer logic
-        return;
-      }
       const timeoutId = setTimeout(() => {
         $(".clock_jquery").each(function () {
           const el = $(this);
@@ -158,7 +141,7 @@ const AuctionDetails = () => {
 
       return () => clearTimeout(timeoutId);
     }
-  }, [htmlContent]);
+  }, [htmlContent, loading]);
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     if (!token) {
@@ -437,9 +420,8 @@ const AuctionDetails = () => {
                 </ul>
               </div>
             )}
-
-            {videoIfram ? (
-              <div className="w-full aspect-video rounded-[22px] overflow-hidden">
+            <div className="w-full aspect-video rounded-[22px] overflow-hidden">
+              {videoIfram ? (
                 <div
                   key={auction.id}
                   className="video-container"
@@ -447,10 +429,10 @@ const AuctionDetails = () => {
                     __html: videoIfram,
                   }}
                 />
-              </div>
-            ) : (
-              ""
-            )}
+              ) : (
+                ""
+              )}
+            </div>
 
             <div className="mt-8">
               <h2
@@ -519,13 +501,13 @@ const AuctionDetails = () => {
                 }}
               ></div>
             )}
-            {auction.images.length > 0 ? (
-              <ProductGalleryPage {...auction.images} />
-            ) : (
-              ""
-            )}
 
             <div className="uwa_auction_product_ajax_change">
+              {auction.images.length > 1 ? (
+                <ProductGalleryPage {...auction.images} />
+              ) : (
+                ""
+              )}
               {auction.short_description ? (
                 <Description shortDescription={auction.short_description} />
               ) : (
@@ -545,16 +527,8 @@ const AuctionDetails = () => {
               )}
 
               <div className="flex flex-col md:flex-row items-center gap-2 DocumentCard">
-                {prepurchase_exam.url ? (
-                  <DocumentCard name="HEALTH DOC" src={prepurchase_exam.url} />
-                ) : (
-                  ""
-                )}
-                {COGGINS.url ? (
-                  <DocumentCard name="COGGINS" src={COGGINS.url} />
-                ) : (
-                  ""
-                )}
+                <DocumentCard name="HEALTH DOC" src={prepurchase_exam.url} />
+                <DocumentCard name="COGGINS" src={COGGINS.url} />
               </div>
               {/* Rules  */}
               {more_information ? (
