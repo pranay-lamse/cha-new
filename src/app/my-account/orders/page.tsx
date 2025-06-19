@@ -8,20 +8,23 @@ import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import { getToken } from "@/utils/storage";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+
 export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [bidStatus, setBidStatus] = useState<string>("active"); // State to store bidStatus
   const token = getToken();
+  const router = useRouter();
 
-  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/orders`; // ✅ Dynamic URL
+  const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/orders`;
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const data = await fetchHtmlData(url); // ✅ Pass URL dynamically
+      const data = await fetchHtmlData(url);
       setHtmlContent(data);
     } catch (error) {
       setError("Failed to fetch data. Please try again later.");
@@ -32,26 +35,20 @@ export default function EditAccountPage() {
   };
 
   useEffect(() => {
-    const handleCancelClick = async (e: Event) => {
+    const handleClick = async (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+      const anchor = target.closest("a") as HTMLAnchorElement;
 
-      // Look for anchor element with class 'cancel'
-      if (target && target.closest("a.cancel")) {
-        const anchor = target.closest("a.cancel") as HTMLAnchorElement;
-        if (!anchor) return;
+      if (!anchor || !anchor.href) return;
 
+      // Cancel Order logic
+      if (anchor.classList.contains("cancel")) {
         e.preventDefault();
-
         const href = anchor.getAttribute("href");
         if (!href) return;
 
-        console.log("Cancelling order via href:", href);
-
-        // Parse the full URL to get path and query
         const urlObj = new URL(href, window.location.origin);
         const cleanPathWithQuery = urlObj.pathname + urlObj.search;
-
-        // Build full API URL
         const fullURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}${cleanPathWithQuery}`;
 
         try {
@@ -64,23 +61,30 @@ export default function EditAccountPage() {
             withCredentials: true,
           });
 
-          // Optionally trigger WooCommerce event or your own logic
-          console.log("Order cancelled successfully");
-
-          // Re-fetch data to reflect cancellation
-          fetchData();
+          fetchData(); // Refresh list
         } catch (error) {
           console.error("Failed to cancel order:", error);
         } finally {
           anchor.classList.remove("loading");
         }
+        return;
+      }
+
+      // Redirect Pay link to /checkout
+      const href = anchor.getAttribute("href");
+      if (
+        href &&
+        href.includes("/checkout/order-pay") &&
+        anchor.hostname === window.location.hostname
+      ) {
+        e.preventDefault();
+        router.push("/checkout");
       }
     };
 
-    document.addEventListener("click", handleCancelClick);
-
+    document.addEventListener("click", handleClick);
     return () => {
-      document.removeEventListener("click", handleCancelClick);
+      document.removeEventListener("click", handleClick);
     };
   }, [htmlContent]);
 
@@ -89,7 +93,7 @@ export default function EditAccountPage() {
   }, []);
 
   return (
-    <div className="container  mx-auto w-full sm:w-11/12 lg:w-[1170px] px-2">
+    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] px-2">
       <div className="e-my-account-tab e-my-account-tab__dashboard">
         <div className="woocommerce myaccount-info">
           <div className="woocommerce-MyAccount-navigation col-span-1">
