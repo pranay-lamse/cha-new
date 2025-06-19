@@ -41,10 +41,11 @@ export default function EditAccountPage() {
 
       if (!anchor || !anchor.href) return;
 
-      // Cancel Order logic
+      const href = anchor.getAttribute("href");
+
+      // ✅ Cancel Order logic
       if (anchor.classList.contains("cancel")) {
         e.preventDefault();
-        const href = anchor.getAttribute("href");
         if (!href) return;
 
         const urlObj = new URL(href, window.location.origin);
@@ -70,15 +71,31 @@ export default function EditAccountPage() {
         return;
       }
 
-      // Redirect Pay link to /checkout
-      const href = anchor.getAttribute("href");
+      // ✅ Redirect /checkout/order-pay/:id/... → /checkout?pay-uwa-auction=ORDER_ID
       if (
         href &&
         href.includes("/checkout/order-pay") &&
         anchor.hostname === window.location.hostname
       ) {
         e.preventDefault();
-        router.push("/checkout");
+
+        try {
+          const urlObj = new URL(href, window.location.origin);
+          const orderPayMatch = urlObj.pathname.match(
+            /\/checkout\/order-pay\/(\d+)/
+          );
+
+          if (orderPayMatch && orderPayMatch[1]) {
+            const orderId = orderPayMatch[1];
+            router.push(`/checkout?pay-uwa-auction=${orderId}`);
+          } else {
+            console.warn("Could not extract order ID from href:", href);
+          }
+        } catch (err) {
+          console.error("Failed to parse href:", err);
+        }
+
+        return;
       }
     };
 
@@ -118,3 +135,4 @@ export default function EditAccountPage() {
     </div>
   );
 }
+                                                      
