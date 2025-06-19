@@ -30,7 +30,7 @@ table tbody>tr:nth-child(odd)>th {
 }
 
 button#place_order {
-  float: unset;
+  float: unset !important;
 }
 
 table td,
