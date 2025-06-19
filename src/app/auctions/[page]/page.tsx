@@ -10,7 +10,7 @@ import { MAX_RESULTS } from "@/constants";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import axiosClientGeneralToken from "@/api/axiosClientGeneralToken";
 import axiosClientGeneralTokenCustomApi from "@/api/axiosClientGeneralTokenCustomApi";
 import Timer from "@/components/Timer";
@@ -47,7 +47,7 @@ const AuctionDetails = () => {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [bidMessage, setBidMessage] = useState("");
   const [loginMessage, setLoginMessage] = useState(false);
-
+  const previousPriceHtmlRef = useRef<string | null>(null); // stores last price_html
   const pathname = usePathname();
   const token = getToken();
   const slug = pathname.split("/").pop();
@@ -255,28 +255,37 @@ const AuctionDetails = () => {
 
   // --- Product Fetch for Page ---
   useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
     const fetchSingleProduct = async () => {
-      setLoading(true);
       try {
         const response = await axiosClientGeneralTokenCustomApi.get(
           `/wp-json/wc/v3/products?slug=${slug}`
         );
-        setData(response.data || {});
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-        setData({});
-      } finally {
-        setLoading(false);
-        const noticeWrapper = document.querySelector("body");
-        if (noticeWrapper) {
-          noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          console.log("Element not found");
+
+        const latestProduct = response.data?.[0];
+
+        if (!latestProduct) return;
+
+        const latestPriceHtml = latestProduct?.price_html;
+
+        // Only update if price_html has changed
+        if (previousPriceHtmlRef.current !== latestPriceHtml) {
+          previousPriceHtmlRef.current = latestPriceHtml;
+          setData([latestProduct]); // keep consistent data structure
         }
+      } catch (error) {
+        console.error("Error fetching product data:", error);
       }
     };
-    fetchSingleProduct();
-  }, []);
+
+    fetchSingleProduct(); // Initial fetch
+
+    intervalId = setInterval(fetchSingleProduct, 2000); // Poll every 2s
+
+    return () => clearInterval(intervalId); // Cleanup
+  }, [slug]);
+
   useEffect(() => {
     const message = localStorage.getItem("bidMessage");
     if (message) {
