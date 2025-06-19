@@ -255,7 +255,7 @@ const AuctionDetails = () => {
 
   // --- Product Fetch for Page ---
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
+
 
     const fetchSingleProduct = async () => {
       try {
@@ -281,9 +281,9 @@ const AuctionDetails = () => {
 
     fetchSingleProduct(); // Initial fetch
 
-    intervalId = setInterval(fetchSingleProduct, 2000); // Poll every 2s
+     const intervalId = setInterval(fetchSingleProduct, 2000); // poll every 2s
 
-    return () => clearInterval(intervalId); // Cleanup
+    return () => clearInterval(intervalId); // cleanup
   }, [slug]);
 
   useEffect(() => {
