@@ -21,6 +21,7 @@ import Head from "next/head";
 import { Leatherwood } from "@/components/Leatherwood";
 import Image from "next/image";
 import { marcellus, raleway } from "@/config/fonts";
+import { useRouter } from "next/navigation";
 
 export default function EditAccountPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
@@ -59,24 +60,87 @@ export default function EditAccountPage() {
     }
   }, [bidStatus]);
 
-  useEffect(() => {
+    const router = useRouter();
+    const [redirectUrl, setRedirectUrl] = useState("/my-account");
+ const handleRedirect = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    router.push(redirectUrl);
+  };
+  
+
+
+    useEffect(() => {
     if (!loading && htmlContent) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
+        // ✅ Client-side routing for both "Bid now" and "How to bid"
+        $(document).on(
+          "click",
+          "a.product_type_auction, #hwa_button, a.button.product_type_simple",
+          function (e) {
+            const href = $(this).attr("href");
+            if (!href) return;
+
+            const url = new URL(href, window.location.origin);
+            const path = url.pathname;
+            const hash = url.hash;
+
+            e.preventDefault();
+            router.push(path + hash);
+          }
+        );
+
+        $(".clock_jquery").each(function () {
+          const el = $(this);
+          const timeStr = el.data("time");
+          const [datePart, timePart] = timeStr.split(" ");
+          const [year, month, day] = datePart.split("-").map(Number);
+          const [hour, minute, second] = timePart.split(":").map(Number);
+          const endTime = new Date(
+            Date.UTC(year, month - 1, day, hour + 6, minute, second)
+          ).getTime();
+
+          function update() {
+            const now = Date.now();
+            const diff = endTime - now;
+            if (diff <= 0) {
+              el.html('<span class="countdown-expired">Auction ended</span>');
+              clearInterval(timer);
+              return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor(
+              (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            el.html(`
+              <span class="countdown_row countdown_show4">
+                <span class="countdown_section"><span class="countdown_amount">${d} </span><br>Day(s),</span>
+                <span class="countdown_section"><span class="countdown_amount">${h} </span><br>Hour(s),</span>
+                <span class="countdown_section"><span class="countdown_amount">${m} </span><br>Min(s),</span>
+                <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
+              </span>`);
+          }
+
+          update();
+          const timer = setInterval(update, 1000);
+        });
+
         $(".product").each(function () {
           const price = $(this).find(".price");
           const title = $(this).find(".woocommerce-loop-product__title");
           const details = $(this).find(".short_des_loop");
 
           if (details.length) {
-            if (price.length && !details.find(".price").length) {
+            if (price.length && !details.find(".price").length)
               price.detach().prependTo(details);
-            }
             if (
               title.length &&
               !details.find(".woocommerce-loop-product__title").length
-            ) {
+            )
               title.detach().prependTo(details);
-            }
           }
         });
 
@@ -85,114 +149,91 @@ export default function EditAccountPage() {
           const button = $(this)
             .closest(".product")
             .find(
-              "a.button.product_type_auction, a.button.product_type_simple"
+              "a.button.product_type_auction, a.button.alt.uwa_pay_now, .uwa_auction_product_countdown, a.button.product_type_simple"
             );
-
           if (details.length && button.length) {
             details.after(button);
           }
         });
 
-        function reorderProducts() {
-          const windowWidth = $(window)?.width() || 0;
-
-          if (windowWidth > 768) {
-            $(".products .product").each(function (index) {
-              const $image = $(this).find(".woocommerce-LoopProduct-link");
-              const $description = $(this).find(".short_des_loop");
-
-              if ($image.length && $description.length) {
-                if (index % 2 === 0) {
-                  $image.insertBefore($description);
-                } else {
-                  $description.insertBefore($image);
-                }
-              }
-            });
-          } else {
-            $(".products .product").each(function () {
-              const $image = $(this).find(".woocommerce-LoopProduct-link");
-              const $description = $(this).find(".short_des_loop");
-
-              if ($image.length && $description.length) {
-                $image.insertBefore($description);
-              }
-            });
-          }
-        }
-
-        $(
-          ".woocommerce ul.products li.product.type-product span.woo-ua-winned-for.winning_bid"
-        ).text("Sold via Bid");
-
-        $(
-          ".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for"
-        ).text("Sold via Buy Now");
+        $(".woo-ua-winned-for.winning_bid").text("Sold via Bid");
+        $(".woo-ua-sold-for.sold_for").text("Sold via Buy Now");
 
         $(".home_products_sec .product").each(function () {
           const $link = $(this)
             .find(".woocommerce-LoopProduct-link")
             .attr("href");
-
           $(this)
             .find(".short_des_loop")
             .append(
-              "<a href='" +
-                $link +
-                "#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>"
+              `<a href="${$link}#bidding" style="margin-left: 20px;" id="hwa_button" class="button">How to bid</a>`
             );
-
           $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+          $(".auctionTow-page ul.products li.product").css("opacity", "1");
         });
 
-        if (window.location.href.indexOf("bidding") > -1) {
-          console.log("yes");
-
+        if (window.location.href.includes("bidding")) {
           $("html, body").animate({
-            scrollTop:
-              $("#bidding_sec").offset() && $("#bidding_sec").offset()?.top
-                ? $("#bidding_sec").offset()!.top - 300
-                : 0,
+            scrollTop: $("#bidding_sec").offset()?.top
+              ? $("#bidding_sec").offset()!.top - 300
+              : 0,
           });
         }
 
-        reorderProducts();
-        $(window).on("resize", reorderProducts);
+        $(document).on("click", ".how-to-bid-button", function (e) {
+          e.preventDefault();
+          alert("Open How to Bid instructions or modal here.");
+        });
 
-        return () => {
-          $(window).off("resize", reorderProducts);
-        };
-      }, 100);
+        $("ul.products li.product").each(function () {
+          const $product = $(this);
+          const $bdi = $product.find(
+            "span.woocommerce-Price-amount.amount bdi"
+          );
+          const currency = $bdi.find("span").text();
+          $bdi.find("span").remove();
+          const priceRefText = $bdi.html();
+
+          const hasReserveOrExpired =
+            $product.find(".woo-ua-winned-for").hasClass("reserve_not_met") ||
+            $product.find(".woo-ua-winned-for").hasClass("expired");
+
+          const finalPrice = hasReserveOrExpired
+            ? $product.find(".product-custom-price").attr("data-price") ?? "0"
+            : priceRefText ?? "0";
+
+          $product.attr("data-price", finalPrice);
+          $bdi.prepend(currency);
+        });
+
+        function sortProductsPriceDescending() {
+          [
+            ".home_products_sec:not(.closed_auctions) ul.products",
+            ".closed_auc ul.products",
+          ].forEach((selector) => {
+            const $wrapper = $(selector);
+            const products = $wrapper.find("li.product").toArray();
+
+            products.sort((a, b) => {
+              const priceA = parseFloat($(a).attr("data-price") ?? "0");
+              const priceB = parseFloat($(b).attr("data-price") ?? "0");
+              return priceB - priceA;
+            });
+
+            $wrapper.append(products);
+          });
+        }
+
+        sortProductsPriceDescending();
+      }, 0);
+
+      return () => {
+        clearTimeout(timeoutId);
+        $(document).off("click", "a.product_type_auction, a.button.product_type_simple");
+        $(document).off("click", "#hwa_button");
+      };
     }
   }, [htmlContent, loading]);
-
-  useEffect(() => {
-    // Ensure the Facebook SDK is loaded
-    if (
-      typeof window !== "undefined" &&
-      !document.getElementById("facebook-jssdk")
-    ) {
-      const script = document.createElement("script");
-      script.id = "facebook-jssdk";
-      script.src =
-        "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0";
-      script.async = true;
-      script.defer = true;
-      script.crossOrigin = "anonymous";
-      script.onload = () => {
-        if (window.FB) {
-          window.FB.XFBML.parse();
-          setLoading(false);
-        } else {
-          console.error("Facebook SDK failed to load.");
-        }
-      };
-      script.onerror = () => {
-        console.error("Error loading the Facebook SDK script.");
-      };
-      document.body.appendChild(script);
-    }
-  }, []);
 
   return (
     <div className="auctionTow-page">
