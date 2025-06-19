@@ -98,6 +98,12 @@ const AuctionDetails = () => {
 
   useEffect(() => {
     if (!loading && htmlContent) {
+      if (
+        htmlContent.includes("woo-ua-sold-for") ||
+        htmlContent.includes("sold_for")
+      ) {
+        return;
+      }
       const timeoutId = setTimeout(() => {
         $(".clock_jquery").each(function () {
           const el = $(this);
