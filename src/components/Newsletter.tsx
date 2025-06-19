@@ -92,7 +92,7 @@ export const Newsletter = () => {
               onChange={handleInputChange}
               placeholder="Your Name"
               style={{ fontFamily: "Cormorant_SC" }}
-              className="block w-full h-11 px-5 py-2.5 bg-white border border-golden-light rounded-md text-gray-900 placeholder-opacity-60 placeholder-black placeholder:uppercase focus:outline-none"
+              className="block w-full h-11 px-5 py-2.5 bg-white border border-golden-light rounded-md text-gray-900 placeholder-opacity-60 placeholder-black focus:outline-none"
               required
             />
             <input
@@ -102,7 +102,7 @@ export const Newsletter = () => {
               onChange={handleInputChange}
               placeholder="Your Email"
               style={{ fontFamily: "Cormorant_SC" }}
-              className="block w-full h-11 px-5 py-2.5 bg-white border border-golden-light rounded-md text-gray-900 placeholder-opacity-60 placeholder-black placeholder:uppercase focus:outline-none"
+              className="block w-full h-11 px-5 py-2.5 bg-white border border-golden-light rounded-md text-gray-900 placeholder-opacity-60 placeholder-black focus:outline-none"
               required
             />
             <input
@@ -112,7 +112,7 @@ export const Newsletter = () => {
               onChange={handleInputChange}
               placeholder="Your Phone Number"
               style={{ fontFamily: "Cormorant_SC" }}
-              className="block w-full h-11 px-5 py-2.5 bg-white border border-golden-light rounded-md text-gray-900 placeholder-opacity-60 placeholder-black placeholder:uppercase focus:outline-none"
+              className="block w-full h-11 px-5 py-2.5 bg-white border border-golden-light rounded-md text-gray-900 placeholder-opacity-60 placeholder-black focus:outline-none"
               required
             />
             <input type="hidden" name="token-recaptcha" value={token} />
