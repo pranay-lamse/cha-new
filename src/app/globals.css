@@ -29,6 +29,10 @@ table tbody>tr:nth-child(odd)>th {
   background-color: hsla(0, 0%, 50%, .071);
 }
 
+button#place_order {
+  float: unset;
+}
+
 table td,
 table th {
   border: 1px solid hsla(0, 0%, 50%, .502);
