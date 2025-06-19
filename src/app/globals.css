@@ -29,8 +29,12 @@ table tbody>tr:nth-child(odd)>th {
   background-color: hsla(0, 0%, 50%, .071);
 }
 
-button#place_order {
+.woocommerce-checkout #payment button#place_order {
   float: unset !important;
+}
+
+.woocommerce-checkout #payment div.form-row {
+  text-align: right;
 }
 
 table td,
