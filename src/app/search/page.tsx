@@ -43,25 +43,19 @@ export default function EditAccountPage() {
   }, [orderKey]);
 
   return (
-    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] px-2">
-      <div className="e-my-account-tab e-my-account-tab__dashboard">
-        <div className="woocommerce myaccount-info">
-          <div className="woocommerce-MyAccount-content-outer">
-            {loading ? (
-              <Loader />
-            ) : (
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: filterHTMLContent(htmlContent || "", [
-                    "elementor-widget-container",
-                  ]),
-                }}
-                className="woocommerce-MyAccount-content-inner"
-              />
-            )}
-          </div>
-        </div>
-      </div>
+    <div className="search-page">
+      {loading ? (
+        <Loader />
+      ) : (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: filterHTMLContent(htmlContent || "", [
+              "elementor-location-archive",
+            ]),
+          }}
+          className="search-page-inner"
+        />
+      )}
     </div>
   );
 }
