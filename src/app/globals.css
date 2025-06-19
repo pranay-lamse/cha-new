@@ -13,6 +13,30 @@ span {
   -webkit-font-smoothing: antialiased;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+  margin-block-end: 1rem;
+  margin-block-start: .5rem;
+}
+
+table tbody>tr:nth-child(odd)>td,
+table tbody>tr:nth-child(odd)>th {
+  background-color: hsla(0, 0%, 50%, .071);
+}
+
+table td,
+table th {
+  border: 1px solid hsla(0, 0%, 50%, .502);
+  line-height: 1.5;
+  padding: 15px;
+  vertical-align: top;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -3320,6 +3344,19 @@ form.woocommerce-form.woocommerce-form-register.register form span a,
   padding: 10px 12px;
   height: 40px;
   margin-top: 10px;
+}
+
+.woocommerce-checkout main#content,
+.woocommerce-cart main#content {
+  max-width: 1000px;
+  margin: 70px auto;
+}
+
+.woocommerce-checkout main#content h1.entry-title,
+.woocommerce-cart main#content h1.entry-title {
+  color: #222;
+  font-family: Marcellus;
+  font-size: 46px;
 }
 
 @media (max-width: 767px) {
