@@ -292,6 +292,14 @@ const AuctionDetails = () => {
 
       if (!token) {
         setLoginMessage(true);
+        /* const message = localStorage.getItem(
+          "Please Login/Register to place your bid or buy the product."
+        ); */
+        const currentPath = window.location.pathname + window.location.search;
+        setRedirectUrl(
+          `/my-account?redirect=${encodeURIComponent(currentPath)}`
+        );
+        router.push(redirectUrl);
         return;
       }
 
