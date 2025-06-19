@@ -58,21 +58,58 @@ export default function EditAccountPage() {
     if (!loading && htmlContent) {
       setTimeout(() => {
         // DOM reordering and layout fixes
+        $(".clock_jquery").each(function () {
+          const el = $(this);
+          const timeStr = el.data("time");
+          const [datePart, timePart] = timeStr.split(" ");
+          const [year, month, day] = datePart.split("-").map(Number);
+          const [hour, minute, second] = timePart.split(":").map(Number);
+          const endTime = new Date(
+            Date.UTC(year, month - 1, day, hour + 6, minute, second)
+          ).getTime();
+
+          function update() {
+            const now = Date.now();
+            const diff = endTime - now;
+            if (diff <= 0) {
+              el.html('<span class="countdown-expired">Auction ended</span>');
+              clearInterval(timer);
+              return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor(
+              (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            el.html(`
+              <span class="countdown_row countdown_show4">
+                <span class="countdown_section"><span class="countdown_amount">${d} </span><br>Day(s),</span>
+                <span class="countdown_section"><span class="countdown_amount">${h} </span><br>Hour(s),</span>
+                <span class="countdown_section"><span class="countdown_amount">${m} </span><br>Min(s),</span>
+                <span class="countdown_section"><span class="countdown_amount">${s} </span><br>Sec(s)</span>
+              </span>`);
+          }
+
+          update();
+          const timer = setInterval(update, 1000);
+        });
+
         $(".product").each(function () {
           const price = $(this).find(".price");
           const title = $(this).find(".woocommerce-loop-product__title");
           const details = $(this).find(".short_des_loop");
 
           if (details.length) {
-            if (price.length && !details.find(".price").length) {
+            if (price.length && !details.find(".price").length)
               price.detach().prependTo(details);
-            }
             if (
               title.length &&
               !details.find(".woocommerce-loop-product__title").length
-            ) {
+            )
               title.detach().prependTo(details);
-            }
           }
         });
 
@@ -81,9 +118,8 @@ export default function EditAccountPage() {
           const button = $(this)
             .closest(".product")
             .find(
-              "a.button.product_type_auction, a.button.product_type_simple"
+              ".button, a.button.alt.uwa_pay_now, .uwa_auction_product_countdown"
             );
-
           if (details.length && button.length) {
             details.after(button);
           }
