@@ -222,7 +222,7 @@ const AuctionDetails = () => {
           ${slug} has been added to your cart. <a href="/cart/" class="button wc-forward">View cart</a>
         </div>`;
         document.querySelector(".woocommerce-notices-wrapper")?.remove();
-        document.querySelector(".video-container")?.prepend(messageContainer);
+        document.querySelector("#content")?.prepend(messageContainer);
 
         target.classList.add("added");
       } catch (error) {
