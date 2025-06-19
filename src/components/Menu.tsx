@@ -28,7 +28,7 @@ export const Menu = ({ menuTree }: Props) => {
   const handleSearch = (e: any) => {
     e.preventDefault();
     if (query.trim()) {
-      window.location.href = `/?search=${encodeURIComponent(query)}`;
+      window.location.href = `/search?search=${encodeURIComponent(query)}`;
     }
   };
 
