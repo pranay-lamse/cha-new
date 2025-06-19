@@ -15,6 +15,7 @@ export default function MyAccountPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loginMessage, setLoginMessage] = useState("");
 
   const [email, setEmail] = useState("");
   const [regpassword, setRegPassword] = useState("");
@@ -49,6 +50,14 @@ export default function MyAccountPage() {
     phone: "",
   });
 
+  useEffect(() => {
+    const message = localStorage.getItem("loginMessage");
+    if (message) {
+      setLoginMessage(message);
+      localStorage.removeItem("loginMessage");
+    }
+  }, []);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -73,6 +82,20 @@ export default function MyAccountPage() {
                         <div
                           dangerouslySetInnerHTML={{
                             __html: loginErrorMessage || "",
+                          }}
+                        ></div>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                {loginMessage && (
+                  <div className="woocommerce-notices-wrapper">
+                    <ul className="woocommerce-error" role="alert">
+                      <li>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: loginMessage || "",
                           }}
                         ></div>
                       </li>
