@@ -291,7 +291,7 @@ const AuctionDetails = () => {
       e.stopPropagation();
 
       if (!token) {
-        setLoginMessage(true);
+        /*  setLoginMessage(true); */
 
         localStorage.setItem(
           "loginMessage",
@@ -301,7 +301,10 @@ const AuctionDetails = () => {
         setRedirectUrl(
           `/my-account?redirect=${encodeURIComponent(currentPath)}`
         );
-        router.push(redirectUrl);
+        const redirectUrlget = `/my-account?redirect=${encodeURIComponent(
+          currentPath
+        )}`;
+        router.push(redirectUrlget);
         return;
       }
 
@@ -331,16 +334,9 @@ const AuctionDetails = () => {
           auctionId: productId,
           bidAmount: bidValue,
         });
-        localStorage.setItem(
-          "bidMessage",
-          `Your bid of $${bidValue} has been placed successfully!`
-        );
-        window.location.reload();
-        // fetchData();
-        // setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
-      } catch (err) {
-        console.error("Bid failed:", err);
-      } finally {
+
+        fetchData();
+        setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
         button.prop("disabled", false);
         $("#bid-spinner").remove();
         button.text("Custom Bid");
@@ -351,6 +347,9 @@ const AuctionDetails = () => {
         } else {
           console.log("Element not found");
         }
+      } catch (err) {
+        console.error("Bid failed:", err);
+      } finally {
       }
     };
 
