@@ -22,7 +22,7 @@ export default function CheckoutPage() {
   const token = getToken();
   const router = useRouter();
   const url = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/checkout`;
-
+  const [isRegistering, setIsRegistering] = useState("");
   // Fetch bidStatus from URL search parameters on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -244,7 +244,17 @@ export default function CheckoutPage() {
             console.log("Redirecting to:", cleanedPath);
           } else if (response.data.result === "failure") {
             //show error message
-            alert("Please fill all the required fields.");
+
+            setIsRegistering("Please fill all the required fields.");
+            const noticeWrapper = document.querySelector("body");
+            if (noticeWrapper) {
+              noticeWrapper.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            } else {
+              console.log("Element not found");
+            }
           }
           // Optional: Redirect to a success page
           // window.location.href = "/order-success";
@@ -323,6 +333,19 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1000px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page">
+      {isRegistering && (
+        <div className="woocommerce-notices-wrapper">
+          <ul className="woocommerce-error" role="alert">
+            <li>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: isRegistering || "",
+                }}
+              ></div>
+            </li>
+          </ul>
+        </div>
+      )}
       {loading ? (
         <Loader />
       ) : (

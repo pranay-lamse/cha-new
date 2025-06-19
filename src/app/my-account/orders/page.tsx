@@ -32,6 +32,59 @@ export default function EditAccountPage() {
   };
 
   useEffect(() => {
+    const handleCancelClick = async (e: Event) => {
+      const target = e.target as HTMLElement;
+
+      // Look for anchor element with class 'cancel'
+      if (target && target.closest("a.cancel")) {
+        const anchor = target.closest("a.cancel") as HTMLAnchorElement;
+        if (!anchor) return;
+
+        e.preventDefault();
+
+        const href = anchor.getAttribute("href");
+        if (!href) return;
+
+        console.log("Cancelling order via href:", href);
+
+        // Parse the full URL to get path and query
+        const urlObj = new URL(href, window.location.origin);
+        const cleanPathWithQuery = urlObj.pathname + urlObj.search;
+
+        // Build full API URL
+        const fullURL = `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}${cleanPathWithQuery}`;
+
+        try {
+          anchor.classList.add("loading");
+
+          await axios.get(fullURL, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          });
+
+          // Optionally trigger WooCommerce event or your own logic
+          console.log("Order cancelled successfully");
+
+          // Re-fetch data to reflect cancellation
+          fetchData();
+        } catch (error) {
+          console.error("Failed to cancel order:", error);
+        } finally {
+          anchor.classList.remove("loading");
+        }
+      }
+    };
+
+    document.addEventListener("click", handleCancelClick);
+
+    return () => {
+      document.removeEventListener("click", handleCancelClick);
+    };
+  }, [htmlContent]);
+
+  useEffect(() => {
     fetchData();
   }, []);
 
