@@ -107,17 +107,19 @@ export default function EditAccountPage() {
           }
         });
 
-        $(".short_des_loop").each(function () {
-          const details = $(this).find("ul");
-          const button = $(this)
-            .closest(".product")
-            .find(
-              "a.button.product_type_auction, a.button.alt.uwa_pay_now, .uwa_auction_product_countdown"
-            );
-          if (details.length && button.length) {
-            details.after(button);
-          }
-        });
+       $(".short_des_loop").each(function () {
+  const details = $(this).find("ul");
+  const product = $(this).closest(".product");
+  const button = product.find(
+    "a.button.product_type_auction, a.button.alt.uwa_pay_now, .uwa_auction_product_countdown"
+  );
+
+  if (details.length && button.length) {
+    details.after(button);
+  }
+
+  // Delay of 0ms, or you can adjust it if needed
+});
 
         $(".woo-ua-winned-for.winning_bid").text("Sold via Bid");
         $(".woo-ua-sold-for.sold_for").text("Sold via Buy Now");
@@ -132,6 +134,12 @@ export default function EditAccountPage() {
               `<a href="${$link}#bidding" style="margin-left: 20px;" id="hwa_button" class="button">How to bid</a>`
             );
           $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+        
+    const clock = $(this).find(".uwa_auction_product_countdown");
+  
+       $(this).find(".button_wrap").before(clock);
+
+          
           $(".auctionTow-page ul.products li.product").css("opacity", "1");
         });
 
