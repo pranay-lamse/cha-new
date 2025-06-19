@@ -178,7 +178,7 @@ export default function OrdersView() {
                       </>
                     ) : null}
 
-                    <tr>
+                    {/* <tr>
                       <td className="p-2 border-b">Actions:</td>
                       <td className="p-2 border-b flex space-x-3">
                         <Link
@@ -194,7 +194,7 @@ export default function OrdersView() {
                           Cancel
                         </Link>
                       </td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </table>
               </div>
