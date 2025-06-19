@@ -141,7 +141,7 @@ const AuctionDetails = () => {
 
       return () => clearTimeout(timeoutId);
     }
-  }, [htmlContent, loading]);
+  }, [htmlContent]);
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     if (!token) {
@@ -420,8 +420,9 @@ const AuctionDetails = () => {
                 </ul>
               </div>
             )}
-            <div className="w-full aspect-video rounded-[22px] overflow-hidden">
-              {videoIfram ? (
+
+            {videoIfram ? (
+              <div className="w-full aspect-video rounded-[22px] overflow-hidden">
                 <div
                   key={auction.id}
                   className="video-container"
@@ -429,10 +430,10 @@ const AuctionDetails = () => {
                     __html: videoIfram,
                   }}
                 />
-              ) : (
-                ""
-              )}
-            </div>
+              </div>
+            ) : (
+              ""
+            )}
 
             <div className="mt-8">
               <h2
@@ -501,13 +502,13 @@ const AuctionDetails = () => {
                 }}
               ></div>
             )}
+            {auction.images.length > 0 ? (
+              <ProductGalleryPage {...auction.images} />
+            ) : (
+              ""
+            )}
 
             <div className="uwa_auction_product_ajax_change">
-              {auction.images.length > 1 ? (
-                <ProductGalleryPage {...auction.images} />
-              ) : (
-                ""
-              )}
               {auction.short_description ? (
                 <Description shortDescription={auction.short_description} />
               ) : (
