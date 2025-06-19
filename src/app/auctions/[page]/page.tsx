@@ -98,10 +98,21 @@ const AuctionDetails = () => {
 
   useEffect(() => {
     if (!loading && htmlContent) {
-      if (
+      const isSold =
         htmlContent.includes("woo-ua-sold-for") ||
-        htmlContent.includes("sold_for")
-      ) {
+        htmlContent.includes("sold_for");
+
+      if (isSold) {
+        // ✅ Inject style to hide countdown elements
+        const style = document.createElement("style");
+        style.innerHTML = `
+        .uwa_auction_product_countdown.uwa-main-auction-product-loop.uwa_auction_product_countdown.clock_jquery {
+          display: none !important;
+        }
+      `;
+        document.head.appendChild(style);
+
+        // ✅ Don't run countdown timer logic
         return;
       }
       const timeoutId = setTimeout(() => {
