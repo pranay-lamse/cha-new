@@ -527,8 +527,16 @@ const AuctionDetails = () => {
               )}
 
               <div className="flex flex-col md:flex-row items-center gap-2 DocumentCard">
-                <DocumentCard name="HEALTH DOC" src={prepurchase_exam.url} />
-                <DocumentCard name="COGGINS" src={COGGINS.url} />
+                {prepurchase_exam.url ? (
+                  <DocumentCard name="HEALTH DOC" src={prepurchase_exam.url} />
+                ) : (
+                  ""
+                )}
+                {COGGINS.url ? (
+                  <DocumentCard name="COGGINS" src={COGGINS.url} />
+                ) : (
+                  ""
+                )}
               </div>
               {/* Rules  */}
               {more_information ? (
