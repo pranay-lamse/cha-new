@@ -55,7 +55,7 @@ export default function EditAccountPage() {
 
   // Intercept <a href="/..."> clicks inside the HTML
   useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
+    const handleClick = (e: Event) => {
       const target = e.target as HTMLElement;
       if (target.tagName === "A") {
         const anchor = target as HTMLAnchorElement;
