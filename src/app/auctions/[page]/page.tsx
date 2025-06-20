@@ -387,6 +387,30 @@ const AuctionDetails = () => {
   const [redirectUrl, setRedirectUrl] = useState("/my-account");
 
   useEffect(() => {
+    if (loading) return;
+
+    const timeout = setTimeout(() => {
+      const priceHintDiv = $(".uwa_inc_price_hint");
+
+      if (
+        priceHintDiv.length &&
+        !priceHintDiv.find(".uwa_inc_warning").length
+      ) {
+        const warningMessage = `
+        <br/>
+        <small class="uwa_inc_warning" >
+          (please don't enter $, . sign while bidding)
+        </small>
+      `;
+
+        priceHintDiv.append(warningMessage);
+      }
+    }, 100); // Small delay to ensure the HTML is injected
+
+    return () => clearTimeout(timeout);
+  }, [loading, htmlContent]);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const currentPath = window.location.pathname + window.location.search;
       setRedirectUrl(`/my-account?redirect=${encodeURIComponent(currentPath)}`);
