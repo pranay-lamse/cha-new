@@ -171,7 +171,20 @@ const AuctionDetails = () => {
       e.preventDefault();
 
       if (!token) {
-        setLoginMessage(true);
+        /*  setLoginMessage(true); */
+
+        localStorage.setItem(
+          "loginMessage",
+          `Please sign in to add auction to watchlist.`
+        );
+        const currentPath = window.location.pathname + window.location.search;
+        setRedirectUrl(
+          `/my-account?redirect=${encodeURIComponent(currentPath)}`
+        );
+        const redirectUrlget = `/my-account?redirect=${encodeURIComponent(
+          currentPath
+        )}`;
+        router.push(redirectUrlget);
         return;
       }
 
@@ -267,6 +280,8 @@ const AuctionDetails = () => {
         if (previousPriceHtmlRef.current !== latestPriceHtml) {
           previousPriceHtmlRef.current = latestPriceHtml;
           setData([latestProduct]); // keep consistent data structure
+          setBidMessage(""); // Reset bid message on new data
+          fetchData(); // Fetch HTML content after updating data
         }
       } catch (error) {
         console.error("Error fetching product data:", error);
@@ -338,18 +353,17 @@ const AuctionDetails = () => {
           bidAmount: bidValue,
         });
 
-        fetchData();
         setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
         button.prop("disabled", false);
         $("#bid-spinner").remove();
         button.text("Custom Bid");
-
-        const noticeWrapper = document.querySelector("body");
-        if (noticeWrapper) {
-          noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          console.log("Element not found");
-        }
+        // const noticeWrapper = document.querySelector("body");
+        // if (noticeWrapper) {
+        //   noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+        // } else {
+        //   console.log("Element not found");
+        // }
+        fetchData();
       } catch (err) {
         console.error("Bid failed:", err);
       } finally {

@@ -21,12 +21,12 @@ h5,
 h6 {
   line-height: 1.2;
   margin-block-end: 1rem;
-  margin-block-start: .5rem;
+  margin-block-start: 0.5rem;
 }
 
 table tbody>tr:nth-child(odd)>td,
 table tbody>tr:nth-child(odd)>th {
-  background-color: hsla(0, 0%, 50%, .071);
+  background-color: hsla(0, 0%, 50%, 0.071);
 }
 
 .woocommerce-checkout #payment button#place_order {
@@ -39,7 +39,7 @@ table tbody>tr:nth-child(odd)>th {
 
 table td,
 table th {
-  border: 1px solid hsla(0, 0%, 50%, .502);
+  border: 1px solid hsla(0, 0%, 50%, 0.502);
   line-height: 1.5;
   padding: 15px;
   vertical-align: top;
@@ -3440,17 +3440,14 @@ form.woocommerce-form.woocommerce-form-register.register form span a,
   margin-bottom: 12px;
 }
 
-
 .search-page nav.elementor-pagination {
   margin: 20px auto;
   text-align: center;
 }
 
-
 .search-page nav.elementor-pagination span.elementor-screen-only {
   display: none;
 }
-
 
 .search-page .page-numbers {
   margin: 0px 7px;
@@ -3480,13 +3477,13 @@ form.woocommerce-form.woocommerce-form-register.register form span a,
   color: #fff;
 }
 
-.uwa_auction_product_countdown.uwa-main-auction-product-loop.uwa_auction_product_countdown.clock_jquery {
+.auction-deatils-page .uwa_auction_product_countdown.uwa-main-auction-product-loop.uwa_auction_product_countdown.clock_jquery {
   display: none;
 }
 
 tbody td.bid_username {
   font-size: 18px !important;
-  font-family: 'Raleway' !important;
+  font-family: "Raleway" !important;
   font-weight: 600;
 }
 
@@ -3495,6 +3492,28 @@ table.auction-history-table td.bid_price {
   font-weight: 800;
   color: #222;
   padding: 0px !important;
+}
+
+table.auction-history-table td {
+  background: transparent !important;
+  border: 0px;
+  width: auto !important;
+  display: flex;
+}
+
+table.auction-history-table td,
+table.auction-history-table th {
+  line-height: 1.5;
+  padding: 15px;
+  vertical-align: top;
+}
+
+tbody td.bid_username,
+table.auction-history-table td.bid_price {
+  order: 2;
+  font-size: 18px !important;
+  font-family: "Raleway" !important;
+  font-weight: 600;
 }
 
 table.auction-history-table td {
@@ -3533,7 +3552,6 @@ table.auction-history-table td.bid_price {
 
   .search-page .elementor-location-archive>section:first-child h1 {
     font-size: 32px;
-
   }
 
   .search-page .elementor-container.elementor-column-gap-default {
@@ -3581,7 +3599,6 @@ table.auction-history-table td.bid_price {
   }
 
   body .woocommerce ul.products li.product .button {
-
     margin-top: 20px !important;
   }
 
