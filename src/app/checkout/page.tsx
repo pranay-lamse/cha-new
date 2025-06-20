@@ -197,25 +197,27 @@ export default function CheckoutPage() {
     const form = document.forms.namedItem("checkout");
 
     const handleClick = async (e: Event) => {
-      e.preventDefault(); // Prevent default button behavior
-      console.log("Place order button clicked");
+      e.preventDefault();
+
       if (!(checkbox as HTMLInputElement)?.checked) {
-        e.preventDefault();
         alert(
           "Please agree to the terms and conditions before placing the order."
         );
         return;
       }
 
-      if (form) {
-        e.preventDefault(); // Stop the default HTML form submission
-
+      if (form && button instanceof HTMLButtonElement) {
         const formData = new FormData(form);
 
         if (!token) {
           alert("You must be logged in to place an order.");
           return;
         }
+
+        // 🔄 Show loader and disable button
+        const originalText = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Placing order...`;
 
         try {
           const response = await axios.post(
@@ -226,25 +228,16 @@ export default function CheckoutPage() {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`,
               },
-              withCredentials: true, // Ensure session/cookies are sent
+              withCredentials: true,
             }
           );
 
           if (response.data.result === "success" && response.data.redirect) {
             const redirectUrl = new URL(response.data.redirect);
-
-            // Remove "/stage" from the beginning of the pathname
             const cleanedPath =
               redirectUrl.pathname.replace(/^\/stage/, "") + redirectUrl.search;
-
-            // Redirect to local frontend without /stage
-
             router.push(cleanedPath);
-
-            console.log("Redirecting to:", cleanedPath);
           } else if (response.data.result === "failure") {
-            //show error message
-
             setIsRegistering("Please fill all the required fields.");
             const noticeWrapper = document.querySelector("body");
             if (noticeWrapper) {
@@ -252,15 +245,14 @@ export default function CheckoutPage() {
                 behavior: "smooth",
                 block: "start",
               });
-            } else {
-              console.log("Element not found");
             }
           }
-          // Optional: Redirect to a success page
-          // window.location.href = "/order-success";
         } catch (error) {
-          /* console.error("Checkout error:", error); */
           alert("Failed to place order. Please try again.");
+        } finally {
+          // ✅ Restore button state
+          button.disabled = false;
+          button.innerHTML = originalText;
         }
       }
     };
@@ -269,7 +261,6 @@ export default function CheckoutPage() {
       button.addEventListener("click", handleClick);
     }
 
-    // Cleanup
     return () => {
       if (button) {
         button.removeEventListener("click", handleClick);
