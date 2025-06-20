@@ -3475,6 +3475,33 @@ form.woocommerce-form.woocommerce-form-register.register form span a,
 .uwa_auction_product_countdown.uwa-main-auction-product-loop.uwa_auction_product_countdown.clock_jquery {
     display: none;
 }
+tbody td.bid_username {
+    font-size: 18px !important;
+    font-family: 'Raleway' !important;
+    font-weight: 600;
+}
+tbody td.bid_username, table.auction-history-table td.bid_price {
+    font-weight: 800;
+    color: #222;
+    padding: 0px !important;
+}
+table.auction-history-table td {
+    background: transparent !IMPORTANT;
+    border: 0px;
+    width: auto !IMPORTANT;
+    display: flex;
+}
+table.auction-history-table td, table.auction-history-table th {
+    line-height: 1.5;
+    padding: 15px;
+    vertical-align: top;
+}
+table.auction-history-table td.bid_price {
+    order: 2;
+    font-size: 18px !important;
+    font-family: 'Raleway' !important;
+    font-weight: 600;
+}
 @media (max-width: 767px) {
   .woocommerce-MyAccount-navigation {
     width: 100%;
