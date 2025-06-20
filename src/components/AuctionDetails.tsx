@@ -143,9 +143,6 @@ export const AuctionDetails = async ({
               </span>{" "}
               and please don't enter $ , . sign while bidding
             </small>
-            <small className="uwa_inc_price">
-              (This will set your max bid.)
-            </small>
           </div>
           {/*  <ProductGalleryPage /> */}
           <div className="description w-full">

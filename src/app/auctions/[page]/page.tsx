@@ -397,9 +397,8 @@ const AuctionDetails = () => {
         !priceHintDiv.find(".uwa_inc_warning").length
       ) {
         const warningMessage = `
-        <br/>
         <small class="uwa_inc_warning" >
-          (please don't enter $, . sign while bidding)
+          please don't enter $, . sign while bidding
         </small>
       `;
 

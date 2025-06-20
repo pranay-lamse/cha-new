@@ -3549,6 +3549,10 @@ table.auction-history-table td.bid_price {
   color: #dcc373;
 }
 
+.uwa_inc_price_hint {
+  display: flex;
+}
+
 @media (max-width: 767px) {
   .woocommerce-MyAccount-navigation {
     width: 100%;
