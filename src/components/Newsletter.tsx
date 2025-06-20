@@ -76,7 +76,7 @@ export const Newsletter = () => {
   };
 
   return (
-    <div className="bg-deep-navy py-4 my-20 md:my-24">
+    <div className="bg-deep-navy py-4 my-20 md:my-24 newsletter">
       <div className="grid gap-4 md:gap-8 md:grid-cols-2 grid-cols-1 w-11/12 mx-auto max-w-[1140px]">
         <div className="md:p-3">
           <h4 className={`${marcellus.className} text-golden-light text-4xl`}>
@@ -127,7 +127,9 @@ export const Newsletter = () => {
           </button>
           {error && <p className="text-red-500 mt-2 form-error">{error}</p>}
           {success && (
-            <p className="text-white mt-2 form-success">Your submission was successful.</p>
+            <p className="text-white mt-2 form-success">
+              Your submission was successful.
+            </p>
           )}
         </form>
       </div>
