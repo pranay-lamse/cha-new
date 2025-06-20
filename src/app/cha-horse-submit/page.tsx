@@ -21,6 +21,13 @@ export default function EditAccountPage() {
         .footer-bar.grid.md\\:grid-cols-2.grid-cols.bg-golden-light.p-2 {
           display: none !important;
         }
+        .elementor-element.elementor-element-a128659 .elementor-heading-title {
+          line-height: 1.2em !important;
+        }
+
+        .elementor-widget-heading .elementor-heading-title > a {
+          font-family: "Cormorant", sans-serif;
+        }
         body {
           background: #0f335f !important;
         }

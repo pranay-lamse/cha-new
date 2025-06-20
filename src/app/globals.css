@@ -3541,6 +3541,14 @@ table.auction-history-table td.bid_price {
   gap: 0px;
 }
 
+.cha-horse-submit-text p.elementor-heading-title.elementor-size-default {
+  font-family: "Cormorant SC", Sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 33px !important;
+  color: #dcc373;
+}
+
 @media (max-width: 767px) {
   .woocommerce-MyAccount-navigation {
     width: 100%;
