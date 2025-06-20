@@ -3553,6 +3553,14 @@ table.auction-history-table td.bid_price {
   display: flex;
 }
 
+.uwa_inc_price_hint>*:nth-child(4) {
+  display: none;
+}
+
+.uwa_inc_price_hint small.uwa_inc_warning {
+  margin-left: 5px;
+}
+
 @media (max-width: 767px) {
   .woocommerce-MyAccount-navigation {
     width: 100%;

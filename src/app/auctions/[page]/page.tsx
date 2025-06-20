@@ -398,7 +398,7 @@ const AuctionDetails = () => {
       ) {
         const warningMessage = `
         <small class="uwa_inc_warning" >
-          please don't enter $, . sign while bidding
+         (Please don't enter $, . sign while bidding)
         </small>
       `;
 
