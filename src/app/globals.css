@@ -3466,6 +3466,9 @@ form.woocommerce-form.woocommerce-form-register.register form span a,
 .uwa_auction_product_countdown.uwa-main-auction-product.uwa_auction_product_countdown.clock_jquery {
     display: none;
 }
+.uwa_auction_product_countdown.uwa_auction_product_countdown.clock_jquery.hasCountdown p{
+  display: none;
+}
 @media (max-width: 767px) {
   .woocommerce-MyAccount-navigation {
     width: 100%;
