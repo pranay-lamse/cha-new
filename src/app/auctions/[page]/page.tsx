@@ -338,18 +338,17 @@ const AuctionDetails = () => {
           bidAmount: bidValue,
         });
 
-        fetchData();
         setBidMessage(`Your bid of $${bidValue} has been placed successfully!`);
         button.prop("disabled", false);
         $("#bid-spinner").remove();
         button.text("Custom Bid");
-
         const noticeWrapper = document.querySelector("body");
         if (noticeWrapper) {
           noticeWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
         } else {
           console.log("Element not found");
         }
+        fetchData();
       } catch (err) {
         console.error("Bid failed:", err);
       } finally {
