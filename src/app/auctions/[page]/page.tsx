@@ -1,31 +1,23 @@
 "use client";
 import { marcellus, raleway } from "@/config/fonts";
-import { Status, Variables } from "@/interfaces";
-import { currencyFormat } from "@/utils/currencyFormat";
-import Image from "next/image";
-import Link from "next/link";
-import { Description, Pagination } from "@/components";
-import { getAuctions } from "@/actions";
-import { MAX_RESULTS } from "@/constants";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { Description, Pagination } from "@/components";
+
 import { useEffect, useState, useCallback, useRef } from "react";
-import axiosClientGeneralToken from "@/api/axiosClientGeneralToken";
+
 import axiosClientGeneralTokenCustomApi from "@/api/axiosClientGeneralTokenCustomApi";
-import Timer from "@/components/Timer";
+
 import { ProductGalleryPage } from "@/components/ProductGallery";
-import { MoreDetails } from "@/components/MoreDetails";
+
 import Loader from "@/components/Loader";
 import DocumentCard from "@/components/Document";
-import { redirect, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import $ from "jquery";
 
 import axios from "axios";
-import Cookies from "js-cookie";
+
 import { env } from "@/env";
-import axiosClient from "@/api/axiosClient";
-import axiosClientwithApi from "@/api/axiosClientwithApi";
+
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { fetchHtmlData } from "@/lib/fetchHtmlData";
@@ -255,8 +247,6 @@ const AuctionDetails = () => {
 
   // --- Product Fetch for Page ---
   useEffect(() => {
-
-
     const fetchSingleProduct = async () => {
       try {
         const response = await axiosClientGeneralTokenCustomApi.get(
@@ -281,7 +271,7 @@ const AuctionDetails = () => {
 
     fetchSingleProduct(); // Initial fetch
 
-     const intervalId = setInterval(fetchSingleProduct, 2000); // poll every 2s
+    const intervalId = setInterval(fetchSingleProduct, 2000); // poll every 2s
 
     return () => clearInterval(intervalId); // cleanup
   }, [slug]);
@@ -383,7 +373,6 @@ const AuctionDetails = () => {
     router.push(redirectUrl);
   };
 
-  const imagePlaceholder = "/assets/img/placeholder.png";
   if (loading)
     return (
       <>
@@ -394,22 +383,11 @@ const AuctionDetails = () => {
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1170px] p-4 my-10 sm:my-10">
       {data?.map((auction: any, index: number) => {
-        const isEven = index % 2 === 0;
-        const imageFirst =
-          auction.images.length > 0 ? auction.images[0].src : imagePlaceholder;
         const videoIfram = auction.ams_acf.find(
           (item: any) => item.key == "video"
         )?.value;
         const videoIframmore = auction.meta_data.find(
           (item: any) => item.key == "_oembed_2a4981f458970ae62b20a6a6a7b398a7"
-        )?.value;
-
-        const startDateEntry = auction.meta_data.find(
-          (item: any) => item.key == "woo_ua_auction_start_date"
-        )?.value;
-
-        const endDateEntry = auction.meta_data.find(
-          (item: any) => item.key === "woo_ua_auction_end_date"
         )?.value;
 
         const more_information = auction.meta_data.find(
