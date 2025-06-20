@@ -13,20 +13,30 @@ export default function EditAccountPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [bidStatus, setBidStatus] = useState<string | null>(null); // ✅ Set initial as null
-
+  const [queryParam, setQueryParam] = useState<{
+    key: string;
+    value: string;
+  } | null>(null);
   // ✅ Extract bidStatus from URL only once
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      const status = params.get("bid_status") || "active";
-      setBidStatus(status);
+
+      if (params.has("bid_status")) {
+        setQueryParam({ key: "bid_status", value: params.get("bid_status")! });
+      } else if (params.has("display")) {
+        setQueryParam({ key: "display", value: params.get("display")! });
+      } else {
+        // fallback default
+        setQueryParam({ key: "bid_status", value: "active" });
+      }
     }
   }, []);
 
   // ✅ Only construct the URL when bidStatus is available
   const url =
-    bidStatus !== null
-      ? `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/uwa-auctions?bid_status=${bidStatus}`
+    queryParam !== null
+      ? `${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/uwa-auctions?${queryParam.key}=${queryParam.value}`
       : null;
 
   // ✅ Fetch data only when bidStatus is available

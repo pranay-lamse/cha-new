@@ -1,7 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import Loader from "@/components/Loader"; // Update path as needed
+import { env } from "@/env";
 
 export default function EditAccountPage() {
+  const [loading, setLoading] = useState(true);
+
   return (
     <>
       <style jsx global>{`
@@ -14,7 +18,6 @@ export default function EditAccountPage() {
         .footer.bg-deep-navy {
           display: none !important;
         }
-
         .footer-bar.grid.md\\:grid-cols-2.grid-cols.bg-golden-light.p-2 {
           display: none !important;
         }
@@ -34,10 +37,17 @@ export default function EditAccountPage() {
         }
       `}</style>
 
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-[#0f335f] z-[9999]">
+          <Loader />
+        </div>
+      )}
+
       <iframe
-        src="https://classichorseauction.com/stage/cha-horse-submit-2/"
-        className="w-screen h-screen border-none cha-horse-submit-text"
+        src={`${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/cha-horse-submit-2`}
+        className="w-screen h-screen border-none"
         title="CHA Horse Submit"
+        onLoad={() => setLoading(false)}
       ></iframe>
     </>
   );

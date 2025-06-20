@@ -137,7 +137,16 @@ const AuctionDetails = () => {
 
   const handleWatchListSubmit = async (auctionId: string | number) => {
     if (!token) {
-      setLoginMessage(true);
+      localStorage.setItem(
+        "loginMessage",
+        `Please sign in to add auction to watchlist.`
+      );
+      const currentPath = window.location.pathname + window.location.search;
+      setRedirectUrl(`/my-account?redirect=${encodeURIComponent(currentPath)}`);
+      const redirectUrlget = `/my-account?redirect=${encodeURIComponent(
+        currentPath
+      )}`;
+      router.push(redirectUrlget);
       return;
     }
 
@@ -171,11 +180,9 @@ const AuctionDetails = () => {
       e.preventDefault();
 
       if (!token) {
-        /*  setLoginMessage(true); */
-
         localStorage.setItem(
           "loginMessage",
-          `Please sign in to add auction to watchlist.`
+          `Please Login/Register to place your bid or buy the product.`
         );
         const currentPath = window.location.pathname + window.location.search;
         setRedirectUrl(
