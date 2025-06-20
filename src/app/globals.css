@@ -3458,55 +3458,70 @@ form.woocommerce-form.woocommerce-form-register.register form span a,
 }
 
 .button_wrap {
-    display: flex;
+  display: flex;
 }
 
 .button_wrap a.button.product_type_auction.add_to_cart_button {
-    order: 1;
+  order: 1;
 }
 
 .button_wrap a#hwa_button {
-    order: 2;
+  order: 2;
 }
+
 /* .uwa_auction_product_countdown.uwa-main-auction-product.uwa_auction_product_countdown.clock_jquery {
     display: none;
 } */
-.uwa_auction_product_countdown.uwa_auction_product_countdown.clock_jquery.hasCountdown p{
+.uwa_auction_product_countdown.uwa_auction_product_countdown.clock_jquery.hasCountdown p {
   display: none;
 }
-.search-modal  .close_icon {
-    color: #fff;
+
+.search-modal .close_icon {
+  color: #fff;
 }
+
 .uwa_auction_product_countdown.uwa-main-auction-product-loop.uwa_auction_product_countdown.clock_jquery {
-    display: none;
+  display: none;
 }
+
 tbody td.bid_username {
-    font-size: 18px !important;
-    font-family: 'Raleway' !important;
-    font-weight: 600;
+  font-size: 18px !important;
+  font-family: 'Raleway' !important;
+  font-weight: 600;
 }
-tbody td.bid_username, table.auction-history-table td.bid_price {
-    font-weight: 800;
-    color: #222;
-    padding: 0px !important;
-}
-table.auction-history-table td {
-    background: transparent !IMPORTANT;
-    border: 0px;
-    width: auto !IMPORTANT;
-    display: flex;
-}
-table.auction-history-table td, table.auction-history-table th {
-    line-height: 1.5;
-    padding: 15px;
-    vertical-align: top;
-}
+
+tbody td.bid_username,
 table.auction-history-table td.bid_price {
-    order: 2;
-    font-size: 18px !important;
-    font-family: 'Raleway' !important;
-    font-weight: 600;
+  font-weight: 800;
+  color: #222;
+  padding: 0px !important;
 }
+
+table.auction-history-table td {
+  background: transparent !IMPORTANT;
+  border: 0px;
+  width: auto !IMPORTANT;
+  display: flex;
+}
+
+table.auction-history-table td,
+table.auction-history-table th {
+  line-height: 1.5;
+  padding: 15px;
+  vertical-align: top;
+}
+
+table.auction-history-table td.bid_price {
+  order: 2;
+  font-size: 18px !important;
+  font-family: 'Raleway' !important;
+  font-weight: 600;
+}
+
+.newsletter>.grid {
+  gap: 0px;
+}
+
 @media (max-width: 767px) {
   .woocommerce-MyAccount-navigation {
     width: 100%;
@@ -3561,11 +3576,12 @@ table.auction-history-table td.bid_price {
     flex-direction: row !important;
   }
 
-.auctionTow-page ul.products li.product {
+  .auctionTow-page ul.products li.product {
     padding: 25px 0px 25px 0px !important;
-}
+  }
+
   body .woocommerce ul.products li.product .button {
-   
+
     margin-top: 20px !important;
   }
 
