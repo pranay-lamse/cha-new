@@ -267,6 +267,7 @@ const AuctionDetails = () => {
         if (previousPriceHtmlRef.current !== latestPriceHtml) {
           previousPriceHtmlRef.current = latestPriceHtml;
           setData([latestProduct]); // keep consistent data structure
+          setBidMessage(""); // Reset bid message on new data
           fetchData(); // Fetch HTML content after updating data
         }
       } catch (error) {
