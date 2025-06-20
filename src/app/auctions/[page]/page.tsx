@@ -267,6 +267,7 @@ const AuctionDetails = () => {
         if (previousPriceHtmlRef.current !== latestPriceHtml) {
           previousPriceHtmlRef.current = latestPriceHtml;
           setData([latestProduct]); // keep consistent data structure
+          fetchData(); // Fetch HTML content after updating data
         }
       } catch (error) {
         console.error("Error fetching product data:", error);
