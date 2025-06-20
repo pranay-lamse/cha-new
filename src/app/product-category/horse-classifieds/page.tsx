@@ -151,7 +151,7 @@ export default function EditAccountPage() {
         );
 
         // Append "How to bid" button and wrap action buttons
-        $(".home_products_sec .product").each(function () {
+        $(".auctionTow-page .product").each(function () {
           const $link = $(this)
             .find(".woocommerce-LoopProduct-link")
             .attr("href");

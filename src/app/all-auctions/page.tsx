@@ -159,6 +159,17 @@ const EditAccountPage = () => {
           $product.attr("data-price", finalPrice);
           $bdi.prepend(currency);
         });
+        $(".auctionTow-page .product").each(function () {
+          const $link = $(this)
+            .find(".woocommerce-LoopProduct-link")
+            .attr("href");
+          $(this)
+            .find(".short_des_loop")
+            .append(
+              `<a href='${$link}#bidding' style='margin-left: 20px;' id='hwa_button' class='button'>How to bid</a>`
+            );
+          $(this).find(".button").wrapAll("<div class='button_wrap'></div>");
+        });
 
         sortProductsPriceDescending();
 

@@ -165,7 +165,7 @@ export default function EditAccountPage() {
           ".woocommerce ul.products li.product.type-product span.woo-ua-sold-for.sold_for"
         ).text("Sold via Buy Now");
 
-        $(".home_products_sec .product").each(function () {
+        $(".auctionTow-page .product").each(function () {
           const $link = $(this)
             .find(".woocommerce-LoopProduct-link")
             .attr("href");
