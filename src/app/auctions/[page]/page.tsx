@@ -171,7 +171,20 @@ const AuctionDetails = () => {
       e.preventDefault();
 
       if (!token) {
-        setLoginMessage(true);
+        /*  setLoginMessage(true); */
+
+        localStorage.setItem(
+          "loginMessage",
+          `Please sign in to add auction to watchlist.`
+        );
+        const currentPath = window.location.pathname + window.location.search;
+        setRedirectUrl(
+          `/my-account?redirect=${encodeURIComponent(currentPath)}`
+        );
+        const redirectUrlget = `/my-account?redirect=${encodeURIComponent(
+          currentPath
+        )}`;
+        router.push(redirectUrlget);
         return;
       }
 
