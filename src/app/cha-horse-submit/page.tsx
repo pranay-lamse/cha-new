@@ -8,11 +8,9 @@ export default function EditAccountPage() {
         header.w-full.z-99 {
           display: none !important;
         }
-
-        .hidden.topbar.md\\:block.w-full.bg-golden-light {
-          display: none !important;
+        .hidden.topbar.md\:block.w-full.bg-golden-light {
+            display: none !important;
         }
-
         .footer.bg-deep-navy {
           display: none !important;
         }
@@ -24,6 +22,11 @@ export default function EditAccountPage() {
         body {
           background: #0f335f !important;
         }
+          html, body {
+    overflow: hidden;
+     }
+  
+    
       `}</style>
 
       <iframe

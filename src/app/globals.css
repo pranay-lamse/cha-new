@@ -833,6 +833,7 @@ body span.countdown_section {
   font-size: 15px;
   font-weight: 700 !important;
   padding: 0px 0px 5px 0px;
+  margin: 0px 0px;
 }
 
 .w-full.contact-form {
@@ -1887,6 +1888,10 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents td.p
 .auctionTow-page header.woocommerce-products-header h1 {
   margin: 0px !important;
   font-size: 46px;
+  line-height: 43px;
+  font-weight: 400;
+  font-family: Marcellus !important;
+  color: #222222;
 }
 
 .auctionTow-page nav.woocommerce-breadcrumb,
