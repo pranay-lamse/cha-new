@@ -209,12 +209,16 @@ const AuctionDetails = () => {
 
         const messageContainer = document.createElement("div");
         messageContainer.className = "woocommerce-notices-wrapper";
-        messageContainer.innerHTML = `
+        messageContainer.innerHTML = `<div className="w-full aspect-video rounded-[22px] overflow-hidden">
+                <div class="video-container">
         <div class="woocommerce-message" role="alert" tabindex="-1">
+
           ${slug} has been added to your cart. <a href="/cart/" class="button wc-forward">View cart</a>
+        </div>
+        </div>
         </div>`;
         document.querySelector(".woocommerce-notices-wrapper")?.remove();
-        document.querySelector("#content")?.prepend(messageContainer);
+        document.querySelector(".video-container")?.prepend(messageContainer);
 
         target.classList.add("added");
       } catch (error) {
