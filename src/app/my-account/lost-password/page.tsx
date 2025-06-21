@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
 import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import axios from "axios";
 import { getToken } from "@/utils/storage";
+import ShowResetForm from "./show-reset-form/page" // ✅ make sure this path is correct
 
 declare global {
   interface Window {
@@ -22,8 +23,18 @@ export default function CheckoutPage() {
   const token = getToken();
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/lost-password`;
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // Set the URL after checking window object
+  const key = searchParams.get("key");
+  const id = searchParams.get("id");
+  const login = searchParams.get("login");
+
+  // ✅ If it's a password reset link, show the reset form immediately
+  if (key && id && login) {
+    return <ShowResetForm />;
+  }
+
+  // Set the URL for lost-password fetch
   useEffect(() => {
     if (typeof window !== "undefined") {
       const finalUrl = window.location.search.includes("reset-link-sent=true")
@@ -33,7 +44,7 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  // Fetch data once the URL is available
+  // Fetch HTML content for lost-password
   useEffect(() => {
     if (!url) return;
 
@@ -61,7 +72,7 @@ export default function CheckoutPage() {
     fetchData();
   }, [url]);
 
-  // Form submission handling
+  // Attach submit handler for native reset form
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -129,7 +140,7 @@ export default function CheckoutPage() {
   }, [htmlContent]);
 
   return (
-    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
+    <div className="container  mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
       {loading ? (
         <Loader />
       ) : (

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -13,6 +14,8 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [notice, setNotice] = useState<{ type: "error" | "success"; message: string } | null>(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -34,13 +37,9 @@ export default function ResetPasswordPage() {
       setLoading(true);
       try {
         const res = await fetch(
-          `${
-            process.env.NEXT_PUBLIC_API_URL_CUSTOM_API
-          }/wp-json/custom/v1/validate-reset-key?key=${encodeURIComponent(
+          `${process.env.NEXT_PUBLIC_API_URL_CUSTOM_API}/wp-json/custom/v1/validate-reset-key?key=${encodeURIComponent(
             keyParam
-          )}&id=${encodeURIComponent(idParam)}&login=${encodeURIComponent(
-            loginParam
-          )}`
+          )}&id=${encodeURIComponent(idParam)}&login=${encodeURIComponent(loginParam)}`
         );
         const data = await res.json();
         if (data.valid) {
@@ -63,8 +62,14 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newPassword) {
-      alert("Please enter a new password.");
+
+    if (!newPassword || !confirmPassword) {
+      setNotice({ type: "error", message: "Please fill in both password fields." });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setNotice({ type: "error", message: "Passwords do not match." });
       return;
     }
 
@@ -88,53 +93,81 @@ export default function ResetPasswordPage() {
       const data = await res.json();
 
       if (data.success) {
-        alert("Password updated successfully!");
-        router.push("/my-account");
+        setNotice({ type: "success", message: "Password updated successfully! Redirecting..." });
+        setTimeout(() => router.push("/my-account"), 1500);
       } else {
-        alert("Failed to update password: " + (data.message || ""));
+        setNotice({ type: "error", message: data.message || "Failed to update password." });
       }
     } catch (e) {
-      alert("Something went wrong while updating password.");
+      setNotice({ type: "error", message: "Something went wrong while updating password." });
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading && valid === null) return <Loader />;
 
   if (valid === false)
     return (
-      <div>
-        <h2>Invalid or expired reset link</h2>
-        {error && <p>{error}</p>}
+      <div className="container mx-auto p-6">
+        <div className="woocommerce-error bg-red-100 text-red-800 border border-red-400 p-4 rounded">
+          <h2 className="font-semibold mb-2">Invalid or expired reset link</h2>
+          {error && <p>{error}</p>}
+        </div>
       </div>
     );
 
-  if (valid === null) return null;
-
   return (
-    <div className="container mx-auto max-w-md p-6 border rounded shadow mt-10">
-      <h2 className="text-xl font-semibold mb-4">Reset Your Password</h2>
-      <form onSubmit={handleSubmit}>
-        <label className="block mb-2">
-          New Password:
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full p-2 border rounded mt-1"
-            required
-            minLength={6}
-          />
-        </label>
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          {loading ? "Updating..." : "Update Password"}
-        </button>
-      </form>
+    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
+      <div className="reset-form max-w-md mx-auto bg-white p-6 rounded shadow">
+        <p className="mb-4 text-gray-700">Enter a new password below.</p>
+
+        {notice && (
+          <div
+            className={`woocommerce-${notice.type} p-4 mb-4 rounded border ${
+              notice.type === "success"
+                ? "bg-green-100 text-green-800 border-green-400"
+                : "bg-red-100 text-red-800 border-red-400"
+            }`}
+          >
+            {notice.message}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <label className="block mb-4">
+            New Password:
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full p-2 border rounded mt-1"
+              required
+              minLength={6}
+            />
+          </label>
+
+          <label className="block mb-4">
+            Re-enter New Password:
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full p-2 border rounded mt-1"
+              required
+              minLength={6}
+            />
+          </label>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            {loading ? "Updating..." : "Update Password"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
