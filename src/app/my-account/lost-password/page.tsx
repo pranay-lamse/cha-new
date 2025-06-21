@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
 import { env } from "@/env";
@@ -15,6 +15,21 @@ declare global {
   }
 }
 
+const ParamsHandler = () => {
+  const searchParams = useSearchParams();
+  const key = searchParams.get("key");
+  const id = searchParams.get("id");
+  const login = searchParams.get("login");
+
+  const showResetForm = key && id && login;
+
+  if (showResetForm) {
+    return <ShowResetForm />;
+  }
+
+  return null;
+};
+
 export default function CheckoutPage() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,14 +40,6 @@ export default function CheckoutPage() {
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/lost-password`;
 
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const key = searchParams.get("key");
-  const id = searchParams.get("id");
-  const login = searchParams.get("login");
-
-  // ✅ Hook-safe conditional rendering flag
-  const showResetForm = key && id && login;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -136,16 +143,14 @@ export default function CheckoutPage() {
     };
   }, [htmlContent]);
 
-  // ✅ Use conditional rendering safely
-  if (showResetForm) {
-    return <ShowResetForm />;
-  }
-
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
-      {loading ? (
-        <Loader />
-      ) : (
+      {/* ✅ Suspense wrapper for useSearchParams */}
+      <Suspense fallback={<Loader />}>
+        <ParamsHandler />
+      </Suspense>
+
+      {!loading && !error && (
         <div
           dangerouslySetInnerHTML={{
             __html: filterHTMLContent(htmlContent || "", ["site-main"]),
@@ -153,6 +158,8 @@ export default function CheckoutPage() {
           className="text-gray-700"
         ></div>
       )}
+
+      {loading && <Loader />}
     </div>
   );
 }
