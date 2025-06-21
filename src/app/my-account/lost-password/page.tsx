@@ -7,7 +7,7 @@ import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import axios from "axios";
 import { getToken } from "@/utils/storage";
-import ShowResetForm from "./show-reset-form/page"; // ✅ make sure this path is correct
+import ShowResetForm from "./show-reset-form/page"; // ✅ ensure path is correct
 
 declare global {
   interface Window {
@@ -20,8 +20,10 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
+
   const token = getToken();
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL_CUSTOM_API}/my-account/lost-password`;
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -29,9 +31,9 @@ export default function CheckoutPage() {
   const id = searchParams.get("id");
   const login = searchParams.get("login");
 
+  // ✅ Hook-safe conditional rendering flag
   const showResetForm = key && id && login;
 
-  // Set the URL for lost-password fetch
   useEffect(() => {
     if (typeof window !== "undefined") {
       const finalUrl = window.location.search.includes("reset-link-sent=true")
@@ -41,7 +43,6 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  // Fetch HTML content for lost-password
   useEffect(() => {
     if (!url) return;
 
@@ -55,7 +56,7 @@ export default function CheckoutPage() {
           },
           withCredentials: true,
         });
-        if (data && data.data) {
+        if (data?.data) {
           setHtmlContent(data.data);
         }
       } catch (error) {
@@ -69,7 +70,6 @@ export default function CheckoutPage() {
     fetchData();
   }, [url]);
 
-  // Attach submit handler for native reset form
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -136,6 +136,7 @@ export default function CheckoutPage() {
     };
   }, [htmlContent]);
 
+  // ✅ Use conditional rendering safely
   if (showResetForm) {
     return <ShowResetForm />;
   }
