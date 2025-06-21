@@ -391,7 +391,7 @@ a.woocommerce-privacy-policy-link,
 .woocommerce-form-login__submit,
 .woocommerce-form-register__submit,
 .woocommerce-error .button,
-.woocommerce-success .button {
+.woocommerce-success .button, .woocommerce-ResetPassword.lost_reset_password .button {
   border: 1px solid #dac172 !important;
   padding: 15px 25px !important;
   background: #dac172 !important;
@@ -413,7 +413,7 @@ a.woocommerce-privacy-policy-link,
 .woocommerce-form-login__submit:hover,
 .woocommerce-form-register__submit:hover,
 .woocommerce-error .button:hover,
-.woocommerce-success .button:hover {
+.woocommerce-success .button:hover, .woocommerce-ResetPassword.lost_reset_password .button:hover {
   background: transparent !important;
   color: #dac172 !important;
 }
@@ -3560,11 +3560,37 @@ table.auction-history-table td.bid_price {
 .uwa_inc_price_hint small.uwa_inc_warning {
   margin-left: 5px;
 }
+.woocommerce-ResetPassword.lost_reset_password {
+    width: 50%;
+    border: 1px solid #d5d8dc;
+    padding: 16px 30px;
+    border-radius: 3px;
+}
 
+.reset-form.woocommerce-ResetPassword.lost_reset_password p {
+    font-family: "Lora";
+    font-size: 14px;
+    font-weight: 500;
+    color: #69727d;
+}
+
+.woocommerce-ResetPassword.lost_reset_password input {
+    background: #f9fafa;
+    min-height: 47px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: Raleway, sans-serif !important;
+    color: #000 ! IMPORTANT;
+    border: 1px solid #ddd !important;
+}
 @media (max-width: 767px) {
   .woocommerce-MyAccount-navigation {
     width: 100%;
   }
+.woocommerce-ResetPassword.lost_reset_password {
+    width: 100%;
+}
 
   .search-page .elementor-posts-container.elementor-posts {
     grid-template-columns: repeat(1, 1fr);

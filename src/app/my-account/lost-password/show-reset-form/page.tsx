@@ -105,34 +105,31 @@ export default function ResetPasswordPage() {
     }
   };
 
-  if (loading && valid === null) return <Loader />;
+  // if (loading && valid === null) return <Loader />;
 
   if (valid === false)
     return (
-      <div className="container mx-auto p-6">
-        <div className="woocommerce-error bg-red-100 text-red-800 border border-red-400 p-4 rounded">
+       <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
           <h2 className="font-semibold mb-2">Invalid or expired reset link</h2>
           {error && <p>{error}</p>}
         </div>
-      </div>
     );
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
-      <div className="reset-form max-w-md mx-auto bg-white p-6 rounded shadow">
-        <p className="mb-4 text-gray-700">Enter a new password below.</p>
-
-        {notice && (
+       {notice && (
+        <div className="woocommerce-notices-wrapper">
           <div
-            className={`woocommerce-${notice.type} p-4 mb-4 rounded border ${
-              notice.type === "success"
-                ? "bg-green-100 text-green-800 border-green-400"
-                : "bg-red-100 text-red-800 border-red-400"
-            }`}
+            className={`woocommerce-${notice.type}`}
           >
             {notice.message}
           </div>
+          </div>
         )}
+      <div className="reset-form woocommerce-ResetPassword lost_reset_password">
+        <p className="mb-4 text-gray-700">Enter a new password below.</p>
+
+       
 
         <form onSubmit={handleSubmit}>
           <label className="block mb-4">
@@ -145,6 +142,7 @@ export default function ResetPasswordPage() {
               required
               minLength={6}
             />
+            <small className="woocommerce-password-hint">Hint: The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ &amp; ).</small>
           </label>
 
           <label className="block mb-4">
@@ -162,7 +160,7 @@ export default function ResetPasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="woocommerce-Button button"
           >
             {loading ? "Updating..." : "Update Password"}
           </button>
