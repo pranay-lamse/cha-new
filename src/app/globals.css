@@ -2842,13 +2842,15 @@ input#uwa_bid_value {
 }
 
 .auction-deatils-page table.auction-history-table td.bid_date {
-  order: 3;
+  order: 4;
   width: 100% !important;
   font-family: "Raleway" !important;
   font-size: 18px !important;
-  padding-top: 0px;
-}
 
+}
+table.auction-history-table td.proxy {
+    order: 2;
+}
 .auction-deatils-page table.auction-history-table tr {
   background: transparent !important;
   display: flex;
@@ -3504,7 +3506,7 @@ table.auction-history-table td {
 table.auction-history-table td,
 table.auction-history-table th {
   line-height: 1.5;
-  padding: 15px;
+  padding: 3px 15px;
   vertical-align: top;
 }
 
@@ -3531,7 +3533,7 @@ table.auction-history-table th {
 }
 
 table.auction-history-table td.bid_price {
-  order: 2;
+  order: 3;
   font-size: 18px !important;
   font-family: 'Raleway' !important;
   font-weight: 600;
