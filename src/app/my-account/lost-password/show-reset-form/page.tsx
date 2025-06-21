@@ -105,31 +105,36 @@ export default function ResetPasswordPage() {
     }
   };
 
-  // if (loading && valid === null) return <Loader />;
+  // ✅ Show loader while validating
+  if (valid === null) {
+    return (
+      <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 px-3 md:px-0">
+        <Loader />
+      </div>
+    );
+  }
 
+  // ✅ Show expired/invalid message
   if (valid === false)
     return (
-       <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
-          <h2 className="font-semibold mb-2">Invalid or expired reset link</h2>
-          {error && <p>{error}</p>}
-        </div>
+      <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
+        <h2 className="font-semibold mb-2">Invalid or expired reset link</h2>
+      </div>
     );
 
+  // ✅ Main form rendering after validation passes
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
-       {notice && (
+      {notice && (
         <div className="woocommerce-notices-wrapper">
-          <div
-            className={`woocommerce-${notice.type}`}
-          >
+          <div className={`woocommerce-${notice.type}`}>
             {notice.message}
           </div>
-          </div>
-        )}
+        </div>
+      )}
+
       <div className="reset-form woocommerce-ResetPassword lost_reset_password">
         <p className="mb-4 text-gray-700">Enter a new password below.</p>
-
-       
 
         <form onSubmit={handleSubmit}>
           <label className="block mb-4">
@@ -142,7 +147,10 @@ export default function ResetPasswordPage() {
               required
               minLength={6}
             />
-            <small className="woocommerce-password-hint">Hint: The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ &amp; ).</small>
+            <small className="woocommerce-password-hint">
+              Hint: The password should be at least twelve characters long.
+              To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ &amp; ).
+            </small>
           </label>
 
           <label className="block mb-4">

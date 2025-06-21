@@ -3588,7 +3588,7 @@ table.auction-history-table td.bid_price {
   .woocommerce-MyAccount-navigation {
     width: 100%;
   }
-.woocommerce-ResetPassword.lost_reset_password {
+.woocommerce-ResetPassword.lost_reset_password, .password-lost form.woocommerce-ResetPassword.lost_reset_password {
     width: 100%;
 }
 
