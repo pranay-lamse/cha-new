@@ -7,7 +7,7 @@ import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import axios from "axios";
 import { getToken } from "@/utils/storage";
-import ShowResetForm from "./show-reset-form/page" // ✅ make sure this path is correct
+import ShowResetForm from "./show-reset-form/page"; // ✅ make sure this path is correct
 
 declare global {
   interface Window {
@@ -29,10 +29,7 @@ export default function CheckoutPage() {
   const id = searchParams.get("id");
   const login = searchParams.get("login");
 
-  // ✅ If it's a password reset link, show the reset form immediately
-  if (key && id && login) {
-    return <ShowResetForm />;
-  }
+  const showResetForm = key && id && login;
 
   // Set the URL for lost-password fetch
   useEffect(() => {
@@ -139,8 +136,12 @@ export default function CheckoutPage() {
     };
   }, [htmlContent]);
 
+  if (showResetForm) {
+    return <ShowResetForm />;
+  }
+
   return (
-    <div className="container  mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
+    <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
       {loading ? (
         <Loader />
       ) : (
