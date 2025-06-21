@@ -7,7 +7,7 @@ import { env } from "@/env";
 import { filterHTMLContent } from "@/utils/htmlHelper";
 import axios from "axios";
 import { getToken } from "@/utils/storage";
-import ShowResetForm from "./show-reset-form/page"; // ✅ ensure path is correct
+import ShowResetForm from "./show-reset-form/page"; // ✅ make sure this is correct
 
 declare global {
   interface Window {
@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-const ParamsHandler = () => {
+function ResetFormWrapper() {
   const searchParams = useSearchParams();
   const key = searchParams.get("key");
   const id = searchParams.get("id");
@@ -23,14 +23,10 @@ const ParamsHandler = () => {
 
   const showResetForm = key && id && login;
 
-  if (showResetForm) {
-    return <ShowResetForm />;
-  }
+  return showResetForm ? <ShowResetForm /> : <CheckoutPageContent />;
+}
 
-  return null;
-};
-
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -145,12 +141,9 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto w-full sm:w-11/12 lg:w-[1100px] my-10 sm:my-20 uwa-auctions-page px-3 md:px-0 checkout-page password-lost">
-      {/* ✅ Suspense wrapper for useSearchParams */}
-      <Suspense fallback={<Loader />}>
-        <ParamsHandler />
-      </Suspense>
-
-      {!loading && !error && (
+      {loading ? (
+        <Loader />
+      ) : (
         <div
           dangerouslySetInnerHTML={{
             __html: filterHTMLContent(htmlContent || "", ["site-main"]),
@@ -158,8 +151,14 @@ export default function CheckoutPage() {
           className="text-gray-700"
         ></div>
       )}
-
-      {loading && <Loader />}
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <ResetFormWrapper />
+    </Suspense>
   );
 }
