@@ -3587,6 +3587,9 @@ table.auction-history-table td.bid_price {
     border: 1px solid #ddd !important;
 }
 @media (max-width: 767px) {
+    .button_wrap {
+    display: block;
+}
   .woocommerce-MyAccount-navigation {
     width: 100%;
   }
@@ -3648,6 +3651,7 @@ table.auction-history-table td.bid_price {
 
   body .woocommerce ul.products li.product .button {
     margin-top: 20px !important;
+    margin-left: 0px !important;
   }
 
   .cha-horse-page {
