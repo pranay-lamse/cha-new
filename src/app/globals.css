@@ -3590,6 +3590,9 @@ table.auction-history-table td.bid_price {
     .button_wrap {
     display: block;
 }
+.button_wrap a#hwa_button {
+    margin-left: 0px !important;
+}
   .woocommerce-MyAccount-navigation {
     width: 100%;
   }
