@@ -37,18 +37,14 @@ export default function EditAccountPage() {
         }
       `}</style>
 
-      {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-[#0f335f] z-[9999]">
-          <Loader />
-        </div>
-      )}
-
-      <iframe
-        src={`${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/cha-horse-submit-2`}
-        className="w-screen h-screen border-none"
-        title="CHA Horse Submit"
-        onLoad={() => setLoading(false)}
-      ></iframe>
+      <div className="fixed inset-0 cha-horse-submit flex items-center justify-center bg-[#0f335f] z-[9999]">
+        <iframe
+          src={`${env.NEXT_PUBLIC_API_URL_CUSTOM_API}/cha-horse-submit-2`}
+          className="w-screen h-screen border-none"
+          title="CHA Horse Submit"
+          onLoad={() => setLoading(false)}
+        ></iframe>
+      </div>
     </>
   );
 }
