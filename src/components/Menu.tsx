@@ -98,6 +98,9 @@ export const Menu = ({ menuTree }: Props) => {
                 <ul className="py-2 text-sm absolute bg-deep-navy">
                   <li>
                     <Link
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
                       className="block lg:hover:text-golden uppercase __className_9ae19a /all-auctions/ text-white px-4 py-2"
                       href={"/all-auctions"}
                     >
@@ -106,6 +109,9 @@ export const Menu = ({ menuTree }: Props) => {
                   </li>
                   <li>
                     <Link
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
                       className="block lg:hover:text-golden uppercase __className_9ae19a /current-auctions/ text-white px-4 py-2"
                       href={"/current-auctions"}
                     >
@@ -114,6 +120,9 @@ export const Menu = ({ menuTree }: Props) => {
                   </li>
                   <li>
                     <Link
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
                       className="block lg:hover:text-golden uppercase __className_9ae19a /closed-auctions/ text-white px-4 py-2"
                       href={"/closed-auctions"}
                     >
@@ -125,6 +134,9 @@ export const Menu = ({ menuTree }: Props) => {
             </>
           ) : (
             <Link
+              onClick={() => {
+                setIsOpen(false);
+              }}
               className={clsx(
                 `block lg:hover:text-golden uppercase ${marcellus.className} ${item.path}`,
                 {
